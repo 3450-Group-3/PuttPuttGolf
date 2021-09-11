@@ -1,7 +1,7 @@
 import path from "path";
 import { Configuration as WebpackConfiguration } from "webpack";
 import { Configuration as WebpackDevServerConfiguration } from "webpack-dev-server";
-import ReactRefreshTypeScript from "react-refresh-typescript";
+import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
 
 interface Configuration extends WebpackConfiguration {
@@ -12,7 +12,7 @@ const isDevelopment = process.env.NODE_ENV !== "production";
 
 const config: Configuration = {
   mode: isDevelopment ? "development" : "production",
-  entry: "./client/index.ts",
+  entry: "./client/index.tsx",
   output: {
     filename: "bundle.js",
     path: path.resolve(__dirname, "app/static"),
@@ -29,25 +29,28 @@ const config: Configuration = {
   module: {
     rules: [
       {
-        test: /\.[jt]sx?$/,
+        test: /\.tsx?$/,
         exclude: /node_modules/,
         use: [
           {
-            loader: "ts-loader",
+            loader: "babel-loader",
             options: {
-              getCustomTransformers: () => ({
-                before: [isDevelopment && ReactRefreshTypeScript()].filter(
-                  Boolean
-                ),
-              }),
-              transpileOnly: isDevelopment,
+              plugins: ["react-refresh/babel"],
+              presets: [
+                ["@babel/preset-react", { runtime: "automatic" }],
+                "@babel/preset-env",
+                [
+                  "@babel/preset-typescript",
+                  { isTSX: true, allExtensions: true },
+                ],
+              ],
             },
           },
         ],
       },
     ],
   },
-  plugins: [new ForkTsCheckerWebpackPlugin()],
+  plugins: [new ReactRefreshWebpackPlugin(), new ForkTsCheckerWebpackPlugin()],
   resolve: {
     extensions: [".tsx", ".ts", ".js"],
   },

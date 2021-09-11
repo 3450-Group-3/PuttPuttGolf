@@ -15,7 +15,7 @@ const config: Configuration = {
 	entry: './client/index.tsx',
 	output: {
 		filename: 'bundle.js',
-		path: path.resolve(__dirname, 'app/static'),
+		path: path.resolve(__dirname, 'app/static/js'),
 	},
 	devServer: {
 		port: 8000,
@@ -35,7 +35,9 @@ const config: Configuration = {
 					{
 						loader: 'babel-loader',
 						options: {
-							plugins: ['react-refresh/babel'],
+							plugins: [
+								isDevelopment && 'productionreact-refresh/babel',
+							].filter(Boolean),
 							presets: [
 								['@babel/preset-react', { runtime: 'automatic' }],
 								'@babel/preset-env',

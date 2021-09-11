@@ -11,6 +11,7 @@ uvicorn = {extras = ["standard"], version = "^0.15.0"}
 poetry-exec-plugin = "^0.2.1"
 Jinja2 = "^3.0.1"
 aiofiles = "^0.7.0"
+pydantic = {extras = ["dotenv"], version = "^1.8.2"}
 
 
 [tool.poetry.dev-dependencies]

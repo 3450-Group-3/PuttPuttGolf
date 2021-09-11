@@ -28,6 +28,8 @@ $ yarn install
 $ poetry install
 ```
 
+Copy `.env.example` to `.env`
+
 ### Start Development Servers
 The frontend server can be started with
 ```

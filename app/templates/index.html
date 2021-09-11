@@ -13,6 +13,13 @@
   <div id="app"></div>
 </body>
 
+{% if environment == 'production' %}
+<!-- Production version -->
+<script src="/static/js/bundle.js"></script>
+{% else %}
+<!-- Local development version -->
 <script src="http://localhost:8000/bundle.js"></script>
+{% endif %}
+
 
 </html>

@@ -21,7 +21,6 @@ const config: Configuration = {
 		port: 8000,
 		allowedHosts: 'all',
 		hot: true,
-		liveReload: false,
 		headers: {
 			'Access-Control-Allow-Origin': '*',
 		},
@@ -35,9 +34,7 @@ const config: Configuration = {
 					{
 						loader: 'babel-loader',
 						options: {
-							plugins: [
-								isDevelopment && 'productionreact-refresh/babel',
-							].filter(Boolean),
+							plugins: [isDevelopment && 'react-refresh/babel'].filter(Boolean),
 							presets: [
 								['@babel/preset-react', { runtime: 'automatic' }],
 								'@babel/preset-env',

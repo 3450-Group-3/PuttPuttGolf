@@ -4,8 +4,8 @@
 	"repository": "git@github.com:3450-Group-3/PuttPuttGolf.git",
 	"license": "GPL-3.0-only",
 	"scripts": {
-		"dev": "NODE_ENV=development webpack-dev-server",
-		"build": "NODE_ENV=production webpack",
+		"dev": "cross-env NODE_ENV=development webpack-dev-server",
+		"build": "cross-env NODE_ENV=production webpack",
 		"lint": "eslint ./client/**",
 		"format": "prettier --write client"
 	},
@@ -30,6 +30,7 @@
 		"@typescript-eslint/eslint-plugin": "^4.31.0",
 		"@typescript-eslint/parser": "^4.31.0",
 		"babel-loader": "^8.2.2",
+		"cross-env": "^7.0.3",
 		"eslint": "^7.32.0",
 		"eslint-config-prettier": "^8.3.0",
 		"eslint-plugin-react": "^7.25.1",

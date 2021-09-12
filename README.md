@@ -57,6 +57,8 @@ $ yarn dev
 **Note** that this server is just used for compiling and serving JS assets, and shouldn't be accessed directly!
 
 The API server can be started with
+
+**NOTE**: the `exec` command is provided by a `poetry` plugin, which are only available when you are in a subshell. Before executing any `exec` commands you need to make sure that you're in a subshell with `poetry shell`
 ```
 $ poetry exec start
 ```

@@ -16,6 +16,6 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
-
-    access_token = AccessToken.encode(data={"sub": user.username})
-    return {"access_token": access_token, "token_type": "bearer"}
+    else:
+        access_token = AccessToken.encode(data={"sub": user.username})
+        return {"access_token": access_token, "token_type": "bearer"}

@@ -2,6 +2,11 @@ from fastapi import FastAPI
 
 
 from .routes import api, base
+from . import models
+from .db import engine
+
+models.Base.metadata.create_all(bind=engine)
+
 
 app = FastAPI(
     openapi_url="/api/openapi.json",

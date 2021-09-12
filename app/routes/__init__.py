@@ -5,11 +5,12 @@ a unique prefix. (i.e for users it might be `/users`). Import that router in to 
 and include it with `api.include_router(<your router>)`
 """
 from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
 
 # Special routes for base-level routes. Don't include in the api router
 from .base import base
 from .auth import auth
-from ..dependancies import get_current_user
+from ..dependancies import get_current_user, get_db
 from ..schemas import User
 
 api = APIRouter(prefix="/api")
@@ -17,5 +18,5 @@ api.include_router(auth)
 
 
 @api.get("/test", response_model=User)
-def test(user=Depends(get_current_user)):
+def test(user=Depends(get_current_user), db: Session = Depends(get_db)):
     return user

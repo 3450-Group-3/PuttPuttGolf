@@ -15,12 +15,13 @@ pydantic = {extras = ["dotenv"], version = "^1.8.2"}
 python-multipart = "^0.0.5"
 python-jose = {extras = ["cryptography"], version = "^3.3.0"}
 passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+SQLAlchemy = {extras = ["mypy"], version = "^1.4.23"}
 
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.0"
 black = "^20.8b1"
-mypy = "^0.800"
+mypy = ">=0.910"
 pylint = "^2.7.0"
 
 

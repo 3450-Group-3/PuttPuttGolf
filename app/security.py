@@ -30,7 +30,7 @@ class AccessToken:
 
     @staticmethod
     def encode(data: dict, expires_delta: Optional[timedelta] = None):
-        """Encodes a JWT access token_
+        """Encodes a JWT access token
 
         Args:
             data (dict): The date to encode in the JWT token
@@ -68,11 +68,13 @@ class AccessToken:
 
 class Password:
     @staticmethod
-    def verify(plain_password: str, hashed_password: str):
+    def verify(plain_password: str, hashed_password: str) -> bool:
+        """Checks a plain password against a stored hashed password"""
         return bcrypt.checkpw(plain_password.encode(), hashed_password.encode())
 
     @staticmethod
-    def hash(password: str):
+    def hash(password: str) -> str:
+        """Hashes a provided password using the `bcrypt` algorithm"""
         salt = bcrypt.gensalt()
         return bcrypt.hashpw(password.encode(), salt=salt).decode()
 

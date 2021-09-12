@@ -149,8 +149,7 @@ disable=print-statement,
         missing-function-docstring,
         missing-class-docstring,
         unsubscriptable-object,
-        no-else-return,
-        no-member
+        no-else-return
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option

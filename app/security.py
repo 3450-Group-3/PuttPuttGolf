@@ -1,19 +1,17 @@
 from typing import Optional
 from datetime import datetime, timedelta
 from jose import jwt
-from passlib.context import CryptContext
+import bcrypt
 
 from .schemas import UserInDB
-
-SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
-
+from .config import config
 
 fake_users_db = {
     "johndoe": {
         "username": "johndoe",
         "full_name": "John Doe",
         "email": "johndoe@example.com",
-        "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",
+        "hashed_password": "$2b$12$8c/9SnhYfIZz1gPsj1CKWuOvD9c852w0dr1wqZTxAD3HbPN02dTey",
         "disabled": False,
     },
     "alice": {
@@ -50,7 +48,9 @@ class AccessToken:
                 minutes=AccessToken.ACCESS_TOKEN_EXPIRE_MINUTES
             )
         to_encode.update({"exp": expire})
-        encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=AccessToken.ALGORITHM)
+        encoded_jwt = jwt.encode(
+            to_encode, config.secret_key, algorithm=AccessToken.ALGORITHM
+        )
         return encoded_jwt
 
     @staticmethod
@@ -63,19 +63,18 @@ class AccessToken:
         Raises:
             JWTError if the JWT is not valid, or has expired
         """
-        return jwt.decode(token, SECRET_KEY, algorithms=[AccessToken.ALGORITHM])
+        return jwt.decode(token, config.secret_key, algorithms=[AccessToken.ALGORITHM])
 
 
 class Password:
-    context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
     @staticmethod
     def verify(plain_password: str, hashed_password: str):
-        return Password.context.verify(plain_password, hashed_password)
+        return bcrypt.checkpw(plain_password.encode(), hashed_password.encode())
 
     @staticmethod
-    def hash(password):
-        return Password.context.hash(password)
+    def hash(password: str):
+        salt = bcrypt.gensalt()
+        return bcrypt.hashpw(password.encode(), salt=salt).decode()
 
 
 def authenticate_user(fake_db, username: str, password: str):

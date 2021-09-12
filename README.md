@@ -47,8 +47,10 @@ The application is configured with a `.env` file. An example one is provided, bu
 
 ### Initialize Database
 ```
-$ alembic upgrade head
+$ poetry run alembic upgrade head
 ```
+**Note** that `poetry run` is used to run any command inside the virtual environment.
+
 ### Start Development Servers
 The frontend server can be started with
 ```

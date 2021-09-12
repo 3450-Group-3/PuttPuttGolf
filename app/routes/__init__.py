@@ -4,14 +4,18 @@ To add a new resource, create a new file in this package and declare a new APIRo
 a unique prefix. (i.e for users it might be `/users`). Import that router in to this file
 and include it with `api.include_router(<your router>)`
 """
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
 # Special routes for base-level routes. Don't include in the api router
 from .base import base
+from .auth import auth
+from ..dependancies import get_current_user
+from ..schemas import User
 
 api = APIRouter(prefix="/api")
+api.include_router(auth)
 
 
-@api.get("/test")
-def test():
-    return {"api": "value"}
+@api.get("/test", response_model=User)
+def test(user=Depends(get_current_user)):
+    return user

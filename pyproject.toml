@@ -1,0 +1,37 @@
+[tool.poetry]
+name = "putt-putt-golf"
+version = "0.1.0"
+description = ""
+authors = ["Sean Collings <seanrcollings@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+fastapi = "^0.68.1"
+uvicorn = {extras = ["standard"], version = "^0.15.0"}
+poetry-exec-plugin = "^0.2.1"
+Jinja2 = "^3.0.1"
+aiofiles = "^0.7.0"
+pydantic = {extras = ["dotenv"], version = "^1.8.2"}
+python-multipart = "^0.0.5"
+python-jose = {extras = ["cryptography"], version = "^3.3.0"}
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+SQLAlchemy = {extras = ["mypy"], version = "^1.4.23"}
+alembic = "^1.7.1"
+
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.0"
+black = "^20.8b1"
+mypy = ">=0.910"
+pylint = "^2.7.0"
+
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry-exec-plugin.commands]
+start = "uvicorn app.main:app --reload --port 3000"
+lint = "pylint app"
+format = "black app"
+test = "pytest tests"

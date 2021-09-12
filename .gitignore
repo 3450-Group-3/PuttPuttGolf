@@ -1,3 +1,11 @@
 .vscode/
 .vs/
 .idea/
+__pycache__
+.env
+node_modules
+.venv
+dist
+app/static/js/*
+!app/static/js/.keep
+app.db

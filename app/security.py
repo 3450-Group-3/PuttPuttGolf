@@ -1,27 +1,13 @@
+"""Module to handle user authentication, token encoding/decoding, and password encryption verification"""
 from typing import Optional
 from datetime import datetime, timedelta
 from jose import jwt
 import bcrypt
+from sqlalchemy.orm.session import Session
 
 from .schemas import UserInDB
 from .config import config
-
-fake_users_db = {
-    "johndoe": {
-        "username": "johndoe",
-        "full_name": "John Doe",
-        "email": "johndoe@example.com",
-        "hashed_password": "$2b$12$8c/9SnhYfIZz1gPsj1CKWuOvD9c852w0dr1wqZTxAD3HbPN02dTey",
-        "disabled": False,
-    },
-    "alice": {
-        "username": "alice",
-        "full_name": "Alice Wonderson",
-        "email": "alice@example.com",
-        "hashed_password": "fakehashedsecret2",
-        "disabled": True,
-    },
-}
+from . import models
 
 
 class AccessToken:
@@ -79,16 +65,17 @@ class Password:
         return bcrypt.hashpw(password.encode(), salt=salt).decode()
 
 
-def authenticate_user(fake_db, username: str, password: str):
-    user = get_user(fake_db, username)
-    if not user:
+def authenticate_user(db: Session, username: str, password: str):
+    user = get_user(db, username)
+    if not user or not Password.verify(password, user.hashed_password):
         return False
-    if not Password.verify(password, user.hashed_password):
-        return False
+
     return user
 
 
-def get_user(db, username: str):
-    if username in db:
-        user_dict = db[username]
-        return UserInDB(**user_dict)
+def get_user(db: Session, username: str):
+    user: Optional[models.User] = (
+        db.query(models.User).where(models.User.username == username).first()
+    )
+    if user:
+        return UserInDB.from_orm(user)

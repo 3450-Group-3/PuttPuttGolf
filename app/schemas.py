@@ -2,11 +2,19 @@ from typing import Optional
 from pydantic import BaseModel
 
 
-class User(BaseModel):
+class UserIn(BaseModel):
+    """Form data for creating a user"""
+
     username: str
-    email: Optional[str] = None
-    full_name: Optional[str] = None
-    disabled: Optional[bool] = None
+    password: str
+
+
+class User(BaseModel):
+    id: int
+    username: str
+
+    class Config:
+        orm_mode = True
 
 
 class UserInDB(User):

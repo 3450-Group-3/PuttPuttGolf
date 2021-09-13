@@ -10,11 +10,13 @@ from sqlalchemy.orm import Session
 # Special routes for base-level routes. Don't include in the api router
 from .base import base
 from .auth import auth
+from .users import users
 from ..dependancies import get_current_user, get_db
 from ..schemas import User
 
 api = APIRouter(prefix="/api")
 api.include_router(auth)
+api.include_router(users)
 
 
 @api.get("/test", response_model=User)

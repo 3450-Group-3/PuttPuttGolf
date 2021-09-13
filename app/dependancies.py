@@ -1,15 +1,26 @@
+from sqlalchemy.orm import Session
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError
 
-from .security import AccessToken, get_user, fake_users_db
+from .security import AccessToken, get_user
 from .db import SessionLocal
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
 
 
-async def get_current_user(token: str = Depends(oauth2_scheme)):
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
+async def get_current_user(
+    token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
+):
     """Dependancy to obtain the currently authenticated user.
     If no authetication is present, a 401 will be returned
     """
@@ -27,15 +38,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     except JWTError as e:
         raise credentials_exception from e
 
-    user = get_user(fake_users_db, username=username)
+    user = get_user(db, username=username)
     if user is None:
         raise credentials_exception
     return user
-
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()

@@ -1,4 +1,5 @@
-from typing import Optional, Union
+"""Module to handle user authentication, token encoding/decoding, and password encryption verification"""
+from typing import Optional
 from datetime import datetime, timedelta
 from jose import jwt
 import bcrypt
@@ -7,23 +8,6 @@ from sqlalchemy.orm.session import Session
 from .schemas import UserInDB
 from .config import config
 from . import models
-
-fake_users_db = {
-    "johndoe": {
-        "username": "johndoe",
-        "full_name": "John Doe",
-        "email": "johndoe@example.com",
-        "hashed_password": "$2b$12$8c/9SnhYfIZz1gPsj1CKWuOvD9c852w0dr1wqZTxAD3HbPN02dTey",
-        "disabled": False,
-    },
-    "alice": {
-        "username": "alice",
-        "full_name": "Alice Wonderson",
-        "email": "alice@example.com",
-        "hashed_password": "fakehashedsecret2",
-        "disabled": True,
-    },
-}
 
 
 class AccessToken:

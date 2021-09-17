@@ -5,7 +5,7 @@ from app.dependancies import get_current_user, get_db
 from app import schemas, models
 from app.security import Password
 
-users = APIRouter(prefix=("/users"))
+users = APIRouter(prefix="/users")
 
 
 @users.get(

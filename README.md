@@ -80,3 +80,10 @@ $ poetry exec test
 
 ## Development Notes
 - FastAPI implements the OpenAPI spec, and as such can provide automatic API documentation. If the server is running, the docs should be accessible at [localhost:3000/api/docs](http://localhost:3000/api/docs)
+
+## Version Control Procedures
+- Make a new branch
+- Implement your features
+- Create a pull request
+- Have someone review the pr 
+- Merge and delete the branch

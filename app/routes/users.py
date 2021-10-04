@@ -8,6 +8,11 @@ from app.security import Password
 users = APIRouter(prefix="/users")
 
 
+@users.get("/me", response_model=schemas.User)
+def me(user=Depends(get_current_user)):
+    return user
+
+
 @users.get(
     "/",
     response_model=list[schemas.User],

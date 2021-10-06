@@ -20,6 +20,18 @@
   - `Webpack` - Bundler
   - `Babel` - Transpiler
 
+## Style Guide
+This project follows the style guides of the technologies being used and enforced by a linter and formatter.
+
+### Python
+- `snake_case` for variable and function names, `PascalCase` for class names
+- 4 spaced identation (spaces only to avoid mixed indentation errors)
+
+### Javascript
+- `camelCase` for variable names, `PascalCase` for class names
+- 2 space identations
+- `PascalCase` for component names and their related files (i.e the `Home` component would exist in `Home.tsx`)
+- Specific styles configurations can be seen in `.prettierrc`
 
 ## Development
 This project uses [yarn](https://yarnpkg.com/) and [poetry](https://python-poetry.org/) for dependancy management. You'll need to install them to continue.
@@ -44,7 +56,7 @@ The application is configured with a `.env` file. An example one is provided, bu
     ```
     $ openssl rand -hex 32
     ```
-
+    **Note:** This being a cryptographically secure key is only really relevant for production, in development / testing, it can be left alone
 ### Initialize Database
 ```
 $ poetry run alembic upgrade head
@@ -85,5 +97,5 @@ $ poetry exec test
 - Make a new branch
 - Implement your features
 - Create a pull request
-- Have someone review the pr 
+- Have someone review the pr
 - Merge and delete the branch

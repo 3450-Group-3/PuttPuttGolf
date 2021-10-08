@@ -1,10 +1,29 @@
-import { ThemeProvider } from 'styled-components';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { ThemeProvider, createGlobalStyle } from 'styled-components';
+import {
+	BrowserRouter as Router,
+	Route,
+	Switch,
+	RouteProps,
+	Redirect,
+} from 'react-router-dom';
 
 import AccountManagement from './AccountManagement';
 import Home from './Home';
 import Login from './Login';
 import SignUp from './SignUp';
+
+const GlobalStyle = createGlobalStyle`
+body {
+	font-family: 'Arial', sans-serif
+}
+`;
+
+const ProtectedRoute = (props: RouteProps) => {
+	if (localStorage.getItem('token')) {
+		return <Route {...props} />;
+	}
+	return <Redirect to="/login" />;
+};
 
 export default function App() {
 	const theme = {
@@ -16,12 +35,13 @@ export default function App() {
 
 	return (
 		<ThemeProvider theme={theme}>
+			<GlobalStyle />
 			<Router>
 				<Switch>
 					<Route path="/" exact component={Home} />
 					<Route path="/signup" exact component={SignUp} />
 					<Route path="/login" component={Login} />
-					<Route path="/me" component={AccountManagement} />
+					<ProtectedRoute path="/me" component={AccountManagement} />
 				</Switch>
 			</Router>
 		</ThemeProvider>

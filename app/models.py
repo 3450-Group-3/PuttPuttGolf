@@ -1,7 +1,11 @@
 import enum
+from fastapi.param_functions import Depends
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy import types
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import Session
+from sqlalchemy.sql.schema import ColumnCollectionConstraint
+
+from app.dependancies import get_db
 
 from .db import Base
 
@@ -73,3 +77,22 @@ class User(Base):
     @property
     def is_player(self):
         return self.has_role(UserRole.PLAYER)
+
+
+class Drink(Base):
+    __tablename__ = "drinks"
+
+    id = Column(types.Integer, primary_key=True, nullable = False, index=True)
+    name = Column(types.String, nullable=False, index=True)
+    price = Column(types.FLOAT, nullable=False)
+    image_url = Column(types.String)
+    description = Column(types.String)
+
+    def add_drink(self, name : str, price : float, description : str = "", image_url : str = "", db : Session = Depends(get_db)) -> None :
+        drink = Drink(name, price, description, image_url)
+        db.add(drink)
+        db.commit()
+        db.refresh()
+
+    def remove_drink(self, id : int, name : str = "") -> None:
+        pass

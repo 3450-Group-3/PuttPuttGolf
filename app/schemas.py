@@ -24,3 +24,13 @@ class UserInDB(User):
 class Token(BaseModel):
     access_token: str
     token_type: str
+
+
+class Drink(BaseModel):
+    name: str
+    price: float
+    image_url: str
+    description: str
+
+    class Config:
+        orm_mode = True

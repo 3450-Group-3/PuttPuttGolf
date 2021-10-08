@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import AccountManagement from './AccountManagement';
 import Home from './Home';
 import Login from './Login';
+import SignUp from './SignUp';
 
 export default function App() {
 	const theme = {
@@ -18,6 +19,7 @@ export default function App() {
 			<Router>
 				<Switch>
 					<Route path="/" exact component={Home} />
+					<Route path="/signup" exact component={SignUp} />
 					<Route path="/login" component={Login} />
 					<Route path="/me" component={AccountManagement} />
 				</Switch>

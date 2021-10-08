@@ -9,3 +9,4 @@ dist
 app/static/js/*
 !app/static/js/.keep
 app.db
+yarn-error.log

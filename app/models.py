@@ -88,11 +88,12 @@ class Drink(Base):
     image_url = Column(types.String)
     description = Column(types.String)
 
-    def add_drink(self, name : str, price : float, description : str = "", image_url : str = "", db : Session = Depends(get_db)) -> None :
+    def add_drink(self, db: Session, name: str, price: float, description: str = "", image_url: str = "", ) -> "Drink":
         drink = Drink(name, price, description, image_url)
         db.add(drink)
         db.commit()
-        db.refresh()
+        db.refresh(drink)
+        return drink
 
-    def remove_drink(self, id : int, name : str = "") -> None:
+    def remove_drink(self, id: int, name: str = "") -> None:
         pass

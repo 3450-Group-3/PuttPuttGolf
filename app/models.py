@@ -91,12 +91,12 @@ class Drink(Base):
         db.refresh(drink)
         return drink
 
-    def remove_drink(self, db : Session, id: int, name : str = "") -> None:
+    def remove_drink(self, db: Session, id: int, name : str = "") -> None:
         """
         Removes a drink from the database. Pass in the db and either the drink id 
-        or pass in -1 for the id and the drink name to remove it
+        or pass in 0 for the id and the drink name to remove it
         """
-        if (id >=0 ):
+        if (id > 0 ):
             db.query(Drink).filter_by(id = id).delete()
         else:
             db.query(Drink).filter_by(name = name).delete()

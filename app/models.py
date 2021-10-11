@@ -95,5 +95,6 @@ class Drink(Base):
         db.refresh(drink)
         return drink
 
-    def remove_drink(self, id: int, name: str = "") -> None:
-        pass
+    def remove_drink(self, db : Session, id: int, name: str = "") -> None:
+        db.query(Drink).filter_by(id = id).delete()
+        db.commit()

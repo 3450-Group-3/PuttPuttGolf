@@ -1,5 +1,7 @@
 import enum
-from sqlalchemy import Column
+
+from typing import Union
+from sqlalchemy import Column, ForeignKey
 from sqlalchemy import types
 from sqlalchemy.orm import Session
 
@@ -38,7 +40,7 @@ class UserRole(enum.Enum):
     """
 
 
-class User(Base):
+class User(Base):  # type: ignore
     __tablename__ = "users"
 
     id = Column(types.Integer, primary_key=True, index=True, nullable=False)
@@ -75,6 +77,7 @@ class User(Base):
         return self.has_role(UserRole.PLAYER)
 
 
+
 class Drink(Base):
     __tablename__ = "drinks"
 
@@ -102,3 +105,49 @@ class Drink(Base):
             db.query(Drink).filter_by(name = name).delete()
 
         db.commit()
+
+class Tournament(Base):  # type: ignore
+    __tablename__ = "tournaments"
+
+    id = Column(types.Integer, primary_key=True, index=True, nullable=False)
+    created_by_id = Column(types.Integer, ForeignKey("users.id"), nullable=False)
+    sponsored_by_id = Column(types.Integer, ForeignKey("users.id"))
+    date = Column(types.DateTime, index=True, nullable=False)
+    completed = Column(types.Boolean, default=False)
+    advertising_banner = Column(types.String)
+    balance = Column(types.Float, default=0.0, nullable=False)
+    hole_count = Column(types.Integer, nullable=False)
+
+    # TODO: Implement scores property, increment_score, add_user, and remove_user when Scores table is written
+
+    @property
+    def _is_sponsored(self):
+        return self.sponsored_by is not None
+
+    def add_user(self, user: Union[User, int]) -> None:
+        # Add user to scores / handle nonexistant id
+        pass
+
+    def remove_user(self, user: Union[User, int]) -> None:
+        # Remove user from score / handle nonexistant id
+        pass
+
+    def update_balance(self, increment: float) -> None:
+        self.balance += increment  # type: ignore
+
+    def formatted_date(self) -> str:
+        return self.date.strftime("%m/%d/%Y, %-I:%M/ %p")
+
+    def increment_score(self, user: Union[User, int], increment: int) -> int:
+        # Increment a user's score for this tournament
+        return -1
+
+    def complete_tournament(self) -> None:  # TODO
+        pass
+
+    def _distribute_winnings(self) -> None:  # TODO
+        pass
+
+    def _finalize_scores(self) -> None:  # TODO
+        pass
+

@@ -1,5 +1,6 @@
 from typing import Optional
 from pydantic import BaseModel
+from datetime import datetime
 
 
 class UserIn(BaseModel):
@@ -24,3 +25,16 @@ class UserInDB(User):
 class Token(BaseModel):
     access_token: str
     token_type: str
+
+
+class Tournament:
+    created_by: User
+    sponsored_by: Optional[User]
+    date = datetime
+    completed = bool
+    advertising_banner = Optional[str]
+    balance = float
+    hole_count = int
+
+    class Config:
+        orm_mode = True

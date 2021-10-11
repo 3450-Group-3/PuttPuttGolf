@@ -1,11 +1,7 @@
 import enum
-from fastapi.param_functions import Depends
-from sqlalchemy import Column, ForeignKey
+from sqlalchemy import Column
 from sqlalchemy import types
 from sqlalchemy.orm import Session
-from sqlalchemy.sql.schema import ColumnCollectionConstraint
-
-from app.dependancies import get_db
 
 from .db import Base
 

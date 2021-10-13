@@ -11,6 +11,7 @@ import AccountManagement from './AccountManagement';
 import Home from './Home';
 import Login from './Login';
 import SignUp from './SignUp';
+import Nav from './Nav';
 
 const GlobalStyle = createGlobalStyle`
 body {
@@ -43,6 +44,7 @@ export default function App() {
 					<Route path="/login" component={Login} />
 					<ProtectedRoute path="/me" component={AccountManagement} />
 				</Switch>
+				<Nav />
 			</Router>
 		</ThemeProvider>
 	);

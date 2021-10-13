@@ -27,6 +27,16 @@ class Token(BaseModel):
     token_type: str
 
 
+
+class Drink(BaseModel):
+    name: str
+    price: float
+    image_url: str
+    description: str
+
+    class Config:
+        orm_mode = True
+
 class Tournament:
     created_by: User
     sponsored_by: Optional[User]
@@ -38,3 +48,4 @@ class Tournament:
 
     class Config:
         orm_mode = True
+

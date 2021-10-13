@@ -1,8 +1,9 @@
 import enum
+
 from typing import Union
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy import types
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import Session
 
 from .db import Base
 
@@ -76,6 +77,35 @@ class User(Base):  # type: ignore
         return self.has_role(UserRole.PLAYER)
 
 
+
+class Drink(Base):
+    __tablename__ = "drinks"
+
+    id = Column(types.Integer, primary_key=True, nullable = False, index=True)
+    name = Column(types.String, nullable=False, index=True)
+    price = Column(types.FLOAT, nullable=False)
+    image_url = Column(types.String)
+    description = Column(types.String)
+
+    def add_drink(self, db: Session, name: str, price: float, description: str = "", image_url: str = "", ) -> "Drink":
+        drink = Drink(name, price, description, image_url)
+        db.add(drink)
+        db.commit()
+        db.refresh(drink)
+        return drink
+
+    def remove_drink(self, db: Session, id: int, name : str = "") -> None:
+        """
+        Removes a drink from the database. Pass in the db and either the drink id 
+        or pass in 0 for the id and the drink name to remove it
+        """
+        if (id > 0 ):
+            db.query(Drink).filter_by(id = id).delete()
+        else:
+            db.query(Drink).filter_by(name = name).delete()
+
+        db.commit()
+
 class Tournament(Base):  # type: ignore
     __tablename__ = "tournaments"
 
@@ -120,3 +150,4 @@ class Tournament(Base):  # type: ignore
 
     def _finalize_scores(self) -> None:  # TODO
         pass
+

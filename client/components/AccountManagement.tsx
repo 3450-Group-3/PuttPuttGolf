@@ -1,6 +1,8 @@
 import { useGet } from '../hooks';
 import { User } from '../types';
 
+const ROLE_MAP = ['PLAYER', 'DRINK_MEISTER', 'SPONSOR', 'MANAGER'];
+
 export default function UserInfo() {
 	const { data, loading, error } = useGet<User>('/users/me');
 
@@ -16,7 +18,8 @@ export default function UserInfo() {
 			<div>
 				{Object.entries(data).map(([key, value], idx) => (
 					<p key={idx}>
-						{(key as string).toUpperCase()}: {value}
+						{(key as string).toUpperCase()}:{' '}
+						{key === 'role' ? ROLE_MAP[value - 1] : value}
 					</p>
 				))}
 			</div>

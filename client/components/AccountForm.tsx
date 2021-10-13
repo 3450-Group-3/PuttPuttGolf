@@ -20,7 +20,6 @@ export default function AccountForm({ onSubmit }: Props) {
 	const {
 		register,
 		handleSubmit,
-		watch,
 		formState: { errors },
 	} = useForm<Inputs>();
 

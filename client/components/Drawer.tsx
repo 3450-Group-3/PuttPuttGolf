@@ -8,20 +8,17 @@ interface IDrawerContainer {
 }
 
 const DrawerContainer = styled.div<IDrawerContainer>`
+	display: ${({ isOpen }) => (isOpen ? 'flex' : 'none')};
 	position: absolute;
 	top: 0;
 	right: 0;
 	height: 100%;
 	width: 10em;
 
-	transition: all 0.3s ease-in-out;
-	transform: ${(props) => (props.isOpen ? 'translate(0)' : 'translate(12em)')};
-
 	background-color: ${(props) => props.theme.primary};
 	border: 2px solid ${(props) => props.theme.secondary};
 	box-sizing: border-box;
 
-	display: flex;
 	flex-direction: column;
 `;
 

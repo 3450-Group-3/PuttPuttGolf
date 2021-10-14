@@ -13,6 +13,7 @@ import Login from './Login';
 import SignUp from './SignUp';
 import Nav from './Nav';
 import { defaultTheme, GlobalStyle } from '../common/styles';
+import NotFound from './NotFound';
 
 const Page = styled.div`
 	display: flex;
@@ -20,6 +21,7 @@ const Page = styled.div`
 	flex-direction: column;
 	overflow-y: auto;
 	overflow-x: hidden;
+	padding-bottom: 10px;
 `;
 
 const ProtectedRoute = (props: RouteProps) => {
@@ -40,7 +42,7 @@ export default function App() {
 						<Route path="/signup" exact component={SignUp} />
 						<Route path="/login" component={Login} />
 						<ProtectedRoute path="/me" component={AccountManagement} />
-						<Route path="*" component={() => <p>404</p>} />
+						<Route path="*" component={NotFound} />
 					</Switch>
 				</Page>
 				<Nav />

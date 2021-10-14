@@ -7,12 +7,18 @@ import { GiGolfTee } from 'react-icons/gi';
 import { MdLocalDrink, MdMoreHoriz } from 'react-icons/md';
 
 const NavContainer = styled.div`
+	overflow: hidden;
 	display: flex;
 	height: 6rem;
 	align-items: center;
+	flex-shrink: 0;
 	justify-content: center;
 	box-shadow: 0px -7px 38px 1px rgba(0, 0, 0, 0.64);
-
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	z-index: 2;
+	background-color: ${({ theme }) => theme.primary};
 	.current {
 		color: white;
 	}
@@ -50,7 +56,7 @@ export default function Nav() {
 	const [drawerIsOpen, setDrawerIsOpen] = useState(false);
 
 	return (
-		<>
+		<div>
 			<Drawer isOpen={drawerIsOpen} setIsOpen={setDrawerIsOpen} />
 			<NavContainer>
 				<NavButton to="/order" activeClassName="current" exact>
@@ -70,6 +76,6 @@ export default function Nav() {
 					<NavText>more</NavText>
 				</NavAction>
 			</NavContainer>
-		</>
+		</div>
 	);
 }

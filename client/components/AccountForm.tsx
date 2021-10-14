@@ -7,6 +7,11 @@ const TextInput = styled.input`
 	margin-bottom: 10px;
 `;
 
+const OptionInput = styled.select`
+	display: block;
+	margin-bottom: 10px;
+`;
+
 interface Inputs extends Omit<User, 'id'> {
 	password: string;
 }
@@ -14,14 +19,15 @@ interface Inputs extends Omit<User, 'id'> {
 interface Props {
 	onSubmit: SubmitHandler<Inputs>;
 	type: 'creating' | 'updating';
+	defaultValues?: User;
 }
 
-export default function AccountForm({ onSubmit }: Props) {
+export default function AccountForm({ onSubmit, type, defaultValues }: Props) {
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
-	} = useForm<Inputs>();
+	} = useForm<Inputs>({ defaultValues: defaultValues });
 
 	return (
 		<form onSubmit={handleSubmit(onSubmit)}>
@@ -33,11 +39,14 @@ export default function AccountForm({ onSubmit }: Props) {
 				})}
 			/>
 			{errors.username && <p>{errors.username.message}</p>}
-			<TextInput
-				placeholder="password"
-				type="password"
-				{...register('password', { required: 'Password Required' })}
-			/>
+			{type == 'creating' && (
+				<TextInput
+					placeholder="password"
+					type="password"
+					{...register('password', { required: 'Password Required' })}
+				/>
+			)}
+
 			{errors.password && <p>{errors.password.message}</p>}
 			<TextInput
 				placeholder="username"
@@ -48,6 +57,21 @@ export default function AccountForm({ onSubmit }: Props) {
 				})}
 			/>
 			{errors.birthdate && <p>{errors.birthdate.message}</p>}
+
+			{type == 'updating' && (
+				<div>
+					<OptionInput
+						{...register('role', { valueAsNumber: true })}
+						defaultValue="1"
+					>
+						<option value="1">User</option>
+						<option value="2">Drink Meister</option>
+						<option value="3">Sponsor</option>
+					</OptionInput>
+					{errors.role && <p>{errors.role.message}</p>}
+				</div>
+			)}
+
 			<input type="submit" />
 		</form>
 	);

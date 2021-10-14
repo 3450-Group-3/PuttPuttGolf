@@ -1,29 +1,37 @@
-import { useGet } from '../hooks';
-import { User } from '../types';
-
-const ROLE_MAP = ['PLAYER', 'DRINK_MEISTER', 'SPONSOR', 'MANAGER'];
+import { Redirect } from 'react-router';
+import { useGet, usePut } from '../hooks';
+import { DetailFormError, User } from '../types';
+import AccountForm from './AccountForm';
 
 export default function UserInfo() {
-	const { data, loading, error } = useGet<User>('/users/me');
+	const { data, loading, error } = useGet<User, DetailFormError>('/users/me');
 
-	if (loading) {
-		return <div>Loading...</div>;
-	}
+	const [
+		{ data: postData, loading: postLoading, error: postError },
+		updateUser,
+	] = usePut<User, DetailFormError>();
+
+	if (loading) return <p>Loading...</p>;
 	if (error) {
-		return <div>Failed to load info!</div>;
-	}
-
-	if (data) {
 		return (
-			<div>
-				{Object.entries(data).map(([key, value], idx) => (
-					<p key={idx}>
-						{(key as string).toUpperCase()}:{' '}
-						{key === 'role' ? ROLE_MAP[value - 1] : value}
-					</p>
-				))}
-			</div>
+			<p>
+				{error.response?.data.detail ||
+					'Something went wrong, please try again'}
+			</p>
 		);
 	}
-	return <div></div>;
+
+	return (
+		<>
+			{postData && data && postData.username !== data.username && (
+				<Redirect to="/login" />
+			)}
+			{postData && <p>Update user successful!</p>}
+			<AccountForm
+				onSubmit={(data) => updateUser({ url: '/users/me', data })}
+				type="updating"
+				defaultValues={data}
+			/>
+		</>
+	);
 }

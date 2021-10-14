@@ -1,3 +1,4 @@
+from typing import Optional
 from fastapi import APIRouter, Depends
 from fastapi.exceptions import HTTPException
 from sqlalchemy.orm.session import Session
@@ -14,6 +15,31 @@ users = APIRouter(prefix="/users")
 @users.get("/me", response_model=schemas.User)
 def me(user=Depends(get_current_user)):
     return user
+
+
+@users.put("/me", response_model=schemas.User)
+def edit_user(
+    user_data: schemas.UserInUpdate,
+    db: Session = Depends(get_db),
+):
+    stored_user: Optional[models.User] = (
+        db.query(models.User).where(models.User.id == user_data.id).first()
+    )
+
+    if stored_user:
+        stored_user.username = user_data.username
+        stored_user.birthdate = user_data.birthdate
+        stored_user.role = user_data.role
+
+        db.commit()
+        db.refresh(stored_user)
+        return stored_user
+
+    else:
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content={"detail": "User not found"},
+        )
 
 
 @users.get(

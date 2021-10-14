@@ -14,6 +14,7 @@ const DrawerContainer = styled.div<IDrawerContainer>`
 	right: 0;
 	height: 100%;
 	width: 10em;
+	z-index: 10;
 
 	background-color: ${(props) => props.theme.primary};
 	border: 2px solid ${(props) => props.theme.secondary};

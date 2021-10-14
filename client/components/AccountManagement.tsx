@@ -22,62 +22,6 @@ export default function UserInfo() {
 						{key === 'role' ? ROLE_MAP[value - 1] : value}
 					</p>
 				))}
-				<div>
-					{Object.entries(data).map(([key, value], idx) => (
-						<p key={idx}>
-							{(key as string).toUpperCase()}:{' '}
-							{key === 'role' ? ROLE_MAP[value - 1] : value}
-						</p>
-					))}
-				</div>
-				<div>
-					{Object.entries(data).map(([key, value], idx) => (
-						<p key={idx}>
-							{(key as string).toUpperCase()}:{' '}
-							{key === 'role' ? ROLE_MAP[value - 1] : value}
-						</p>
-					))}
-				</div>
-				<div>
-					{Object.entries(data).map(([key, value], idx) => (
-						<p key={idx}>
-							{(key as string).toUpperCase()}:{' '}
-							{key === 'role' ? ROLE_MAP[value - 1] : value}
-						</p>
-					))}
-				</div>
-				<div>
-					{Object.entries(data).map(([key, value], idx) => (
-						<p key={idx}>
-							{(key as string).toUpperCase()}:{' '}
-							{key === 'role' ? ROLE_MAP[value - 1] : value}
-						</p>
-					))}
-				</div>
-				<div>
-					{Object.entries(data).map(([key, value], idx) => (
-						<p key={idx}>
-							{(key as string).toUpperCase()}:{' '}
-							{key === 'role' ? ROLE_MAP[value - 1] : value}
-						</p>
-					))}
-				</div>
-				<div>
-					{Object.entries(data).map(([key, value], idx) => (
-						<p key={idx}>
-							{(key as string).toUpperCase()}:{' '}
-							{key === 'role' ? ROLE_MAP[value - 1] : value}
-						</p>
-					))}
-				</div>
-				<div>
-					{Object.entries(data).map(([key, value], idx) => (
-						<p key={idx}>
-							{(key as string).toUpperCase()}:{' '}
-							{key === 'role' ? ROLE_MAP[value - 1] : value}
-						</p>
-					))}
-				</div>
 			</div>
 		);
 	}

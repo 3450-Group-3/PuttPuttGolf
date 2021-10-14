@@ -7,7 +7,7 @@ import styled, {
 
 export const defaultTheme: DefaultTheme = {
 	primary: '#2a2a48',
-	secondary: '#8c8c91',
+	secondary: '#21212b',
 	accent: '#3BC0F0',
 	textColor: '#cac3c3',
 };

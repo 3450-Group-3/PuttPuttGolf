@@ -1,4 +1,4 @@
-import { ThemeProvider, createGlobalStyle } from 'styled-components';
+import styled, { ThemeProvider } from 'styled-components';
 import {
 	BrowserRouter as Router,
 	Route,
@@ -12,11 +12,14 @@ import Home from './Home';
 import Login from './Login';
 import SignUp from './SignUp';
 import Nav from './Nav';
+import { defaultTheme, GlobalStyle } from '../common/styles';
 
-const GlobalStyle = createGlobalStyle`
-body {
-	font-family: 'Arial', sans-serif
-}
+const Page = styled.div`
+	display: flex;
+	flex-grow: 1;
+	flex-direction: column;
+	overflow-y: auto;
+	overflow-x: hidden;
 `;
 
 const ProtectedRoute = (props: RouteProps) => {
@@ -27,23 +30,19 @@ const ProtectedRoute = (props: RouteProps) => {
 };
 
 export default function App() {
-	const theme = {
-		primary: '#686868',
-		secondary: '#444',
-		accent: '#3BC0F0',
-		textColor: '#ececec',
-	};
-
 	return (
-		<ThemeProvider theme={theme}>
+		<ThemeProvider theme={defaultTheme}>
 			<GlobalStyle />
 			<Router>
-				<Switch>
-					<Route path="/" exact component={Home} />
-					<Route path="/signup" exact component={SignUp} />
-					<Route path="/login" component={Login} />
-					<ProtectedRoute path="/me" component={AccountManagement} />
-				</Switch>
+				<Page>
+					<Switch>
+						<Route path="/" exact component={Home} />
+						<Route path="/signup" exact component={SignUp} />
+						<Route path="/login" component={Login} />
+						<ProtectedRoute path="/me" component={AccountManagement} />
+						<Route path="*" component={() => <p>404</p>} />
+					</Switch>
+				</Page>
 				<Nav />
 			</Router>
 		</ThemeProvider>

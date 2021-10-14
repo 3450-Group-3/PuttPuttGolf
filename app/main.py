@@ -2,6 +2,7 @@ from fastapi import FastAPI
 
 
 from .routes import api, base
+from fastapi.staticfiles import StaticFiles
 
 
 app = FastAPI(
@@ -10,5 +11,6 @@ app = FastAPI(
     redoc_url="/api/redoc",
     swagger_ui_oauth2_redirect_url="/api/docs/oauth2-redirect",
 )
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
 app.include_router(api)
 app.include_router(base)

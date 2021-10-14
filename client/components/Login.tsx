@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { usePost } from '../hooks';
 import { FormError } from '../types';
+import { Link } from "react-router-dom";
 
 type LoginSuccess = { access_token: string };
 
@@ -31,6 +32,8 @@ export default function Login() {
 
 	return (
 		<div>
+			<img src="/static/images/logo.png" alt="logo png" width="400" height="400"></img>
+			<h3>Please sign into your account</h3>
 			{loading && <div>Logging in...</div>}
 			{error && <div>Login failed :(</div>}
 			{data && <div>Login Success!</div>}
@@ -47,6 +50,7 @@ export default function Login() {
 				type="password"
 			/>
 			<br />
+			<h5>Click <Link to="/signup">here</Link> to sign up for an account</h5>
 			<button onClick={() => handleLogin()}>Login</button>
 		</div>
 	);

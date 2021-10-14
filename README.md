@@ -93,6 +93,19 @@ $ poetry exec test
 ## Development Notes
 - FastAPI implements the OpenAPI spec, and as such can provide automatic API documentation. If the server is running, the docs should be accessible at [localhost:3000/api/docs](http://localhost:3000/api/docs)
 
+### Migrations
+To create a migration, edit / create your new models.
+
+Run this command to generate the migration file
+```
+$ alembic revision -m "<message>" --autogenerate
+```
+To upgrade your DB
+```
+$ alembic upgrade head
+```
+**Note** alembic doesn't detect these changes: https://alembic.sqlalchemy.org/en/latest/autogenerate.html#what-does-autogenerate-detect-and-what-does-it-not-detect
+
 ## Version Control Procedures
 - Make a new branch
 - Implement your features

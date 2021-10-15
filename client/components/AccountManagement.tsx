@@ -21,12 +21,20 @@ export default function UserInfo() {
 		);
 	}
 
+	if (postData && data && postData.username !== data.username) {
+		localStorage.removeItem('token');
+		return <Redirect to="/login" />;
+	}
+
 	return (
 		<>
-			{postData && data && postData.username !== data.username && (
-				<Redirect to="/login" />
-			)}
 			{postData && <p>Update user successful!</p>}
+			{postError && (
+				<p>
+					{postError.response?.data.detail ||
+						'Something went wrong, please try again'}
+				</p>
+			)}
 			<AccountForm
 				onSubmit={(data) => updateUser({ url: '/users/me', data })}
 				type="updating"

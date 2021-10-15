@@ -22,6 +22,20 @@ def edit_user(
     user_data: schemas.UserInUpdate,
     db: Session = Depends(get_db),
 ):
+    collisions = (
+        db.query(models.User)
+        .where(
+            models.User.username == user_data.username, models.User.id != user_data.id
+        )
+        .all()
+    )
+
+    if collisions:
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content={"detail": "Username Taken"},
+        )
+
     stored_user: Optional[models.User] = (
         db.query(models.User).where(models.User.id == user_data.id).first()
     )

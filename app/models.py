@@ -3,7 +3,7 @@ import enum
 from typing import Union
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy import types
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, relationship
 
 from .db import Base
 
@@ -52,10 +52,8 @@ class User(Base):  # type: ignore
     """Represents their current monetary balance which
     can be used to purchase drinks or sponsor events"""
 
-    # TODO: Uncomment when adding the scores table
-    # scores = relationship("Score")
-    # The scores table will have something like this to refer back to the user:
-    # user_id = Column(types.Integer, ForeignKey("user.id"))
+    scores = relationship("Score")
+    tournaments = relationship('Tournament', secondary = 'score')
 
     def has_role(self, role: UserRole):
         return self.role == role
@@ -119,18 +117,23 @@ class Tournament(Base):  # type: ignore
     hole_count = Column(types.Integer, nullable=False)
 
     # TODO: Implement scores property, increment_score, add_user, and remove_user when Scores table is written
+    players = relationship('User', secondary = 'score')
 
     @property
     def _is_sponsored(self):
         return self.sponsored_by is not None
 
-    def add_user(self, user: Union[User, int]) -> None:
+    def add_user(self, db: Session, user: User) -> None:
         # Add user to scores / handle nonexistant id
-        pass
+        self.players.append(user)
+        db.commit()
+        db.refresh(self)
 
-    def remove_user(self, user: Union[User, int]) -> None:
+    def remove_user(self, db: Session, user: User) -> None:
         # Remove user from score / handle nonexistant id
-        pass
+        self.players.remove(user)
+        db.commit()
+        db.refresh(self)
 
     def update_balance(self, increment: float) -> None:
         self.balance += increment  # type: ignore
@@ -140,7 +143,7 @@ class Tournament(Base):  # type: ignore
 
     def increment_score(self, user: Union[User, int], increment: int) -> int:
         # Increment a user's score for this tournament
-        return -1
+        self.user.score += increment
 
     def complete_tournament(self) -> None:  # TODO
         pass
@@ -151,3 +154,10 @@ class Tournament(Base):  # type: ignore
     def _finalize_scores(self) -> None:  # TODO
         pass
 
+class Score(Base):
+    __tablename__ = 'score'
+
+    id = Column(types.Integer, primary_key=True, index=True, nullable=False)
+    tournment_id = Column(types.Integer,  ForeignKey("tournment.id"), nullable=False)
+    user_id = Column(types.Integer, ForeignKey("user.id"), nullable=False)
+    score = Column(types.Integer, index=True, nullable=False)

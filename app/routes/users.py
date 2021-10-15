@@ -87,3 +87,35 @@ def create_user(user_data: schemas.UserIn, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(user)
     return user
+
+
+@users.post("/me/change-password", response_model=schemas.User)
+def change_password(
+    pw_data: schemas.PasswordIn,
+    db: Session = Depends(get_db),
+    user_data=Depends(
+        get_current_user,
+    ),
+):
+    if not Password.verify(pw_data.curr_password, user_data.hashed_password):
+        return JSONResponse(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            content={"detail": "Incorrect password"},
+        )
+
+    user: Optional[models.User] = (
+        db.query(models.User).where(models.User.id == user_data.id).first()
+    )
+
+    if user:
+        user.hashed_password = Password.hash(pw_data.new_password)
+
+        db.commit()
+        db.refresh(user)
+        return user
+
+    else:
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content={"detail": "User not found"},
+        )

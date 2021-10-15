@@ -41,6 +41,11 @@ class UserInUpdate(InModel):
     role: UserRole
 
 
+class PasswordIn(InModel):
+    curr_password: str
+    new_password: str
+
+
 class User(OutModel):
     id: int
     username: str

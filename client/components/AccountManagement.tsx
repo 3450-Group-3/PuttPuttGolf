@@ -1,11 +1,10 @@
 import { useGet } from '../hooks';
-interface IUserInfo {
-	id: number;
-	username: string;
-}
+import { User } from '../types';
+
+const ROLE_MAP = ['PLAYER', 'DRINK_MEISTER', 'SPONSOR', 'MANAGER'];
 
 export default function UserInfo() {
-	const { data, loading, error } = useGet<IUserInfo>('/users/me');
+	const { data, loading, error } = useGet<User>('/users/me');
 
 	if (loading) {
 		return <div>Loading...</div>;
@@ -17,8 +16,12 @@ export default function UserInfo() {
 	if (data) {
 		return (
 			<div>
-				<p>ID: {data.id}</p>
-				<p>USERNAME: {data.username}</p>
+				{Object.entries(data).map(([key, value], idx) => (
+					<p key={idx}>
+						{(key as string).toUpperCase()}:{' '}
+						{key === 'role' ? ROLE_MAP[value - 1] : value}
+					</p>
+				))}
 			</div>
 		);
 	}

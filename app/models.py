@@ -52,7 +52,13 @@ class User(Base):  # type: ignore
     """Represents their current monetary balance which
     can be used to purchase drinks or sponsor events"""
 
-    tournaments = relationship("Score", back_populates="user")
+    tournaments = relationship("TournamentEnrollment", back_populates="user")
+    created_tournaments = relationship("Tournament", back_populates="created_by")
+    # sponsored_tournaments = relationship(
+    #     "Tournament",
+    #     back_populates="sponsored_by",
+    #     foreign_keys=["tournaments.sponsored_by_id"],
+    # )
 
     def has_role(self, role: UserRole):
         return self.role == role
@@ -78,15 +84,18 @@ class Tournament(Base):  # type: ignore
     __tablename__ = "tournaments"
 
     id = Column(types.Integer, primary_key=True, index=True, nullable=False)
-    created_by_id = Column(types.Integer, ForeignKey("users.id"), nullable=False)
-    sponsored_by_id = Column(types.Integer, ForeignKey("users.id"))
     date = Column(types.DateTime, index=True, nullable=False)
     completed = Column(types.Boolean, default=False)
     advertising_banner = Column(types.String)
     balance = Column(types.Float, default=0.0, nullable=False)
     hole_count = Column(types.Integer, nullable=False)
 
-    players = relationship("Score", back_populates="tournament")
+    created_by_id = Column(types.Integer, ForeignKey("users.id"), nullable=False)
+    created_by = relationship("User", back_populates="created_tournaments")
+    # sponsored_by_id = Column(types.Integer, ForeignKey("users.id"))
+    # sponsored_by = relationship("User", back_populates="sponsored_tournaments")
+
+    players = relationship("TournamentEnrollment", back_populates="tournament")
 
     @property
     def _is_sponsored(self):
@@ -124,8 +133,8 @@ class Tournament(Base):  # type: ignore
         pass
 
 
-class Score(Base):
-    __tablename__ = "scores"
+class TournamentEnrollment(Base):
+    __tablename__ = "tournament_enrollments"
 
     tournament_id: int = Column(
         ForeignKey("tournaments.id"), primary_key=True, nullable=False

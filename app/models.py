@@ -52,8 +52,7 @@ class User(Base):  # type: ignore
     """Represents their current monetary balance which
     can be used to purchase drinks or sponsor events"""
 
-    scores = relationship("Score")
-    tournaments = relationship('Tournament', secondary = 'score')
+    tournaments = relationship("Score", back_populates="user")
 
     def has_role(self, role: UserRole):
         return self.role == role
@@ -75,35 +74,6 @@ class User(Base):  # type: ignore
         return self.has_role(UserRole.PLAYER)
 
 
-
-class Drink(Base):
-    __tablename__ = "drinks"
-
-    id = Column(types.Integer, primary_key=True, nullable = False, index=True)
-    name = Column(types.String, nullable=False, index=True)
-    price = Column(types.FLOAT, nullable=False)
-    image_url = Column(types.String)
-    description = Column(types.String)
-
-    def add_drink(self, db: Session, name: str, price: float, description: str = "", image_url: str = "", ) -> "Drink":
-        drink = Drink(name, price, description, image_url)
-        db.add(drink)
-        db.commit()
-        db.refresh(drink)
-        return drink
-
-    def remove_drink(self, db: Session, id: int, name : str = "") -> None:
-        """
-        Removes a drink from the database. Pass in the db and either the drink id 
-        or pass in 0 for the id and the drink name to remove it
-        """
-        if (id > 0 ):
-            db.query(Drink).filter_by(id = id).delete()
-        else:
-            db.query(Drink).filter_by(name = name).delete()
-
-        db.commit()
-
 class Tournament(Base):  # type: ignore
     __tablename__ = "tournaments"
 
@@ -116,8 +86,7 @@ class Tournament(Base):  # type: ignore
     balance = Column(types.Float, default=0.0, nullable=False)
     hole_count = Column(types.Integer, nullable=False)
 
-    # TODO: Implement scores property, increment_score, add_user, and remove_user when Scores table is written
-    players = relationship('User', secondary = 'score')
+    players = relationship("Score", back_populates="tournament")
 
     @property
     def _is_sponsored(self):
@@ -154,10 +123,53 @@ class Tournament(Base):  # type: ignore
     def _finalize_scores(self) -> None:  # TODO
         pass
 
-class Score(Base):
-    __tablename__ = 'score'
 
-    id = Column(types.Integer, primary_key=True, index=True, nullable=False)
-    tournment_id = Column(types.Integer,  ForeignKey("tournment.id"), nullable=False)
-    user_id = Column(types.Integer, ForeignKey("user.id"), nullable=False)
+class Score(Base):
+    __tablename__ = "scores"
+
+    tournament_id: int = Column(
+        ForeignKey("tournaments.id"), primary_key=True, nullable=False
+    )
+    user_id: int = Column(ForeignKey("users.id"), primary_key=True, nullable=False)
     score = Column(types.Integer, index=True, nullable=False)
+
+    user: User = relationship(User, back_populates="tournaments")
+    tournament: Tournament = relationship(Tournament, back_populates="players")
+
+
+class Drink(Base):
+    __tablename__ = "drinks"
+
+    id = Column(types.Integer, primary_key=True, nullable=False, index=True)
+    name = Column(types.String, nullable=False, index=True)
+    price = Column(types.FLOAT, nullable=False)
+    image_url = Column(types.String)
+    description = Column(types.String)
+
+    def add_drink(
+        self,
+        db: Session,
+        name: str,
+        price: float,
+        description: str = "",
+        image_url: str = "",
+    ) -> "Drink":
+        drink = Drink(
+            name=name, price=price, description=description, image_url=image_url
+        )
+        db.add(drink)
+        db.commit()
+        db.refresh(drink)
+        return drink
+
+    def remove_drink(self, db: Session, id: int, name: str = "") -> None:
+        """
+        Removes a drink from the database. Pass in the db and either the drink id
+        or pass in 0 for the id and the drink name to remove it
+        """
+        if id > 0:
+            db.query(Drink).filter_by(id=id).delete()
+        else:
+            db.query(Drink).filter_by(name=name).delete()
+
+        db.commit()

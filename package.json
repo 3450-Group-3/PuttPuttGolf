@@ -10,11 +10,13 @@
 		"format": "prettier --write client"
 	},
 	"dependencies": {
+		"@types/react-icons": "^3.0.0",
 		"axios": "^0.21.4",
 		"axios-hooks": "^2.7.0",
 		"react": "^17.0.2",
 		"react-dom": "^17.0.2",
 		"react-hook-form": "^7.17.1",
+		"react-icons": "^4.3.1",
 		"react-router": "^5.2.1",
 		"react-router-dom": "^5.3.0",
 		"styled-components": "^5.3.1"

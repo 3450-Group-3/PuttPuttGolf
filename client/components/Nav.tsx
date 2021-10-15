@@ -49,6 +49,7 @@ const NavAction = styled.div`
 
 const NavText = styled.p`
 	font-size: 0.8rem;
+	letter-spacing: 1px;
 	margin: 0;
 `;
 

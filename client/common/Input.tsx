@@ -40,6 +40,7 @@ const TextInput = styled.input`
 
 const Title = styled.h3`
 	margin: 3px 0px;
+	letter-spacing: 2px;
 `;
 
 const Icon = styled.div`

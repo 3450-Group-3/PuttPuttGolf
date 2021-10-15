@@ -2,8 +2,9 @@ import { Redirect } from 'react-router';
 import { useGet, usePut } from '../hooks';
 import { DetailFormError, User } from '../types';
 import AccountForm from './AccountForm';
+import PasswordForm from './PasswordForm';
 
-export default function UserInfo() {
+export default function AccountManagement() {
 	const { data, loading, error } = useGet<User, DetailFormError>('/users/me');
 
 	const [
@@ -12,6 +13,7 @@ export default function UserInfo() {
 	] = usePut<User, DetailFormError>();
 
 	if (loading) return <p>Loading...</p>;
+
 	if (error) {
 		return (
 			<p>
@@ -26,20 +28,24 @@ export default function UserInfo() {
 		return <Redirect to="/login" />;
 	}
 
-	return (
-		<>
-			{postData && <p>Update user successful!</p>}
-			{postError && (
-				<p>
-					{postError.response?.data.detail ||
-						'Something went wrong, please try again'}
-				</p>
-			)}
-			<AccountForm
-				onSubmit={(data) => updateUser({ url: '/users/me', data })}
-				type="updating"
-				defaultValues={data}
-			/>
-		</>
-	);
+	if (data)
+		return (
+			<>
+				{postData && <p>Update user successful!</p>}
+				{postError && (
+					<p>
+						{postError.response?.data.detail ||
+							'Something went wrong, please try again'}
+					</p>
+				)}
+				<AccountForm
+					onSubmit={(data) => updateUser({ url: '/users/me', data })}
+					type="updating"
+					defaultValues={data}
+				/>
+				<PasswordForm user={data} />
+			</>
+		);
+
+	return <div></div>;
 }

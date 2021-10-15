@@ -30,6 +30,7 @@ export default function Login() {
 		});
 	};
 
+	//todo: use styled components from common
 	return (
 		<div>
 			<img src="/static/images/logo.png" alt="logo png" width="400" height="400"></img>

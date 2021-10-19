@@ -23,6 +23,24 @@ def user(db: Session):
         db.commit()
 
 
+@pytest.fixture
+def tournament(user: models.User, db: Session):
+    tournament = models.Tournament(
+        date=datetime.now(),
+        hole_count=10,
+        created_by=user,
+    )
+
+    db.add(tournament)
+    db.commit()
+    db.refresh(tournament)
+    try:
+        yield tournament
+    finally:
+        db.delete(tournament)
+        db.commit()
+
+
 class TestUserModel:
     def test_creation(self, user: models.User):
         assert user.id == 1
@@ -41,3 +59,26 @@ class TestUserModel:
 
         with pytest.raises(AssertionError):
             user.update_balance("string", db)  # type: ignore
+
+
+class TestTournamentModel:
+    def test_enrollments(
+        self, user: models.User, tournament: models.Tournament, db: Session
+    ):
+        tournament.add_user(db, user)
+        assert len(user.enrollments) == 1
+        assert len(tournament.enrollments) == 1
+        tournament.remove_user(db, user)
+        assert len(user.enrollments) == 0
+        assert len(tournament.enrollments) == 0
+
+    def test_increment_score(
+        self, user: models.User, tournament: models.Tournament, db: Session
+    ):
+        tournament.add_user(db, user)
+        tournament.increment_score(db, user, 5)
+        assert user.enrollments[0].score == 5
+
+        tournament.remove_user(db, user)
+        with pytest.raises(ValueError):
+            tournament.increment_score(db, user, 5)

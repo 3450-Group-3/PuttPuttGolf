@@ -1,6 +1,6 @@
 import enum
 
-from typing import Union
+from typing import Optional, Union
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy import types
 from sqlalchemy.orm import Session, relationship
@@ -52,13 +52,22 @@ class User(Base):  # type: ignore
     """Represents their current monetary balance which
     can be used to purchase drinks or sponsor events"""
 
-    tournaments = relationship("TournamentEnrollment", back_populates="user")
-    created_tournaments = relationship("Tournament", back_populates="created_by")
+    enrollments: list["TournamentEnrollment"] = relationship(
+        "TournamentEnrollment", back_populates="user"
+    )
+    created_tournaments: "Tournament" = relationship(
+        "Tournament", back_populates="created_by", cascade="all, delete, delete-orphan"
+    )
     # sponsored_tournaments = relationship(
     #     "Tournament",
     #     back_populates="sponsored_by",
     #     foreign_keys=["tournaments.sponsored_by_id"],
     # )
+
+    @property
+    def tournaments(self):
+        for enrollment in self.enrollments:
+            yield enrollment.tournament
 
     def has_role(self, role: UserRole):
         return self.role == role
@@ -136,23 +145,37 @@ class Tournament(Base):  # type: ignore
     # sponsored_by_id = Column(types.Integer, ForeignKey("users.id"))
     # sponsored_by = relationship("User", back_populates="sponsored_tournaments")
 
-    players = relationship("TournamentEnrollment", back_populates="tournament")
+    enrollments = relationship(
+        "TournamentEnrollment",
+        back_populates="tournament",
+        cascade="all, delete, delete-orphan",
+    )
 
     @property
     def _is_sponsored(self):
         return self.sponsored_by is not None
 
-    def add_user(self, db: Session, user: User) -> None:
+    @property
+    def players(self):
+        for enrollment in self.enrollments:
+            yield enrollment.user
+
+    def add_user(self, db: Session, user: User) -> "TournamentEnrollment":
         # Add user to scores / handle nonexistant id
-        self.players.append(user)
+        enrollment = TournamentEnrollment(tournament=self, user=user, score=0)
+        db.add(enrollment)
         db.commit()
-        db.refresh(self)
+        db.refresh(enrollment)
+        return enrollment
 
     def remove_user(self, db: Session, user: User) -> None:
         # Remove user from score / handle nonexistant id
-        self.players.remove(user)
+        db.delete(
+            db.query(TournamentEnrollment).filter_by(user=user, tournament=self).first()
+        )
         db.commit()
         db.refresh(self)
+        db.refresh(user)
 
     def update_balance(self, increment: float) -> None:
         self.balance += increment  # type: ignore
@@ -160,9 +183,18 @@ class Tournament(Base):  # type: ignore
     def formatted_date(self) -> str:
         return self.date.strftime("%m/%d/%Y, %-I:%M/ %p")
 
-    def increment_score(self, user: Union[User, int], increment: int) -> int:
+    def increment_score(self, db: Session, user: User, increment: int) -> int:
         # Increment a user's score for this tournament
-        self.user.score += increment
+        assert not self.completed
+        enrollment: Optional[TournamentEnrollment] = (
+            db.query(TournamentEnrollment).filter_by(user=user, tournament=self).first()
+        )
+        if enrollment:
+            enrollment.score += increment
+            db.commit()
+            return enrollment.score
+        else:
+            raise ValueError(f"User {user.id} is not enrolled in tournament {self.id}")
 
     def complete_tournament(self) -> None:  # TODO
         pass
@@ -183,43 +215,5 @@ class TournamentEnrollment(Base):
     user_id: int = Column(ForeignKey("users.id"), primary_key=True, nullable=False)
     score = Column(types.Integer, index=True, nullable=False)
 
-    user: User = relationship(User, back_populates="tournaments")
-    tournament: Tournament = relationship(Tournament, back_populates="players")
-
-
-class Drink(Base):
-    __tablename__ = "drinks"
-
-    id = Column(types.Integer, primary_key=True, nullable=False, index=True)
-    name = Column(types.String, nullable=False, index=True)
-    price = Column(types.FLOAT, nullable=False)
-    image_url = Column(types.String)
-    description = Column(types.String)
-
-    def add_drink(
-        self,
-        db: Session,
-        name: str,
-        price: float,
-        description: str = "",
-        image_url: str = "",
-    ) -> "Drink":
-        drink = Drink(
-            name=name, price=price, description=description, image_url=image_url
-        )
-        db.add(drink)
-        db.commit()
-        db.refresh(drink)
-        return drink
-
-    def remove_drink(self, db: Session, id: int, name: str = "") -> None:
-        """
-        Removes a drink from the database. Pass in the db and either the drink id
-        or pass in 0 for the id and the drink name to remove it
-        """
-        if id > 0:
-            db.query(Drink).filter_by(id=id).delete()
-        else:
-            db.query(Drink).filter_by(name=name).delete()
-
-        db.commit()
+    user: User = relationship(User, back_populates="enrollments")
+    tournament: Tournament = relationship(Tournament, back_populates="enrollments")

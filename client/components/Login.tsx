@@ -11,12 +11,9 @@ type LoginSuccess = { access_token: string };
 
 const Div = styled.div`
 	text-align: center;
-	input {
-		color: red;
-	};
 	a {
 		color: ${defaultTheme.accent};
-	};
+	}
 `;
 
 export default function Login() {

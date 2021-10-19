@@ -1,18 +1,22 @@
 import { useState } from 'react';
-import { usePost, useGet } from '../hooks';
-import { FormError, User } from '../types';
 import { Link, Redirect } from 'react-router-dom';
-import Input from '../common/Input';
 import styled from 'styled-components';
+import Input from '../common/Input';
 import { Button, defaultTheme } from '../common/styles';
-
+import { usePost } from '../hooks';
+import { FormError } from '../types';
+import { IoPersonCircleOutline } from 'react-icons/io5';
+import { RiLockPasswordLine } from 'react-icons/ri';
 type LoginSuccess = { access_token: string };
 
 const Div = styled.div`
 	text-align: center;
+	input {
+		color: red;
+	};
 	a {
 		color: ${defaultTheme.accent};
-	}
+	};
 `;
 
 export default function Login() {
@@ -71,12 +75,14 @@ export default function Login() {
 				// title="Username"
 				placeholder="Username"
 				onChange={(e) => setState({ username: e.target.value, password })}
+				icon={<IoPersonCircleOutline size={40} />}
 			/>
 			<Input
 				// title="Password"
 				placeholder="Password"
 				type="password"
 				onChange={(e) => setState({ password: e.target.value, username })}
+				icon={<RiLockPasswordLine size={40} />}
 			/>
 			<h5>Click <Link to="/signup">here</Link> to sign up for an account</h5>
 			<Button onClick={() => handleLogin()}>Login</Button>

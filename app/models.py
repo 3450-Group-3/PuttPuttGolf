@@ -76,6 +76,11 @@ class User(Base):  # type: ignore
     def is_player(self):
         return self.has_role(UserRole.PLAYER)
 
+    def update_balance(self, value: float, db: Session):
+        assert isinstance(value, (float, int))
+        self.balance = value
+        db.add(self)
+
 
 class Drink(Base):
     __tablename__ = "drinks"

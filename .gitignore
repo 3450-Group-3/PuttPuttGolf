@@ -8,5 +8,5 @@ node_modules
 dist
 app/static/js/*
 !app/static/js/.keep
-app.db
+*.db
 yarn-error.log

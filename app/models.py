@@ -79,6 +79,47 @@ class User(Base):  # type: ignore
     def is_player(self):
         return self.has_role(UserRole.PLAYER)
 
+    def update_balance(self, value: float, db: Session):
+        assert isinstance(value, (float, int))
+        self.balance = value
+        db.add(self)
+
+
+class Drink(Base):
+    __tablename__ = "drinks"
+
+    id = Column(types.Integer, primary_key=True, nullable=False, index=True)
+    name = Column(types.String, nullable=False, index=True)
+    price = Column(types.FLOAT, nullable=False)
+    image_url = Column(types.String)
+    description = Column(types.String)
+
+    def add_drink(
+        self,
+        db: Session,
+        name: str,
+        price: float,
+        description: str = "",
+        image_url: str = "",
+    ) -> "Drink":
+        drink = Drink(name, price, description, image_url)
+        db.add(drink)
+        db.commit()
+        db.refresh(drink)
+        return drink
+
+    def remove_drink(self, db: Session, id: int, name: str = "") -> None:
+        """
+        Removes a drink from the database. Pass in the db and either the drink id
+        or pass in 0 for the id and the drink name to remove it
+        """
+        if id > 0:
+            db.query(Drink).filter_by(id=id).delete()
+        else:
+            db.query(Drink).filter_by(name=name).delete()
+
+        db.commit()
+
 
 class Tournament(Base):  # type: ignore
     __tablename__ = "tournaments"

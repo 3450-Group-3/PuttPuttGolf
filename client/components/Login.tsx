@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import { usePost } from '../hooks';
-import { FormError } from '../types';
-import { Link } from 'react-router-dom';
+import { usePost, useGet } from '../hooks';
+import { FormError, User } from '../types';
+import { Link, Redirect } from 'react-router-dom';
 import Input from '../common/Input';
 import styled from 'styled-components';
 import { Button, defaultTheme } from '../common/styles';
-import { sleep } from '../common/utils';
 
 type LoginSuccess = { access_token: string };
 
@@ -17,22 +16,34 @@ const Div = styled.div`
 `;
 
 export default function Login() {
+	var alreadyLoggedIn = false;
+	if (localStorage.getItem('token')) {
+		alreadyLoggedIn = true;
+	} 
+
 	const [state, setState] = useState({
 		username: '',
 		password: '',
 	});
 	const { username, password } = state;
 
+	const [redirectState, setRedirectState] = useState({
+		redirect: false,
+	});
+	const {redirect} = redirectState;
+
 	const [{ data, loading, error }, login] = usePost<
 		LoginSuccess,
 		FormError<keyof typeof state>
 	>('/auth/token');
 
-	
 	if (data){
-		sleep(3000);
-		window.location.href = "/play";
+		setTimeout(() => {
+			setRedirectState({redirect: true})
+		},
+		1000)
 	}
+
 
 	const handleLogin = () => {
 		const form = new FormData();
@@ -54,6 +65,8 @@ export default function Login() {
 			{loading && <div>Logging in...</div>}
 			{error && <div>Login failed :(</div>}
 			{data && <div>Login Success!</div>}
+			{data && redirect && <Redirect to="/play"></Redirect>}
+			{alreadyLoggedIn && <Redirect to="/play"></Redirect>}
 			<Input
 				// title="Username"
 				placeholder="Username"

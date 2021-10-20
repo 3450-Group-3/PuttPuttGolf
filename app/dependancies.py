@@ -3,6 +3,8 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError
 
+from app import models
+
 from .security import AccessToken, get_user
 from .db import SessionLocal
 
@@ -20,7 +22,7 @@ def get_db():
 
 async def get_current_user(
     token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
-):
+) -> models.User:
     """Dependancy to obtain the currently authenticated user.
     If no authetication is present, a 401 will be returned
     """
@@ -42,3 +44,40 @@ async def get_current_user(
     if user is None:
         raise credentials_exception
     return user
+
+async def current_user_is_manager() -> bool:
+    permission_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="User does not have sufficient permissions",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    user : models.User = get_current_user()
+    if (user.is_manager):
+        return True
+    else:
+        raise permission_exception
+    
+async def current_user_is_sponsor() -> bool:
+    permission_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="User does not have sufficient permissions",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    user : models.User = get_current_user()
+    if (user.is_sponsor):
+        return True
+    else:
+        raise permission_exception
+    
+async def current_user_is_drinkmeister() -> bool:
+    permission_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="User does not have sufficient permissions",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    user : models.User = get_current_user()
+    if (user.is_drink_meister):
+        return True
+    else:
+        raise permission_exception
+    

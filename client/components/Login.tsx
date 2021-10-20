@@ -66,7 +66,7 @@ export default function Login() {
 				alt="logo png"
 				width="400em"
 				height="300em"
-			></img>
+			/>
 			<h3>Please sign into your account</h3>
 			{loading && <div>Logging in...</div>}
 			{error && <div>Login failed :(</div>}

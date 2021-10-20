@@ -29,10 +29,10 @@ body {
 
 a {
 	text-decoration: none;
-	color: ${({ theme }) => theme.textColor};
+	color: ${({ theme }) => theme.accent};
 
 	&:visited {
-		color: ${({ theme }) => theme.textColor};
+		color: ${({ theme }) => theme.accent};
 	}
 }
 

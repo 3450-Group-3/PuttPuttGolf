@@ -72,7 +72,8 @@ $ yarn dev
 
 The API server can be started with
 
-**NOTE**: the `exec` command is provided by a `poetry` plugin, which are only available when you are in a subshell. Before executing any `exec` commands you need to make sure that you're in a subshell with `poetry shell`
+**NOTE**: the `exec` command is provided by a `poetry` plugin, which are only available when you are in a subshell. Before executing any `exec` commands you need to make sure that you're in a subshell with `poetry shell`  
+**NOTE**: the `exec` command provided by the plugin only works in unix shells, if you are on windows, make sure you run `poetry shell` then proceed to run `uvicorn app.main:app --reload --port 3000`. You can also just run the single command `poetry run uvicorn app.main:app --reload --port 3000`. A third option is to make sure you are in the root folder of the project and then using command prompt, then run the batch script `startserver.bat` within the command prompt.
 ```
 $ poetry exec start
 ```

@@ -5,14 +5,11 @@ Anything else should be registered to the `base` router.
 from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from fastapi.staticfiles import StaticFiles
 
 from ..config import config
 
 base = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
-
-base.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 
 @base.get("/{path:path}", response_class=HTMLResponse)

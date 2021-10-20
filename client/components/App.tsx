@@ -1,4 +1,4 @@
-import styled, { ThemeProvider } from 'styled-components';
+import { ThemeProvider } from 'styled-components';
 import {
 	BrowserRouter as Router,
 	Route,
@@ -11,18 +11,9 @@ import AccountManagement from './AccountManagement';
 import Home from './Home';
 import Login from './Login';
 import SignUp from './SignUp';
-import Nav from './Nav';
 import { defaultTheme, GlobalStyle } from '../common/styles';
 import NotFound from './NotFound';
-
-const Page = styled.div`
-	display: flex;
-	flex-grow: 1;
-	flex-direction: column;
-	overflow-y: auto;
-	overflow-x: hidden;
-	padding-bottom: 10px;
-`;
+import LayoutManager from './LayoutManager';
 
 const ProtectedRoute = (props: RouteProps) => {
 	if (localStorage.getItem('token')) {
@@ -36,7 +27,7 @@ export default function App() {
 		<ThemeProvider theme={defaultTheme}>
 			<GlobalStyle />
 			<Router>
-				<Page>
+				<LayoutManager>
 					<Switch>
 						<Route path="/" exact component={Home} />
 						<Route path="/signup" exact component={SignUp} />
@@ -44,8 +35,7 @@ export default function App() {
 						<ProtectedRoute path="/me" component={AccountManagement} />
 						<Route path="*" component={NotFound} />
 					</Switch>
-				</Page>
-				<Nav />
+				</LayoutManager>
 			</Router>
 		</ThemeProvider>
 	);

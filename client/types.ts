@@ -19,3 +19,5 @@ export interface User {
 	birthdate: Date;
 	role: UserRole;
 }
+
+export type Layout = 'mobile' | 'desktop';

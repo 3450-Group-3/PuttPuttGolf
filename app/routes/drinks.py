@@ -4,11 +4,11 @@ from app.dependancies import get_current_user, get_db, current_user_is_manager
 from app import schemas, models
 
 
-drinks = APIRouter(prefix="drinks")
+drinks = APIRouter(prefix="/drinks")
 
-@drinks.get("", response_model=list[schemas.Drink], dependencies=[Depends(get_current_user)]) #todo: get a list of all drinks
+@drinks.get("", dependencies=[Depends(get_current_user)]) #todo: get a list of all drinks
 def list_drinks():
-    pass
+    return {"ASDh" : "byae"}
 
 @drinks.post("", response_model=schemas.Drink, dependencies=[Depends(current_user_is_manager)]) #todo: create a drink and add it to the db
 def create_drink():

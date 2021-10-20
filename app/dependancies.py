@@ -45,39 +45,44 @@ async def get_current_user(
         raise credentials_exception
     return user
 
-async def current_user_is_manager() -> bool:
+async def current_user_is_manager(
+    token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
+) -> bool:
     permission_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="User does not have sufficient permissions",
         headers={"WWW-Authenticate": "Bearer"},
     )
-    user : models.User = get_current_user()
+    user = await get_current_user(token, db)
     if (user.is_manager):
         return True
     else:
         raise permission_exception
     
-async def current_user_is_sponsor() -> bool:
+async def current_user_is_sponsor(
+    token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
+) -> bool:
     permission_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="User does not have sufficient permissions",
         headers={"WWW-Authenticate": "Bearer"},
     )
-    user : models.User = get_current_user()
+    user = await get_current_user(token, db)
     if (user.is_sponsor):
         return True
     else:
         raise permission_exception
-    
-async def current_user_is_drinkmeister() -> bool:
+
+async def current_user_is_drinkmeister(
+    token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
+) -> bool:
     permission_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="User does not have sufficient permissions",
         headers={"WWW-Authenticate": "Bearer"},
     )
-    user : models.User = get_current_user()
+    user = await get_current_user(token, db)
     if (user.is_drink_meister):
         return True
     else:
         raise permission_exception
-    

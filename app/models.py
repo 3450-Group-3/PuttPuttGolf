@@ -69,7 +69,7 @@ class User(Base):  # type: ignore
         for enrollment in self.enrollments:
             yield enrollment.tournament
 
-    def has_role(self, role: UserRole):
+    def has_role(self, role: UserRole) -> bool:
         return self.role == role
 
     @property
@@ -78,15 +78,15 @@ class User(Base):  # type: ignore
 
     @property
     def is_drink_meister(self):
-        return self.has_role(UserRole.DRINK_MEISTER)
+        return self.has_role(UserRole.DRINK_MEISTER) or self.has_role(UserRole.MANAGER)
 
     @property
     def is_sponsor(self):
-        return self.has_role(UserRole.SPONSOR)
+        return self.has_role(UserRole.SPONSOR) or self.has_role(UserRole.MANAGER)
 
     @property
     def is_player(self):
-        return self.has_role(UserRole.PLAYER)
+        return self.has_role(UserRole.PLAYER) 
 
     def update_balance(self, value: float, db: Session):
         assert isinstance(value, (float, int))

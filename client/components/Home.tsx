@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom';
 
 export default function Home() {
 	const token = localStorage.getItem('token');
-	console.log(token);
 
 	return (
 		<div>

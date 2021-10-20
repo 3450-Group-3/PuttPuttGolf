@@ -5,6 +5,7 @@ export default function Home() {
 
 	return (
 		<div>
+			<img src="app/static/images/logo.png" alt="logo"/>
 			<Link to="/me">Account Info</Link>
 			<br />
 

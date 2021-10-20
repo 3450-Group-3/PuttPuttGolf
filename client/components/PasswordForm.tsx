@@ -13,12 +13,7 @@ interface Inputs {
 	newPassword: string;
 }
 
-interface Props {
-	// onSubmit: SubmitHandler<Inputs>;
-	user: User;
-}
-
-export default function PasswordForm({ user }: Props) {
+export default function PasswordForm() {
 	const {
 		register,
 		handleSubmit,

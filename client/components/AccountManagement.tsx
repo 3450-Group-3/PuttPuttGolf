@@ -43,7 +43,7 @@ export default function AccountManagement() {
 					type="updating"
 					defaultValues={data}
 				/>
-				<PasswordForm user={data} />
+				<PasswordForm />
 			</>
 		);
 

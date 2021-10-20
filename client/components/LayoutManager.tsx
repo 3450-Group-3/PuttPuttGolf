@@ -13,12 +13,9 @@ const LayoutWrapper = styled.div`
 `;
 
 const Page = styled.div`
-	display: flex;
 	flex-grow: 1;
 	overflow-y: auto;
 	overflow-x: hidden;
-	padding-bottom: 10px;
-	width: 100%;
 `;
 
 interface Props {

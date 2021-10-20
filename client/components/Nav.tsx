@@ -7,7 +7,6 @@ import { GiGolfTee } from 'react-icons/gi';
 import { MdLocalDrink, MdMoreHoriz } from 'react-icons/md';
 import { Layout } from '../types';
 import { layoutSwitch } from '../utils';
-import { RiLoginCircleLine } from 'react-icons/ri';
 
 const NavContainer = styled.div`
 	overflow: hidden;

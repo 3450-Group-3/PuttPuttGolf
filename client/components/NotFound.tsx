@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Button, ButtonLink } from '../common/styles';
+import { ButtonLink } from '../common/styles';
 
 const Content = styled.div`
 	display: flex;
@@ -7,6 +7,7 @@ const Content = styled.div`
 	justify-content: space-evenly;
 	flex-direction: column;
 	flex: 1;
+	height: 100%;
 `;
 
 const Header = styled.h1`

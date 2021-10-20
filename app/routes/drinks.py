@@ -6,9 +6,9 @@ from app import schemas, models
 
 drinks = APIRouter(prefix="/drinks")
 
-@drinks.get("", dependencies=[Depends(get_current_user)]) #todo: get a list of all drinks
-def list_drinks():
-    return {"ASDh" : "byae"}
+@drinks.get("", response_model=list[schemas.Drink], dependencies=[Depends(get_current_user)])
+def list_drinks(db: Session = Depends(get_db)):
+    return db.query(models.Drink).all()
 
 @drinks.post("", response_model=schemas.Drink, dependencies=[Depends(current_user_is_manager)]) #todo: create a drink and add it to the db
 def create_drink():

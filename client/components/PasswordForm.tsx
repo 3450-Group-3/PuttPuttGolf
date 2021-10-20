@@ -36,6 +36,11 @@ export default function PasswordForm() {
 		changePassword({ data });
 	};
 
+	if (data) {
+		localStorage.removeItem('token');
+		return <Redirect to="/login" />;
+	}
+
 	return (
 		<Form onSubmit={handleSubmit(onSubmit)}>
 			{loading && <Message>Changing password...</Message>}
@@ -45,8 +50,6 @@ export default function PasswordForm() {
 						'Something went wrong, please try again'}
 				</Message>
 			)}
-
-			{data && <Redirect to="/login"></Redirect>}
 
 			<Input
 				title="Current Password"

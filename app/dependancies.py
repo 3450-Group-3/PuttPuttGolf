@@ -55,7 +55,7 @@ async def current_user_is_manager(
     )
     user = await get_current_user(token, db)
     if (user.is_manager):
-        return True
+        return user
     else:
         raise permission_exception
     
@@ -69,7 +69,7 @@ async def current_user_is_sponsor(
     )
     user = await get_current_user(token, db)
     if (user.is_sponsor):
-        return True
+        return user
     else:
         raise permission_exception
 
@@ -83,6 +83,6 @@ async def current_user_is_drinkmeister(
     )
     user = await get_current_user(token, db)
     if (user.is_drink_meister):
-        return True
+        return user
     else:
         raise permission_exception

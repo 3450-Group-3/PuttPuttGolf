@@ -5,7 +5,8 @@ import { usePost } from '../hooks';
 import { DetailFormError, User } from '../types';
 
 import Input from '../common/Input';
-import { Button } from '../common/styles';
+import { Button, Message } from '../common/styles';
+import { Redirect } from 'react-router';
 
 const Form = styled.form`
 	display: flex;
@@ -37,32 +38,33 @@ export default function PasswordForm() {
 
 	return (
 		<Form onSubmit={handleSubmit(onSubmit)}>
+			{loading && <Message>Changing password...</Message>}
 			{error && (
-				<p>
-					{error.response?.data.detail ||
+				<Message error>
+					{error?.response?.data.detail ||
 						'Something went wrong, please try again'}
-				</p>
+				</Message>
 			)}
 
-			{data && <p>Password change successful</p>}
+			{data && <Redirect to="/login"></Redirect>}
 
 			<Input
 				title="Current Password"
 				placeholder="8 - 20 Characters"
 				type="password"
 				icon={<RiLockPasswordLine size={40} />}
+				error={errors.currPassword?.message}
 				{...register('currPassword', { required: 'Current Password Required' })}
 			/>
-			{errors.currPassword && <p>{errors.currPassword.message}</p>}
 
 			<Input
 				title="New Password"
 				placeholder="8 - 20 Characters"
 				type="password"
 				icon={<RiLockPasswordLine size={40} />}
+				error={errors.newPassword?.message}
 				{...register('newPassword', { required: 'New Password Required' })}
 			/>
-			{errors.currPassword && <p>{errors.currPassword.message}</p>}
 
 			<Button type="submit">Change Password</Button>
 		</Form>

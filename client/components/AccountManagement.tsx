@@ -1,8 +1,10 @@
 import { Redirect } from 'react-router';
+import styled from 'styled-components';
 import { useGet, usePut } from '../hooks';
 import { DetailFormError, User } from '../types';
 import AccountForm from './AccountForm';
 import PasswordForm from './PasswordForm';
+import { Content, Message } from '../common/styles';
 
 export default function AccountManagement() {
 	const { data, loading, error } = useGet<User, DetailFormError>('/users/me');
@@ -30,7 +32,7 @@ export default function AccountManagement() {
 
 	if (data)
 		return (
-			<>
+			<Content>
 				{postData && <p>Update user successful!</p>}
 				{postError && (
 					<p>
@@ -44,7 +46,7 @@ export default function AccountManagement() {
 					defaultValues={data}
 				/>
 				<PasswordForm />
-			</>
+			</Content>
 		);
 
 	return <div></div>;

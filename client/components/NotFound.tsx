@@ -1,13 +1,5 @@
 import styled from 'styled-components';
-import { Button, ButtonLink } from '../common/styles';
-
-const Content = styled.div`
-	display: flex;
-	align-items: center;
-	justify-content: space-evenly;
-	flex-direction: column;
-	flex: 1;
-`;
+import { Button, ButtonLink, Content } from '../common/styles';
 
 const Header = styled.h1`
 	font-size: 8rem;

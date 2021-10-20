@@ -86,3 +86,9 @@ class Tournament:
 
     class Config:
         orm_mode = True
+
+
+class Score:
+    score: int
+    user: User
+    tournament: Tournament

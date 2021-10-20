@@ -1,7 +1,22 @@
 import AccountForm from './AccountForm';
 import { usePost } from '../hooks';
+
 import { DetailFormError, User } from '../types';
 import { Redirect } from 'react-router-dom';
+import styled from 'styled-components';
+
+const Content = styled.div`
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	flex: 1;
+`;
+
+const Message = styled.h2<{ error?: boolean }>`
+	color: ${({ error }) => (error ? 'red' : 'inherit')};
+	text-align: center;
+`;
 
 export default function SignUp() {
 	const [{ data, loading, error }, signUp] = usePost<User, DetailFormError>(
@@ -9,16 +24,16 @@ export default function SignUp() {
 	);
 
 	return (
-		<div>
-			{loading && <p>Creating Account...</p>}
+		<Content>
+			{loading && <Message>Creating Account...</Message>}
 			{error && (
-				<p>
-					{error.response?.data.detail ||
+				<Message error>
+					{error?.response?.data.detail ||
 						'Something went wrong, please try again'}
-				</p>
+				</Message>
 			)}
 			{data && <Redirect to="/login" />}
 			<AccountForm onSubmit={(data) => signUp({ data })} type="creating" />
-		</div>
+		</Content>
 	);
 }

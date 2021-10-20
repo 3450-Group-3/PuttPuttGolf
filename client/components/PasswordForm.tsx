@@ -1,11 +1,17 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { RiLockPasswordLine } from 'react-icons/ri';
 import styled from 'styled-components';
 import { usePost } from '../hooks';
 import { DetailFormError, User } from '../types';
 
-const TextInput = styled.input`
-	display: block;
-	margin-bottom: 10px;
+import Input from '../common/Input';
+import { Button } from '../common/styles';
+
+const Form = styled.form`
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	margin-top: 3em;
 `;
 
 interface Inputs {
@@ -30,7 +36,7 @@ export default function PasswordForm() {
 	};
 
 	return (
-		<form onSubmit={handleSubmit(onSubmit)}>
+		<Form onSubmit={handleSubmit(onSubmit)}>
 			{error && (
 				<p>
 					{error.response?.data.detail ||
@@ -40,21 +46,25 @@ export default function PasswordForm() {
 
 			{data && <p>Password change successful</p>}
 
-			<TextInput
-				placeholder="current password"
+			<Input
+				title="Current Password"
+				placeholder="8 - 20 Characters"
 				type="password"
+				icon={<RiLockPasswordLine size={40} />}
 				{...register('currPassword', { required: 'Current Password Required' })}
 			/>
 			{errors.currPassword && <p>{errors.currPassword.message}</p>}
 
-			<TextInput
-				placeholder="new password"
+			<Input
+				title="New Password"
+				placeholder="8 - 20 Characters"
 				type="password"
+				icon={<RiLockPasswordLine size={40} />}
 				{...register('newPassword', { required: 'New Password Required' })}
 			/>
 			{errors.currPassword && <p>{errors.currPassword.message}</p>}
 
-			<input type="submit" value="Change Password" />
-		</form>
+			<Button type="submit">Change Password</Button>
+		</Form>
 	);
 }

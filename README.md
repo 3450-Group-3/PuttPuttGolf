@@ -72,12 +72,18 @@ $ yarn dev
 **Note** that this server is just used for compiling and serving JS assets, and shouldn't be accessed directly!
 
 The API server can be started with
-
-**NOTE**: the `exec` command is provided by a `poetry` plugin, which are only available when you are in a subshell. Before executing any `exec` commands you need to make sure that you're in a subshell with `poetry shell`  
-**NOTE**: the `exec` command provided by the plugin only works in unix shells, if you are on windows, make sure you run `poetry shell` then proceed to run `uvicorn app.main:app --reload --port 3000`. You can also just run the single command `poetry run uvicorn app.main:app --reload --port 3000`. A third option is to make sure you are in the root folder of the project and then using command prompt, then run the batch script `startserver.bat` within the command prompt.
 ```
 $ poetry exec start
 ```
+ **NOTE**:  
+ > the `exec` command is provided by a `poetry` plugin, which are only available when you are in a subshell. Before executing any `exec` commands you need to make sure that you're in a subshell with `poetry shell`  
+ 
+ **NOTE**:  
+ > the `exec` command provided by the plugin only works in unix shells, if you are on windows, make sure you run `poetry shell` then proceed to run `uvicorn app.main:app --reload --port 3000`. You can also just run the single command `poetry run uvicorn app.main:app --reload --port 3000`. A third option is to make sure you are in the root folder of the project and then using command prompt, then run the batch script `startserver.bat` within the command prompt.  
+
+  
+    
+    
 Now you should be able to go to [localhost:3000](http://localhost:3000) in your browser and see the application running.
 
 ## Building the Project

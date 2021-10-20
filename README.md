@@ -35,6 +35,7 @@ This project follows the style guides of the technologies being used and enforce
 
 ## Development
 This project uses [yarn](https://yarnpkg.com/) and [poetry](https://python-poetry.org/) for dependancy management. You'll need to install them to continue.
+Please make sure you have [nodeJS](https://nodejs.org/en/) installed and then use `npm install -g yarn` to install yarn. To install poetry use the python package manager pip and run `pip install --user poetry`.
 
 Pull down this repository.
 

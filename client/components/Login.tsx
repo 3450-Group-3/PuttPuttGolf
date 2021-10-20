@@ -11,9 +11,10 @@ type LoginSuccess = { access_token: string };
 
 const Div = styled.div`
 	text-align: center;
-	a {
-		color: ${defaultTheme.accent};
-	}
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
 `;
 
 export default function Login() {

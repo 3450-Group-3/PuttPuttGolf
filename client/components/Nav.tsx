@@ -5,6 +5,7 @@ import Drawer from './Drawer';
 import { IoPersonCircleOutline } from 'react-icons/io5';
 import { GiGolfTee } from 'react-icons/gi';
 import { MdLocalDrink, MdMoreHoriz } from 'react-icons/md';
+import { defaultTheme } from '../common/styles';
 
 const NavContainer = styled.div`
 	overflow: hidden;
@@ -37,6 +38,7 @@ const NavItem = css`
 		cursor: pointer;
 		color: white;
 	}
+	color: ${defaultTheme.textColor} !important;
 `;
 
 const NavButton = styled(NavLink)`

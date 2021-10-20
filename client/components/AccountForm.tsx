@@ -1,20 +1,17 @@
 import styled from 'styled-components';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
+import Select from 'react-select';
+import { IoPersonCircleOutline } from 'react-icons/io5';
+import { RiLockPasswordLine } from 'react-icons/ri';
+
 import { User } from '../types';
 import { Button } from '../common/styles';
 import Input from '../common/Input';
-import { IoPersonCircleOutline } from 'react-icons/io5';
-import { RiLockPasswordLine } from 'react-icons/ri';
 
 const Form = styled.form`
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
-`;
-
-const OptionInput = styled.select`
-	display: block;
-	margin-bottom: 10px;
 `;
 
 interface Inputs extends Omit<User, 'id'> {
@@ -31,8 +28,15 @@ export default function AccountForm({ onSubmit, type, defaultValues }: Props) {
 	const {
 		register,
 		handleSubmit,
+		control,
 		formState: { errors },
 	} = useForm<Inputs>({ defaultValues: defaultValues });
+
+	const userOptions = [
+		{ value: 1, label: 'User' },
+		{ value: 2, label: 'Drink Meister' },
+		{ value: 3, label: 'Sponsor' },
+	];
 
 	return (
 		<Form onSubmit={handleSubmit(onSubmit)}>
@@ -70,19 +74,22 @@ export default function AccountForm({ onSubmit, type, defaultValues }: Props) {
 					valueAsDate: true,
 				})}
 			/>
-			{errors.birthdate && <p>{errors.birthdate.message}</p>}
-			{type == 'updating' && (
-				<div>
-					<OptionInput
-						{...register('role', { valueAsNumber: true })}
-						defaultValue="1"
-					>
-						<option value="1">User</option>
-						<option value="2">Drink Meister</option>
-						<option value="3">Sponsor</option>
-					</OptionInput>
-					{errors.role && <p>{errors.role.message}</p>}
-				</div>
+
+			{defaultValues && (
+				<Controller
+					control={control}
+					defaultValue={defaultValues.role}
+					name="role"
+					render={({ field: { onChange, value } }) => (
+						<Select
+							value={userOptions.find((c) => value === c.value)}
+							onChange={(selectedOption) => {
+								onChange(selectedOption?.value);
+							}}
+							options={userOptions}
+						/>
+					)}
+				/>
 			)}
 
 			<Button type="submit">Submit</Button>

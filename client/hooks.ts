@@ -1,7 +1,13 @@
 import { makeUseAxios, Options } from 'axios-hooks';
 import { Method } from 'axios';
 import api from './api';
-import { RefObject, useEffect, useLayoutEffect, useState } from 'react';
+import {
+	RefObject,
+	useEffect,
+	useLayoutEffect,
+	useState,
+	EffectCallback,
+} from 'react';
 
 const useAxios = makeUseAxios({
 	axios: api,
@@ -66,4 +72,8 @@ export function useWindowSize() {
 	}, []);
 
 	return size;
+}
+
+export function useMount(callback: EffectCallback) {
+	return useEffect(callback, []);
 }

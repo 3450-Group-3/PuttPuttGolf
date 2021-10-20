@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { ButtonLink } from '../common/styles';
+import Title from '../common/Title';
 
 const Content = styled.div`
 	display: flex;
@@ -27,6 +28,7 @@ const Text = styled.p`
 export default function NotFound() {
 	return (
 		<Content>
+			<Title>Not Found</Title>
 			<Header>404</Header>
 			<Text>Looks like this page doesn&apos;t exist! </Text>
 			<ButtonLink to="/" kind="outline">

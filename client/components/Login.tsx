@@ -7,6 +7,7 @@ import { usePost } from '../hooks';
 import { FormError } from '../types';
 import { IoPersonCircleOutline } from 'react-icons/io5';
 import { RiLockPasswordLine } from 'react-icons/ri';
+import Title from '../common/Title';
 type LoginSuccess = { access_token: string };
 
 const Div = styled.div`
@@ -61,6 +62,7 @@ export default function Login() {
 
 	return (
 		<Div>
+			<Title>Sign In</Title>
 			<img
 				src="/static/images/logo.png"
 				alt="logo png"

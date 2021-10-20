@@ -4,6 +4,7 @@ import { usePost } from '../hooks';
 import { DetailFormError, User } from '../types';
 import { Redirect } from 'react-router-dom';
 import styled from 'styled-components';
+import Title from '../common/Title';
 
 const Content = styled.div`
 	display: flex;
@@ -25,6 +26,7 @@ export default function SignUp() {
 
 	return (
 		<Content>
+			<Title>Sign Up</Title>
 			{loading && <Message>Creating Account...</Message>}
 			{error && (
 				<Message error>

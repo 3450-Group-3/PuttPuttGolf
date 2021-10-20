@@ -1,6 +1,8 @@
 import React, { InputHTMLAttributes } from 'react';
 import styled from 'styled-components';
 
+import { Title } from './styles';
+
 const Container = styled.div`
 	display: block;
 	margin-bottom: 10px;
@@ -36,11 +38,6 @@ const TextInput = styled.input`
 	padding: 18px 8px;
 	margin: 2px;
 	border-radius: 3px;
-`;
-
-const Title = styled.h3`
-	margin: 3px 0px;
-	letter-spacing: 2px;
 `;
 
 const Icon = styled.div`

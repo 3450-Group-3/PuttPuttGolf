@@ -108,3 +108,8 @@ export const Message = styled.h2<{ error?: boolean }>`
 	color: ${({ error }) => (error ? 'red' : 'inherit')};
 	text-align: center;
 `;
+
+export const Title = styled.h3`
+	margin: 3px 0px;
+	letter-spacing: 2px;
+`;

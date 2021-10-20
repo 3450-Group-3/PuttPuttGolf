@@ -14,14 +14,14 @@ export default function AccountManagement() {
 		updateUser,
 	] = usePut<User, DetailFormError>();
 
-	if (loading) return <p>Loading...</p>;
+	if (loading) return <Message>Loading user data...</Message>;
 
 	if (error) {
 		return (
-			<p>
+			<Message error>
 				{error.response?.data.detail ||
 					'Something went wrong, please try again'}
-			</p>
+			</Message>
 		);
 	}
 
@@ -33,12 +33,13 @@ export default function AccountManagement() {
 	if (data)
 		return (
 			<Content>
-				{postData && <p>Update user successful!</p>}
+				{postLoading && <Message>Updating user...</Message>}
+				{postData && <Message>Update user successful!</Message>}
 				{postError && (
-					<p>
-						{postError.response?.data.detail ||
+					<Message error>
+						{postError?.response?.data.detail ||
 							'Something went wrong, please try again'}
-					</p>
+					</Message>
 				)}
 				<AccountForm
 					onSubmit={(data) => updateUser({ url: '/users/me', data })}

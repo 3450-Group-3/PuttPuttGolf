@@ -10,3 +10,5 @@ app/static/js/*
 !app/static/js/.keep
 *.db
 yarn-error.log
+test.py
+test.html

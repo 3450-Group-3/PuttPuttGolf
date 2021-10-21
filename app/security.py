@@ -77,5 +77,4 @@ def get_user(db: Session, username: str):
     user: Optional[models.User] = (
         db.query(models.User).where(models.User.username == username).first()
     )
-    if user:
-        return user
+    return user

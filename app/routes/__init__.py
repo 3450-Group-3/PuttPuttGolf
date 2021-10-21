@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 # Special routes for base-level routes. Don't include in the api router
 from .base import base
 from .auth import auth
+from .drinks import drinks
 from .users import users
 from .tournaments import tournaments
 from ..dependancies import get_current_user, get_db
@@ -19,6 +20,7 @@ api = APIRouter(prefix="/api")
 api.include_router(auth)
 api.include_router(users)
 api.include_router(tournaments)
+api.include_router(drinks)
 
 
 @api.get("/{path:path}")

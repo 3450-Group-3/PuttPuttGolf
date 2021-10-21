@@ -5,23 +5,25 @@ import Drawer from './Drawer';
 import { IoPersonCircleOutline } from 'react-icons/io5';
 import { GiGolfTee } from 'react-icons/gi';
 import { MdLocalDrink, MdMoreHoriz } from 'react-icons/md';
-import { defaultTheme } from '../common/styles';
+import { Layout } from '../types';
+import { layoutSwitch } from '../utils';
 
 const NavContainer = styled.div`
 	overflow: hidden;
 	display: flex;
-	height: 6rem;
+	flex-direction: ${layoutSwitch('column', 'row')};
+	width: ${layoutSwitch('8rem', '100%')};
+	height: ${layoutSwitch('100%', '6rem')};
+	margin-right: ${layoutSwitch('60px', '0px')};
 	align-items: center;
 	flex-shrink: 0;
 	justify-content: center;
 	box-shadow: 0px -7px 38px 1px rgba(0, 0, 0, 0.64);
-	bottom: 0;
-	left: 0;
-	width: 100%;
 	z-index: 2;
 	background-color: ${({ theme }) => theme.primary};
+
 	.current {
-		color: white;
+		color: white !important;
 	}
 `;
 
@@ -33,12 +35,12 @@ const NavItem = css`
 	justify-content: space-evenly;
 	flex-direction: column;
 	cursor: pointer;
+	color: ${({ theme }) => theme.textColor} !important;
 
 	&:hover {
 		cursor: pointer;
-		color: white;
+		color: white !important;
 	}
-	color: ${defaultTheme.textColor} !important;
 `;
 
 const NavButton = styled(NavLink)`
@@ -52,21 +54,26 @@ const NavAction = styled.div`
 const NavText = styled.p`
 	font-size: 0.8rem;
 	letter-spacing: 1px;
+	text-align: center;
 	margin: 0;
 `;
 
-export default function Nav() {
+interface Props {
+	layout: Layout;
+}
+
+export default function Nav({ layout }: Props) {
 	const [drawerIsOpen, setDrawerIsOpen] = useState(false);
 
 	return (
-		<div>
+		<>
 			<Drawer isOpen={drawerIsOpen} setIsOpen={setDrawerIsOpen} />
-			<NavContainer>
-				<NavButton to="/order" activeClassName="current" exact>
+			<NavContainer layout={layout}>
+				<NavButton to="/order" activeClassName="current" exact key={1}>
 					<MdLocalDrink size={50} />
 					<NavText>order drinks</NavText>
 				</NavButton>
-				<NavButton to="/play" activeClassName="current" exact>
+				<NavButton to="/play" activeClassName="current" exact key={2}>
 					<GiGolfTee size={50} />
 					<NavText>play</NavText>
 				</NavButton>
@@ -74,11 +81,12 @@ export default function Nav() {
 					<IoPersonCircleOutline size={50} />
 					<NavText>account</NavText>
 				</NavButton>
+
 				<NavAction onClick={() => setDrawerIsOpen(!drawerIsOpen)}>
 					<MdMoreHoriz size={50} />
 					<NavText>more</NavText>
 				</NavAction>
 			</NavContainer>
-		</div>
+		</>
 	);
 }

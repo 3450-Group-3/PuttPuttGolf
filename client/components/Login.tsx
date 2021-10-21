@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import styled from 'styled-components';
 import Input from '../common/Input';
-import { Button, defaultTheme } from '../common/styles';
+import { Button } from '../common/styles';
 import { usePost } from '../hooks';
 import { FormError } from '../types';
 import { IoPersonCircleOutline } from 'react-icons/io5';
 import { RiLockPasswordLine } from 'react-icons/ri';
+import Title from '../common/Title';
 type LoginSuccess = { access_token: string };
 
 const Div = styled.div`
@@ -15,13 +16,14 @@ const Div = styled.div`
 	align-items: center;
 	justify-content: center;
 	flex-direction: column;
+	width: 100%;
 `;
 
 export default function Login() {
 	var alreadyLoggedIn = false;
 	if (localStorage.getItem('token')) {
 		alreadyLoggedIn = true;
-	} 
+	}
 
 	const [state, setState] = useState({
 		username: '',
@@ -32,20 +34,18 @@ export default function Login() {
 	const [redirectState, setRedirectState] = useState({
 		redirect: false,
 	});
-	const {redirect} = redirectState;
+	const { redirect } = redirectState;
 
 	const [{ data, loading, error }, login] = usePost<
 		LoginSuccess,
 		FormError<keyof typeof state>
 	>('/auth/token');
 
-	if (data){
+	if (data) {
 		setTimeout(() => {
-			setRedirectState({redirect: true})
-		},
-		1000)
+			setRedirectState({ redirect: true });
+		}, 1000);
 	}
-
 
 	const handleLogin = () => {
 		const form = new FormData();
@@ -62,7 +62,13 @@ export default function Login() {
 
 	return (
 		<Div>
-			<img src="/static/images/logo.png" alt="logo png" width="400em" height="300em"></img>
+			<Title>Sign In</Title>
+			<img
+				src="/static/images/logo.png"
+				alt="logo png"
+				width="400em"
+				height="300em"
+			/>
 			<h3>Please sign into your account</h3>
 			{loading && <div>Logging in...</div>}
 			{error && <div>Login failed :(</div>}
@@ -82,7 +88,9 @@ export default function Login() {
 				onChange={(e) => setState({ password: e.target.value, username })}
 				icon={<RiLockPasswordLine size={40} />}
 			/>
-			<h5>Click <Link to="/signup">here</Link> to sign up for an account</h5>
+			<h5>
+				Click <Link to="/signup">here</Link> to sign up for an account
+			</h5>
 			<Button onClick={() => handleLogin()}>Login</Button>
 		</Div>
 	);

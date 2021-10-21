@@ -4,6 +4,9 @@ import { usePost } from '../hooks';
 import { Content, Message } from '../common/styles';
 import { DetailFormError, User } from '../types';
 
+import styled from 'styled-components';
+import Title from '../common/Title';
+
 export default function SignUp() {
 	const [{ data, loading, error }, signUp] = usePost<User, DetailFormError>(
 		'/users'
@@ -11,6 +14,7 @@ export default function SignUp() {
 
 	return (
 		<Content>
+			<Title>Sign Up</Title>
 			{loading && <Message>Creating Account...</Message>}
 			{error && (
 				<Message error>

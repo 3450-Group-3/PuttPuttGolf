@@ -20,6 +20,7 @@ def me(user=Depends(get_current_user)):
 @users.put("/me", response_model=schemas.User)
 def edit_user(
     user_data: schemas.UserInUpdate,
+    curr_user=Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     collisions = (
@@ -36,24 +37,13 @@ def edit_user(
             content={"detail": "Username Taken"},
         )
 
-    stored_user: Optional[models.User] = (
-        db.query(models.User).where(models.User.id == user_data.id).first()
-    )
+    curr_user.username = user_data.username
+    curr_user.birthdate = user_data.birthdate
+    curr_user.role = user_data.role
 
-    if stored_user:
-        stored_user.username = user_data.username
-        stored_user.birthdate = user_data.birthdate
-        stored_user.role = user_data.role
-
-        db.commit()
-        db.refresh(stored_user)
-        return stored_user
-
-    else:
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            content={"detail": "User not found"},
-        )
+    db.commit()
+    db.refresh(curr_user)
+    return curr_user
 
 
 @users.get(
@@ -93,29 +83,18 @@ def create_user(user_data: schemas.UserIn, db: Session = Depends(get_db)):
 def change_password(
     pw_data: schemas.PasswordIn,
     db: Session = Depends(get_db),
-    user_data=Depends(
+    user=Depends(
         get_current_user,
     ),
 ):
-    if not Password.verify(pw_data.curr_password, user_data.hashed_password):
+    if not Password.verify(pw_data.curr_password, user.hashed_password):
         return JSONResponse(
             status_code=status.HTTP_401_UNAUTHORIZED,
             content={"detail": "Incorrect password"},
         )
 
-    user: Optional[models.User] = (
-        db.query(models.User).where(models.User.id == user_data.id).first()
-    )
+    user.hashed_password = Password.hash(pw_data.new_password)
 
-    if user:
-        user.hashed_password = Password.hash(pw_data.new_password)
-
-        db.commit()
-        db.refresh(user)
-        return user
-
-    else:
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            content={"detail": "User not found"},
-        )
+    db.commit()
+    db.refresh(user)
+    return user

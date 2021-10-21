@@ -102,22 +102,29 @@ class Drink(Base):
     price = Column(types.FLOAT, nullable=False)
     image_url = Column(types.String)
     description = Column(types.String)
-
+    
+    @staticmethod
     def add_drink(
-        self,
         db: Session,
         name: str,
         price: float,
         description: str = "",
         image_url: str = "",
     ) -> "Drink":
-        drink = Drink(name, price, description, image_url)
+        drink = Drink(
+            name = name,
+            price = price, 
+            description = description, 
+            image_url = image_url
+        )
+
         db.add(drink)
         db.commit()
         db.refresh(drink)
         return drink
 
-    def remove_drink(self, db: Session, id: int, name: str = "") -> None:
+    @staticmethod
+    def remove_drink(db: Session, id: int = 0, name: str = "") -> None:
         """
         Removes a drink from the database. Pass in the db and either the drink id
         or pass in 0 for the id and the drink name to remove it
@@ -128,6 +135,25 @@ class Drink(Base):
             db.query(Drink).filter_by(name=name).delete()
 
         db.commit()
+
+    @staticmethod
+    def update_drink(
+        db: Session,
+        name: str,
+        price: float,
+        image_url: str,
+        description: str
+    ) -> "Drink":
+        drink = db.query(Drink).where(Drink.name == name).first()
+
+        drink.price = price
+        drink.image_url = image_url
+        drink.description = description
+
+        db.commit()
+        db.refresh(drink)
+
+        return drink
 
 
 class Tournament(Base):  # type: ignore

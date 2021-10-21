@@ -22,7 +22,7 @@ export function useGet<Response, Error = unknown>(
 
 function makeLazy(method: Method) {
 	return <Response, Error = unknown>(
-		url: string,
+		url?: string,
 		options: Omit<Options, 'manual'> = {}
 	) => useAxios<Response, Error>({ url, method }, { manual: true, ...options });
 }

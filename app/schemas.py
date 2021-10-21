@@ -34,6 +34,18 @@ class UserIn(InModel):
     birthdate: datetime
 
 
+class UserInUpdate(InModel):
+    id: int
+    username: str
+    birthdate: datetime
+    role: UserRole
+
+
+class PasswordIn(InModel):
+    curr_password: str
+    new_password: str
+
+
 class User(OutModel):
     id: int
     username: str
@@ -53,7 +65,6 @@ class Token(BaseModel):
     token_type: str
 
 
-
 class Drink(BaseModel):
     name: str
     price: float
@@ -62,6 +73,7 @@ class Drink(BaseModel):
 
     class Config:
         orm_mode = True
+
 
 class Tournament:
     created_by: User
@@ -74,6 +86,7 @@ class Tournament:
 
     class Config:
         orm_mode = True
+
 
 class Score:
     score: int

@@ -78,4 +78,4 @@ def get_user(db: Session, username: str):
         db.query(models.User).where(models.User.username == username).first()
     )
     if user:
-        return UserInDB.from_orm(user)
+        return user

@@ -5,7 +5,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from ..security import authenticate_user, AccessToken
 from ..dependancies import get_db
 
-auth = APIRouter(prefix="/auth")
+auth = APIRouter(prefix="/auth", tags=["Authorization"])
 
 
 @auth.post("/token")

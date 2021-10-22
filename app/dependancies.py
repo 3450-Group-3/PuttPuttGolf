@@ -10,6 +10,10 @@ from .db import SessionLocal
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
+permission_exception = HTTPException(
+    status_code=status.HTTP_401_UNAUTHORIZED,
+    detail="User does not have sufficient permissions",
+)
 
 
 def get_db():
@@ -45,44 +49,29 @@ async def get_current_user(
         raise credentials_exception
     return user
 
+
 async def current_user_is_manager(
-    token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
-) -> bool:
-    permission_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="User does not have sufficient permissions",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-    user = await get_current_user(token, db)
-    if (user.is_manager):
-        return user
-    else:
-        raise permission_exception
-    
-async def current_user_is_sponsor(
-    token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
-) -> bool:
-    permission_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="User does not have sufficient permissions",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-    user = await get_current_user(token, db)
-    if (user.is_sponsor):
+    user: models.User = Depends(get_current_user),
+) -> models.User:
+    if user.is_manager:
         return user
     else:
         raise permission_exception
 
+
+async def current_user_is_sponsor(
+    user: models.User = Depends(get_current_user),
+) -> models.User:
+    if user.is_sponsor:
+        return user
+    else:
+        raise permission_exception
+
+
 async def current_user_is_drinkmeister(
-    token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
-) -> bool:
-    permission_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="User does not have sufficient permissions",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-    user = await get_current_user(token, db)
-    if (user.is_drink_meister):
+    user: models.User = Depends(get_current_user),
+) -> models.User:
+    if user.is_drink_meister:
         return user
     else:
         raise permission_exception

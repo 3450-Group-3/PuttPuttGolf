@@ -35,7 +35,6 @@ class UserIn(InModel):
 
 
 class UserInUpdate(InModel):
-    id: int
     username: str
     birthdate: datetime
     role: UserRole
@@ -51,6 +50,7 @@ class User(OutModel):
     username: str
     birthdate: date
     role: UserRole
+    balance: int
 
     class Config:
         orm_mode = True

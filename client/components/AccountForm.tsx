@@ -1,10 +1,12 @@
+import { useContext, useMemo } from 'react';
+import { ThemeContext, DefaultTheme } from 'styled-components';
 import styled from 'styled-components';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import Select, { StylesConfig, SingleValue } from 'react-select';
 import { IoPersonCircleOutline } from 'react-icons/io5';
 import { RiLockPasswordLine } from 'react-icons/ri';
 
-import { defaultTheme, Title } from '../common/styles';
+import { Title } from '../common/styles';
 import { User } from '../types';
 import { Button } from '../common/styles';
 import Input from '../common/Input';
@@ -20,7 +22,7 @@ interface Option {
 	label: string;
 }
 
-const SelectStyles: StylesConfig = {
+const selectedStylesConfig = (theme: DefaultTheme): StylesConfig => ({
 	container: (provided) => ({
 		...provided,
 		zIndex: 10,
@@ -29,34 +31,34 @@ const SelectStyles: StylesConfig = {
 	control: (provided, state) => ({
 		...provided,
 		boxShadow: 'none',
-		backgroundColor: defaultTheme.secondary,
-		borderColor: state.isFocused ? defaultTheme.textColor : 'transparent',
+		backgroundColor: theme.secondary,
+		borderColor: state.isFocused ? theme.textColor : 'transparent',
 		'&:hover': {
-			borderColor: state.isFocused ? defaultTheme.textColor : 'transparent',
+			borderColor: state.isFocused ? theme.textColor : 'transparent',
 		},
 	}),
 	menu: (provided) => ({
 		...provided,
-		backgroundColor: defaultTheme.secondary,
+		backgroundColor: theme.secondary,
 	}),
 	option: (provided) => ({
 		...provided,
-		color: defaultTheme.textColor,
+		color: theme.textColor,
 		fontSize: '17px',
 		padding: '1em',
-		backgroundColor: defaultTheme.secondary,
+		backgroundColor: theme.secondary,
 		cursor: 'pointer',
 		'&:hover': {
-			backgroundColor: defaultTheme.primary,
+			backgroundColor: theme.primary,
 		},
 	}),
 	singleValue: (provided) => ({
 		...provided,
-		color: defaultTheme.textColor,
+		color: theme.textColor,
 		padding: '18px 8px',
 		fontSize: '17px',
 	}),
-};
+});
 
 interface Inputs extends Omit<User, 'id'> {
 	password: string;
@@ -75,6 +77,8 @@ export default function AccountForm({ onSubmit, type, defaultValues }: Props) {
 		control,
 		formState: { errors },
 	} = useForm<Inputs>({ defaultValues: defaultValues });
+	const theme = useContext(ThemeContext);
+	const selectedStyles = useMemo(() => selectedStylesConfig(theme), [theme]);
 
 	const userOptions: Option[] = [
 		{ value: 1, label: 'User' },
@@ -118,7 +122,6 @@ export default function AccountForm({ onSubmit, type, defaultValues }: Props) {
 					valueAsDate: true,
 				})}
 			/>
-
 			{defaultValues && (
 				<>
 					<Title>Role</Title>
@@ -133,7 +136,7 @@ export default function AccountForm({ onSubmit, type, defaultValues }: Props) {
 									onChange((selectedOption as SingleValue<Option>)?.value);
 								}}
 								options={userOptions}
-								styles={SelectStyles}
+								styles={selectedStyles}
 							/>
 						)}
 					/>

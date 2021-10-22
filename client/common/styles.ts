@@ -5,11 +5,26 @@ import styled, {
 	DefaultTheme,
 } from 'styled-components';
 
-export const defaultTheme: DefaultTheme = {
-	primary: '#2a2a48',
-	secondary: '#21212b',
-	accent: '#3BC0F0',
-	textColor: '#cac3c3',
+export const themes: Record<string, DefaultTheme> = {
+	darkMode: {
+		primary: '#2a2a48',
+		secondary: '#21212b',
+		accent: '#3BC0F0',
+		textColor: '#cac3c3',
+
+		navBarBackground: '#2a2a48',
+		navBarText: '#cac3c3',
+	},
+
+	lightMode: {
+		primary: '#eee',
+		secondary: '#c7c7c7',
+		accent: '#ab4e68',
+		textColor: '#21212b',
+
+		navBarBackground: '#21212b',
+		navBarText: '#cac3c3',
+	},
 };
 
 export const GlobalStyle = createGlobalStyle`
@@ -31,6 +46,7 @@ a {
 	text-decoration: none;
 	color: ${({ theme }) => theme.accent};
 
+
 	&:visited {
 		color: ${({ theme }) => theme.accent};
 	}
@@ -38,8 +54,6 @@ a {
 
 
 #app {
-	display: flex;
-	flex-direction: column;
 	height: 100%;
 	overflow-x: hidden;
 }
@@ -58,10 +72,11 @@ const ButtonStyles = css<ButtonProps>`
 	border: ${({ background, kind = 'solid', theme }) =>
 		kind === 'outline' ? `1px solid ${background || theme.accent}` : 'none'};
 
-	color: ${({ text }) => text || 'white'} !important;
+	color: ${({ text, theme, kind = 'solid' }) =>
+		text || kind === 'outline' ? theme.textColor : 'white'} !important;
 
 	box-shadow: ${({ kind = 'solid' }) =>
-		kind === 'text' ? 'none' : '0px 0px 50px 6px rgba(0, 0, 0, 0.4);'};
+		kind === 'text' ? 'none' : '0px 0px 50px 6px rgba(0, 0, 0, 0.3);'};
 
 	box-sizing: border-box;
 	padding: 10px 20px;
@@ -83,7 +98,7 @@ const ButtonStyles = css<ButtonProps>`
 			};
 			return kindMap[kind];
 		}};
-		box-shadow: 0px 0px 50px 10px rgba(0, 0, 0, 0.5);
+		box-shadow: 0px 0px 50px 10px rgba(0, 0, 0, 0.4);
 		cursor: pointer;
 	}
 `;

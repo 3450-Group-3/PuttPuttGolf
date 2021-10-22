@@ -1,7 +1,13 @@
 import { makeUseAxios, Options } from 'axios-hooks';
 import { Method } from 'axios';
 import api from './api';
-import { RefObject, useEffect } from 'react';
+import {
+	RefObject,
+	useEffect,
+	useLayoutEffect,
+	useState,
+	EffectCallback,
+} from 'react';
 
 const useAxios = makeUseAxios({
 	axios: api,
@@ -54,4 +60,20 @@ export function useOnClickOutside<T extends HTMLElement = HTMLElement>(
 
 		// Reload only if ref or handler changes
 	}, [ref, handler]);
+}
+
+export function useWindowSize() {
+	const [size, setSize] = useState([0, 0]);
+	useLayoutEffect(() => {
+		const updateSize = () => setSize([window.innerWidth, window.innerHeight]);
+		window.addEventListener('resize', updateSize);
+		updateSize();
+		return () => window.removeEventListener('resize', updateSize);
+	}, []);
+
+	return size;
+}
+
+export function useMount(callback: EffectCallback) {
+	return useEffect(callback, []);
 }

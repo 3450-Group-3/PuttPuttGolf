@@ -18,9 +18,9 @@ const NavContainer = styled.div`
 	align-items: center;
 	flex-shrink: 0;
 	justify-content: center;
-	box-shadow: 0px -7px 38px 1px rgba(0, 0, 0, 0.64);
+	box-shadow: 0px -7px 38px 1px rgba(0, 0, 0, 0.45);
 	z-index: 2;
-	background-color: ${({ theme }) => theme.primary};
+	background-color: ${({ theme }) => theme.navBarBackground};
 
 	.current {
 		color: white !important;
@@ -35,7 +35,7 @@ const NavItem = css`
 	justify-content: space-evenly;
 	flex-direction: column;
 	cursor: pointer;
-	color: ${({ theme }) => theme.textColor} !important;
+	color: ${({ theme }) => theme.navBarText} !important;
 
 	&:hover {
 		cursor: pointer;
@@ -56,6 +56,7 @@ const NavText = styled.p`
 	letter-spacing: 1px;
 	text-align: center;
 	margin: 0;
+	color: white !important;
 `;
 
 interface Props {

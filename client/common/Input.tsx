@@ -34,7 +34,7 @@ const TextInput = styled.input`
 	outline: none;
 	border: 0px solid transparent;
 	font-size: 17px;
-	color: white;
+	color: ${({ theme }) => theme.textColor};
 	padding: 18px 8px;
 	margin: 2px;
 	border-radius: 3px;

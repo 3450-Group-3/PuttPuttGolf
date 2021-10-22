@@ -8,5 +8,7 @@ declare module 'styled-components' {
 		secondary: string;
 		accent: string;
 		textColor: string;
+		navBarBackground: string;
+		navBarText: string;
 	}
 }

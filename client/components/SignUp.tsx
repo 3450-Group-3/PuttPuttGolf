@@ -1,22 +1,11 @@
+import { Redirect } from 'react-router-dom';
 import AccountForm from './AccountForm';
 import { usePost } from '../hooks';
-
+import { Content, Message } from '../common/styles';
 import { DetailFormError, User } from '../types';
-import { Redirect } from 'react-router-dom';
+
 import styled from 'styled-components';
-
-const Content = styled.div`
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex-direction: column;
-	flex: 1;
-`;
-
-const Message = styled.h2<{ error?: boolean }>`
-	color: ${({ error }) => (error ? 'red' : 'inherit')};
-	text-align: center;
-`;
+import Title from '../common/Title';
 
 export default function SignUp() {
 	const [{ data, loading, error }, signUp] = usePost<User, DetailFormError>(
@@ -25,6 +14,7 @@ export default function SignUp() {
 
 	return (
 		<Content>
+			<Title>Sign Up</Title>
 			{loading && <Message>Creating Account...</Message>}
 			{error && (
 				<Message error>

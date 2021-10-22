@@ -1,13 +1,6 @@
 import styled from 'styled-components';
-import { Button, ButtonLink } from '../common/styles';
-
-const Content = styled.div`
-	display: flex;
-	align-items: center;
-	justify-content: space-evenly;
-	flex-direction: column;
-	flex: 1;
-`;
+import { Button, ButtonLink, Content } from '../common/styles';
+import Title from '../common/Title';
 
 const Header = styled.h1`
 	font-size: 8rem;
@@ -26,6 +19,7 @@ const Text = styled.p`
 export default function NotFound() {
 	return (
 		<Content>
+			<Title>Not Found</Title>
 			<Header>404</Header>
 			<Text>Looks like this page doesn&apos;t exist! </Text>
 			<ButtonLink to="/" kind="outline">

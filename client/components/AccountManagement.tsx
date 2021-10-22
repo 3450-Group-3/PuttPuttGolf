@@ -1,29 +1,54 @@
-import { useGet } from '../hooks';
-import { User } from '../types';
+import { Redirect } from 'react-router';
+import styled from 'styled-components';
+import { useGet, usePut } from '../hooks';
+import { DetailFormError, User } from '../types';
+import AccountForm from './AccountForm';
+import PasswordForm from './PasswordForm';
+import { Content, Message } from '../common/styles';
 
-const ROLE_MAP = ['PLAYER', 'DRINK_MEISTER', 'SPONSOR', 'MANAGER'];
+export default function AccountManagement() {
+	const { data, loading, error } = useGet<User, DetailFormError>('/users/me');
 
-export default function UserInfo() {
-	const { data, loading, error } = useGet<User>('/users/me');
+	const [
+		{ data: postData, loading: postLoading, error: postError },
+		updateUser,
+	] = usePut<User, DetailFormError>();
 
-	if (loading) {
-		return <div>Loading...</div>;
-	}
+	if (loading) return <Message>Loading user data...</Message>;
+
 	if (error) {
-		return <div>Failed to load info!</div>;
-	}
-
-	if (data) {
 		return (
-			<div>
-				{Object.entries(data).map(([key, value], idx) => (
-					<p key={idx}>
-						{(key as string).toUpperCase()}:{' '}
-						{key === 'role' ? ROLE_MAP[value - 1] : value}
-					</p>
-				))}
-			</div>
+			<Message error>
+				{error.response?.data.detail ||
+					'Something went wrong, please try again'}
+			</Message>
 		);
 	}
+
+	if (postData && data && postData.username !== data.username) {
+		localStorage.removeItem('token');
+		return <Redirect to="/login" />;
+	}
+
+	if (data)
+		return (
+			<Content>
+				{postLoading && <Message>Updating user...</Message>}
+				{postData && <Message>Update user successful!</Message>}
+				{postError && (
+					<Message error>
+						{postError?.response?.data.detail ||
+							'Something went wrong, please try again'}
+					</Message>
+				)}
+				<AccountForm
+					onSubmit={(data) => updateUser({ url: '/users/me', data })}
+					type="updating"
+					defaultValues={data}
+				/>
+				<PasswordForm />
+			</Content>
+		);
+
 	return <div></div>;
 }

@@ -36,7 +36,7 @@ const DrawerContainer = styled.div<IDrawerContainer>`
 	box-sizing: border-box;
 	flex-direction: column;
 	overflow-x: hidden;
-	overflow-y: scroll;
+	overflow-y: auto;
 `;
 
 const Top = styled.div`

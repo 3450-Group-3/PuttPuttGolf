@@ -79,3 +79,4 @@ def get_user(db: Session, username: str):
     )
     if user:
         return user
+

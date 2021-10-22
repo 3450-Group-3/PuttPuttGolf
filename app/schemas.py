@@ -75,14 +75,19 @@ class Drink(BaseModel):
         orm_mode = True
 
 
-class Tournament:
-    created_by: User
+class TournamentIn(InModel):
+    date: datetime
+    hole_count: int
+
+
+class Tournament(OutModel):
+    date: datetime
+    hole_count: int
+    balance: float
+    completed: bool
+    advertising_banner: Optional[str]
     sponsored_by: Optional[User]
-    date = datetime
-    completed = bool
-    advertising_banner = Optional[str]
-    balance = float
-    hole_count = int
+    created_by: User
 
     class Config:
         orm_mode = True

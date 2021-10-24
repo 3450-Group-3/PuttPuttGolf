@@ -2,7 +2,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { RiLockPasswordLine } from 'react-icons/ri';
 import styled from 'styled-components';
 import { usePost } from '../hooks';
-import { DetailFormError, User } from '../types';
+import { DetailFormError, UserData } from '../types';
 
 import Input from '../common/Input';
 import { Button, Message } from '../common/styles';
@@ -28,7 +28,7 @@ export default function PasswordForm() {
 	} = useForm<Inputs>();
 
 	const [{ data, loading, error }, changePassword] = usePost<
-		User,
+		UserData,
 		DetailFormError
 	>('/users/me/change-password');
 

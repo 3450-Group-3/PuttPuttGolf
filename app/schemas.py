@@ -60,12 +60,7 @@ class UserInDB(User):
     hashed_password: str
 
 
-class Token(BaseModel):
-    access_token: str
-    token_type: str
-
-
-class Drink(BaseModel):
+class Drink(OutModel):
     name: str
     price: float
     image_url: str
@@ -75,7 +70,7 @@ class Drink(BaseModel):
         orm_mode = True
 
 
-class Tournament:
+class Tournament(OutModel):
     created_by: User
     sponsored_by: Optional[User]
     date = datetime
@@ -86,9 +81,16 @@ class Tournament:
 
     class Config:
         orm_mode = True
+        arbitrary_types_allowed = True  # Why is this needed
 
 
-class Score:
+class Score(OutModel):
     score: int
     user: User
     tournament: Tournament
+
+
+class AuthResponse(OutModel):
+    access_token: str
+    token_type: str
+    user: User

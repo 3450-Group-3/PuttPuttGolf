@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-import { useOnClickOutside } from '../../hooks';
+import { useOnClickOutside, useUser } from '../../hooks';
 import {
 	AiOutlineHome,
 	AiOutlinePlus,
@@ -61,7 +61,7 @@ interface Props {
 }
 
 export default function Drawer(props: Props) {
-	const token = localStorage.getItem('token');
+	const { user } = useUser();
 	const ref = useRef(null);
 
 	const history = useHistory();
@@ -128,22 +128,24 @@ export default function Drawer(props: Props) {
 						<Text>Check Orders</Text>
 					</DrawerItemNav>
 				</DropDown>
-				<DropDown
-					header={
-						<>
-							<MdOutlineAdminPanelSettings size={25} />
-							<Text>Admin</Text>
-						</>
-					}
-				>
-					<DrawerItemNav to="/admin/users" activeClassName="selected" exact>
-						<FiUser size={25} />
-						<Text>Users</Text>
-					</DrawerItemNav>
-				</DropDown>
+				{user.isManager && (
+					<DropDown
+						header={
+							<>
+								<MdOutlineAdminPanelSettings size={25} />
+								<Text>Admin</Text>
+							</>
+						}
+					>
+						<DrawerItemNav to="/admin/users" activeClassName="selected" exact>
+							<FiUser size={25} />
+							<Text>Users</Text>
+						</DrawerItemNav>
+					</DropDown>
+				)}
 			</Top>
 			<Bottom>
-				{!token ? (
+				{!user.loggedIn ? (
 					<>
 						<DrawerItemNav to="/signup" activeClassName="selected">
 							<FiUserPlus size={25} />

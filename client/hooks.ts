@@ -7,7 +7,9 @@ import {
 	useLayoutEffect,
 	useState,
 	EffectCallback,
+	useContext,
 } from 'react';
+import GlobalContext from './global';
 
 const useAxios = makeUseAxios({
 	axios: api,
@@ -76,4 +78,14 @@ export function useWindowSize() {
 
 export function useMount(callback: EffectCallback) {
 	return useEffect(callback, []);
+}
+
+export function useGlobal() {
+	return useContext(GlobalContext);
+}
+
+// TODO: Add and updateUser function
+export function useUser() {
+	const { user, setUser } = useGlobal();
+	return { user, setUser };
 }

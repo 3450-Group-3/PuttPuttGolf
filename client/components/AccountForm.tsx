@@ -7,7 +7,7 @@ import { IoPersonCircleOutline } from 'react-icons/io5';
 import { RiLockPasswordLine } from 'react-icons/ri';
 
 import { Title } from '../common/styles';
-import { User } from '../types';
+import { UserData } from '../types';
 import { Button } from '../common/styles';
 import Input from '../common/Input';
 
@@ -60,14 +60,14 @@ const selectedStylesConfig = (theme: DefaultTheme): StylesConfig => ({
 	}),
 });
 
-interface Inputs extends Omit<User, 'id'> {
+interface Inputs extends Omit<UserData, 'id'> {
 	password: string;
 }
 
 interface Props {
 	onSubmit: SubmitHandler<Inputs>;
 	type: 'creating' | 'updating';
-	defaultValues?: User;
+	defaultValues?: UserData;
 }
 
 export default function AccountForm({ onSubmit, type, defaultValues }: Props) {

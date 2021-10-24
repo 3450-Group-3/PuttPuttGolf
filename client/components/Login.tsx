@@ -3,12 +3,17 @@ import { Link, Redirect } from 'react-router-dom';
 import styled from 'styled-components';
 import Input from '../common/Input';
 import { Button } from '../common/styles';
-import { usePost } from '../hooks';
-import { FormError } from '../types';
+import { usePost, useUser } from '../hooks';
+import { FormError, UserData } from '../types';
 import { IoPersonCircleOutline } from 'react-icons/io5';
 import { RiLockPasswordLine } from 'react-icons/ri';
 import Title from '../common/Title';
-type LoginSuccess = { access_token: string };
+
+interface LoginSuccess {
+	accessToken: string;
+	tokenType: string;
+	user: UserData;
+}
 
 const Div = styled.div`
 	text-align: center;
@@ -20,10 +25,7 @@ const Div = styled.div`
 `;
 
 export default function Login() {
-	var alreadyLoggedIn = false;
-	if (localStorage.getItem('token')) {
-		alreadyLoggedIn = true;
-	}
+	const { user, setUser } = useUser();
 
 	const [state, setState] = useState({
 		username: '',
@@ -31,21 +33,10 @@ export default function Login() {
 	});
 	const { username, password } = state;
 
-	const [redirectState, setRedirectState] = useState({
-		redirect: false,
-	});
-	const { redirect } = redirectState;
-
 	const [{ data, loading, error }, login] = usePost<
 		LoginSuccess,
 		FormError<keyof typeof state>
 	>('/auth/token');
-
-	if (data) {
-		setTimeout(() => {
-			setRedirectState({ redirect: true });
-		}, 1000);
-	}
 
 	const handleLogin = () => {
 		const form = new FormData();
@@ -56,7 +47,8 @@ export default function Login() {
 			data: form,
 			headers: { 'Content-Type': 'multipart/form-data' },
 		}).then(({ data }) => {
-			localStorage.setItem('token', data.access_token);
+			localStorage.setItem('token', data.accessToken);
+			setTimeout(() => setUser(data.user), 1000);
 		});
 	};
 
@@ -73,8 +65,7 @@ export default function Login() {
 			{loading && <div>Logging in...</div>}
 			{error && <div>Login failed :(</div>}
 			{data && <div>Login Success!</div>}
-			{data && redirect && <Redirect to="/play"></Redirect>}
-			{alreadyLoggedIn && <Redirect to="/play"></Redirect>}
+			{user.loggedIn && <Redirect to="/play"></Redirect>}
 			<Input
 				// title="Username"
 				placeholder="Username"

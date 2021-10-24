@@ -1,18 +1,20 @@
 import { Redirect } from 'react-router';
 import styled from 'styled-components';
 import { useGet, usePut } from '../hooks';
-import { DetailFormError, User } from '../types';
+import { DetailFormError, UserData } from '../types';
 import AccountForm from './AccountForm';
 import PasswordForm from './PasswordForm';
 import { Content, Message } from '../common/styles';
 
 export default function AccountManagement() {
-	const { data, loading, error } = useGet<User, DetailFormError>('/users/me');
+	const { data, loading, error } = useGet<UserData, DetailFormError>(
+		'/users/me'
+	);
 
 	const [
 		{ data: postData, loading: postLoading, error: postError },
 		updateUser,
-	] = usePut<User, DetailFormError>();
+	] = usePut<UserData, DetailFormError>();
 
 	if (loading) return <Message>Loading user data...</Message>;
 

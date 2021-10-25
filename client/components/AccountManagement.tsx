@@ -1,12 +1,14 @@
 import { Redirect } from 'react-router';
 import styled from 'styled-components';
-import { useGet, usePut } from '../hooks';
+import { useGet, usePut, useUser } from '../hooks';
 import { DetailFormError, UserData } from '../types';
 import AccountForm from './AccountForm';
 import PasswordForm from './PasswordForm';
 import { Content, Message } from '../common/styles';
 
 export default function AccountManagement() {
+	const { setUser } = useUser();
+	// Retrive the user data to make sure we use the most up-to-date info
 	const { data, loading, error } = useGet<UserData, DetailFormError>(
 		'/users/me'
 	);
@@ -44,7 +46,11 @@ export default function AccountManagement() {
 					</Message>
 				)}
 				<AccountForm
-					onSubmit={(data) => updateUser({ url: '/users/me', data })}
+					onSubmit={(data) =>
+						updateUser({ url: '/users/me', data }).then((res) =>
+							setUser(res.data)
+						)
+					}
 					type="updating"
 					defaultValues={data}
 				/>

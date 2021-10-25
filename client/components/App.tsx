@@ -40,13 +40,16 @@ export default function App() {
 	useMount(() => {
 		if (localStorage.getItem('token') && !globalData.user.loggedIn) {
 			console.debug('Fetching user info');
-			api.get<UserData>('/users/me').then((res) => {
-				if (res.status === 200) {
-					setUser(res.data);
-				} else {
-					console.error('Failed to fetch user data', res.data);
-				}
-			});
+			api
+				.get<UserData>('/users/me')
+				.then((res) => {
+					if (res.status === 200) {
+						setUser(res.data);
+					} else {
+						console.error('Failed to fetch user data', res.data);
+					}
+				})
+				.catch(() => localStorage.removeItem('token'));
 		}
 	});
 

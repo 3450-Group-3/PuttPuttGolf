@@ -29,7 +29,7 @@ const DrawerContainer = styled.div<IDrawerContainer>`
 	left: 0;
 	height: 100vh;
 	width: clamp(10rem, 20rem, 70vw);
-	z-index: 10;
+	z-index: 100;
 	border-radius: 10px 10px 0 0;
 	box-shadow: 17px 0px 31px 4px rgba(0, 0, 0, 0.6);
 	background-color: ${(props) => props.theme.primary};
@@ -98,18 +98,20 @@ export default function Drawer(props: Props) {
 						<AiOutlineTrophy size={25} />
 						<Text>Leaderboards</Text>
 					</DrawerItemNav>
-					<DrawerItemNav to="/tournaments/new" activeClassName="selected" exact>
+					<DrawerItemNav to="/tournaments" activeClassName="selected" exact>
 						<AiOutlinePlus size={25} />
 						<Text>Register</Text>
 					</DrawerItemNav>
-					<DrawerItemNav
-						to="/tournaments/sponsor"
-						activeClassName="selected"
-						exact
-					>
-						<SiGithubsponsors size={25} />
-						<Text>Sponsor</Text>
-					</DrawerItemNav>
+					{user.isSponsor && (
+						<DrawerItemNav
+							to="/tournaments/sponsor"
+							activeClassName="selected"
+							exact
+						>
+							<SiGithubsponsors size={25} />
+							<Text>Sponsor</Text>
+						</DrawerItemNav>
+					)}
 				</DropDown>
 				<DropDown
 					header={
@@ -119,14 +121,23 @@ export default function Drawer(props: Props) {
 						</>
 					}
 				>
-					<DrawerItemNav to="/order/new" activeClassName="selected" exact>
-						<AiOutlinePlus size={25} />
-						<Text>New Order</Text>
-					</DrawerItemNav>
-					<DrawerItemNav to="/order" activeClassName="selected" exact>
-						<AiOutlineEye size={25} />
-						<Text>Check Orders</Text>
-					</DrawerItemNav>
+					{user.isDrinkMeister ? (
+						<DrawerItemNav to="/order/new" activeClassName="selected" exact>
+							<AiOutlineEye size={25} />
+							<Text>Drink Queue</Text>
+						</DrawerItemNav>
+					) : (
+						<>
+							<DrawerItemNav to="/order/new" activeClassName="selected" exact>
+								<AiOutlinePlus size={25} />
+								<Text>New Order</Text>
+							</DrawerItemNav>
+							<DrawerItemNav to="/order" activeClassName="selected" exact>
+								<AiOutlineEye size={25} />
+								<Text>Check Orders</Text>
+							</DrawerItemNav>
+						</>
+					)}
 				</DropDown>
 				{user.isManager && (
 					<DropDown

@@ -111,12 +111,13 @@ export const ButtonLink = styled(Link)`
 	${ButtonStyles}
 `;
 
-export const Content = styled.div`
+export const CenterContent = styled.div`
 	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex-direction: column;
 	flex: 1;
+	flex-direction: column;
+	align-items: center;
+	margin: auto;
+	margin-left: 60px;
 `;
 
 export const Message = styled.h2<{ error?: boolean }>`

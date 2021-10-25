@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Button, ButtonLink, Content } from '../common/styles';
+import { Button, ButtonLink, CenterContent } from '../common/styles';
 import Title from '../common/Title';
 
 const Header = styled.h1`
@@ -18,13 +18,13 @@ const Text = styled.p`
 
 export default function NotFound() {
 	return (
-		<Content>
+		<CenterContent>
 			<Title>Not Found</Title>
 			<Header>404</Header>
 			<Text>Looks like this page doesn&apos;t exist! </Text>
 			<ButtonLink to="/" kind="outline">
 				Take Me Home
 			</ButtonLink>
-		</Content>
+		</CenterContent>
 	);
 }

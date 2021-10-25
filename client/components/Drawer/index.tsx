@@ -32,7 +32,7 @@ const DrawerContainer = styled.div<IDrawerContainer>`
 	z-index: 100;
 	border-radius: 10px 10px 0 0;
 	box-shadow: 17px 0px 31px 4px rgba(0, 0, 0, 0.6);
-	background-color: ${(props) => props.theme.primary};
+	background-color: ${({ theme }) => theme.primary};
 	box-sizing: border-box;
 	flex-direction: column;
 	overflow-x: hidden;

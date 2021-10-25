@@ -1,10 +1,8 @@
 import { Redirect } from 'react-router-dom';
 import AccountForm from './AccountForm';
 import { usePost } from '../hooks';
-import { Content, Message } from '../common/styles';
+import { CenterContent, Message } from '../common/styles';
 import { DetailFormError, UserData } from '../types';
-
-import styled from 'styled-components';
 import Title from '../common/Title';
 
 export default function SignUp() {
@@ -13,7 +11,7 @@ export default function SignUp() {
 	);
 
 	return (
-		<Content>
+		<CenterContent>
 			<Title>Sign Up</Title>
 			{loading && <Message>Creating Account...</Message>}
 			{error && (
@@ -24,6 +22,6 @@ export default function SignUp() {
 			)}
 			{data && <Redirect to="/login" />}
 			<AccountForm onSubmit={(data) => signUp({ data })} type="creating" />
-		</Content>
+		</CenterContent>
 	);
 }

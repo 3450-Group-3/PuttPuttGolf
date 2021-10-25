@@ -4,7 +4,7 @@ import { useGet, usePut, useUser } from '../hooks';
 import { DetailFormError, UserData } from '../types';
 import AccountForm from './AccountForm';
 import PasswordForm from './PasswordForm';
-import { Content, Message } from '../common/styles';
+import { CenterContent, Message } from '../common/styles';
 
 export default function AccountManagement() {
 	const { setUser } = useUser();
@@ -36,7 +36,7 @@ export default function AccountManagement() {
 
 	if (data)
 		return (
-			<Content>
+			<CenterContent>
 				{postLoading && <Message>Updating user...</Message>}
 				{postData && <Message>Update user successful!</Message>}
 				{postError && (
@@ -55,7 +55,7 @@ export default function AccountManagement() {
 					defaultValues={data}
 				/>
 				<PasswordForm />
-			</Content>
+			</CenterContent>
 		);
 
 	return <div></div>;

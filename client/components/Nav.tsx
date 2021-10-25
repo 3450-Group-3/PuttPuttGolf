@@ -14,7 +14,6 @@ const NavContainer = styled.div`
 	flex-direction: ${layoutSwitch('column', 'row')};
 	width: ${layoutSwitch('8rem', '100%')};
 	height: ${layoutSwitch('100%', '6rem')};
-	margin-right: ${layoutSwitch('60px', '0px')};
 	align-items: center;
 	flex-shrink: 0;
 	justify-content: center;

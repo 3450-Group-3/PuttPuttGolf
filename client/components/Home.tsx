@@ -7,7 +7,7 @@ export default function Home() {
 
 	return (
 		<div>
-			<img src="app/static/images/logo.png" alt="logo" />
+			{/* <img src="app/static/images/logo.png" alt="logo" /> */}
 			<Link to="/me">Account Info</Link>
 			<br />
 
@@ -18,12 +18,7 @@ export default function Home() {
 					<Link to="/login">Login</Link>
 				</>
 			) : (
-				<a
-					onClick={() => {
-						localStorage.removeItem('token');
-					}}
-					href=""
-				>
+				<a onClick={() => localStorage.removeItem('token')} href="">
 					Logout
 				</a>
 			)}

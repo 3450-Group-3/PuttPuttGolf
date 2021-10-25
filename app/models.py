@@ -168,6 +168,7 @@ class Tournament(Base):  # type: ignore
 
     created_by_id = Column(types.Integer, ForeignKey("users.id"), nullable=False)
     created_by = relationship("User", back_populates="created_tournaments")
+
     # sponsored_by_id = Column(types.Integer, ForeignKey("users.id"))
     # sponsored_by = relationship("User", back_populates="sponsored_tournaments")
 

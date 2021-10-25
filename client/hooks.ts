@@ -7,7 +7,11 @@ import {
 	useLayoutEffect,
 	useState,
 	EffectCallback,
+	useContext,
 } from 'react';
+import GlobalContext from './global';
+import { UserData } from './types';
+import User from './user';
 
 const useAxios = makeUseAxios({
 	axios: api,
@@ -76,4 +80,19 @@ export function useWindowSize() {
 
 export function useMount(callback: EffectCallback) {
 	return useEffect(callback, []);
+}
+
+export function useGlobal() {
+	return useContext(GlobalContext);
+}
+
+export function useUser() {
+	const { user, setState, ...globalData } = useGlobal();
+
+	return {
+		user,
+		setUser: (data: UserData) => {
+			setState({ ...globalData, user: new User(data), setState });
+		},
+	};
 }

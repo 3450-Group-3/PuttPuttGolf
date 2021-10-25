@@ -15,7 +15,7 @@ const LayoutWrapper = styled.div`
 const Page = styled.div`
 	display: flex;
 	flex-grow: 1;
-	align-items: center;
+	/* align-items: center; */
 	justify-content: center;
 	overflow-y: auto;
 	overflow-x: hidden;

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { Button, ButtonLink, Content } from '../common/styles';
-import Title from '../common/Title';
+import { Button, ButtonLink, CenterContent } from '../styles';
+import Title from '../components/Title';
 
 const Header = styled.h1`
 	font-size: 8rem;
@@ -18,13 +18,13 @@ const Text = styled.p`
 
 export default function NotFound() {
 	return (
-		<Content>
+		<CenterContent>
 			<Title>Not Found</Title>
 			<Header>404</Header>
 			<Text>Looks like this page doesn&apos;t exist! </Text>
 			<ButtonLink to="/" kind="outline">
 				Take Me Home
 			</ButtonLink>
-		</Content>
+		</CenterContent>
 	);
 }

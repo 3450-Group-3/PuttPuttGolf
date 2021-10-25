@@ -60,7 +60,7 @@ def test_get_user(user: models.User, db: Session, client: TestClient):
     res = client.get(
         f"/api/users/{manager.id}", headers={"Authorization": f"Bearer {token}"}
     )
-    assert res.status_code == 401
+    assert res.status_code == 404
 
     # Manager can view other users
     res = client.get(

@@ -1,15 +1,16 @@
 import { Link } from 'react-router-dom';
+import { useUser } from '../hooks';
 
 export default function Home() {
-	const token = localStorage.getItem('token');
+	const { user, setUser } = useUser();
 
 	return (
 		<div>
-			<img src="app/static/images/logo.png" alt="logo" />
+			{/* <img src="app/static/images/logo.png" alt="logo" /> */}
 			<Link to="/me">Account Info</Link>
 			<br />
 
-			{!token ? (
+			{!user.loggedIn ? (
 				<>
 					<Link to="/signup">Sign Up</Link>
 					<br />

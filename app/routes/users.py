@@ -12,6 +12,24 @@ from app.security import Password
 users = APIRouter(prefix="/users", tags=["User Crud"])
 
 
+def get_relevant_user(
+    id: Union[int, Literal["me"]],
+    curr_user: models.User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    if id == "me":
+        return curr_user
+    else:
+        user = db.query(models.User).get(id)
+        if user:
+            if curr_user == user or curr_user.is_manager:
+                return user
+            else:
+                raise errors.ResourceNotFound("User", {"id": id})
+        else:
+            raise errors.ResourceNotFound("User", {"id": id})
+
+
 @users.get(
     "",
     response_model=list[schemas.User],
@@ -27,21 +45,8 @@ def list_users(db: Session = Depends(get_db)):
 
 
 @users.get("/{id}", response_model=schemas.User)
-def show_user(
-    id: Union[int, Literal["me"]],
-    user: models.User = Depends(get_current_user),
-    db: Session = Depends(get_db),
-):
-    if id == "me" or id == user.id:
-        return user
-
-    if user.is_manager:
-        found = db.query(models.User).get(id)
-        if found:
-            return found
-        raise errors.ResourceNotFound("User", {"id": id})
-
-    raise errors.PermissionException("retrieve user data")
+def show_user(user: models.User = Depends(get_relevant_user)):
+    return user
 
 
 @users.post("", response_model=schemas.User)
@@ -70,15 +75,17 @@ def create_user(user_data: schemas.UserIn, db: Session = Depends(get_db)):
 
 @users.put("/{id}", response_model=schemas.User)
 def update_user(
-    id: Union[int, Literal["me"]],
     user_data: schemas.UserInUpdate,
+    id: Union[int, Literal["me"]],
     db: Session = Depends(get_db),
-    curr_user: models.User = Depends(get_current_user),
+    user: models.User = Depends(get_relevant_user),
 ):
-    collisions = (
-        db.query(models.User)
-        .where(models.User.username == user_data.username, models.User.id != id)
+    collisions = tuple(
+        collision
+        for collision in db.query(models.User)
+        .where(models.User.username == user_data.username)
         .all()
+        if collision != user
     )
 
     if collisions:
@@ -87,51 +94,24 @@ def update_user(
             content={"detail": "Username Taken"},
         )
 
-    if id == "me" or curr_user.id == id:
-        curr_user.username = user_data.username
-        curr_user.birthdate = user_data.birthdate
-        curr_user.role = user_data.role
+    user.username = user_data.username
+    user.birthdate = user_data.birthdate
+    user.role = user_data.role
 
-        db.commit()
-        db.refresh(curr_user)
-        return curr_user
-
-    elif curr_user.is_manager:
-        user = db.query(models.User).get(id)
-        if not user:
-            raise errors.ResourceNotFound("User", {"id": id})
-
-        user.username = user_data.username
-        user.birthdate = user_data.birthdate
-        user.role = user_data.role
-
-        db.commit()
-        db.refresh(user)
-        return user
-
-    raise errors.PermissionException("edit user")
+    db.commit()
+    db.refresh(user)
+    return user
 
 
 @users.delete("/{id}")
 def delete_user(
-    id: Union[int, Literal["me"]],
+    user: models.User = Depends(get_relevant_user),
     db: Session = Depends(get_db),
-    curr_user: models.User = Depends(get_current_user),
 ):
-    if id == "me":
-        user = curr_user
-    else:
-        user = db.query(models.User).get(id)
 
-    if not user:
-        raise errors.ResourceNotFound("User", {"id": id})
-
-    if user and (user.id == curr_user.id or curr_user.is_manager):
-        db.delete(user)
-        db.commit()
-        return {"status": "ok"}
-    else:
-        raise errors.PermissionException("delete user")
+    db.delete(user)
+    db.commit()
+    return {"status": "ok"}
 
 
 @users.post("/me/change-password", response_model=schemas.User)

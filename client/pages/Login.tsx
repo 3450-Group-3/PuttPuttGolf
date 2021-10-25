@@ -1,14 +1,22 @@
 import { useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
-import styled from 'styled-components';
-import Input from '../common/Input';
-import { Button } from '../common/styles';
-import { usePost } from '../hooks';
-import { FormError } from '../types';
-import { IoPersonCircleOutline } from 'react-icons/io5';
 import { RiLockPasswordLine } from 'react-icons/ri';
-import Title from '../common/Title';
-type LoginSuccess = { access_token: string };
+import { useLocation } from 'react-router-dom';
+import styled from 'styled-components';
+import Input from '../components/Input';
+import { Button } from '../styles';
+import { usePost, useUser } from '../hooks';
+import { FormError, UserData } from '../types';
+import { IoPersonCircleOutline } from 'react-icons/io5';
+import Title from '../components/Title';
+
+interface LoginSuccess {
+	accessToken: string;
+	tokenType: string;
+	user: UserData;
+}
+
+type RedirectState = { redirectTo?: string };
 
 const Div = styled.div`
 	text-align: center;
@@ -20,32 +28,18 @@ const Div = styled.div`
 `;
 
 export default function Login() {
-	var alreadyLoggedIn = false;
-	if (localStorage.getItem('token')) {
-		alreadyLoggedIn = true;
-	}
-
+	const { state: { redirectTo = '/play' } = {} } = useLocation<RedirectState>();
+	const { user, setUser } = useUser();
 	const [state, setState] = useState({
 		username: '',
 		password: '',
 	});
 	const { username, password } = state;
 
-	const [redirectState, setRedirectState] = useState({
-		redirect: false,
-	});
-	const { redirect } = redirectState;
-
 	const [{ data, loading, error }, login] = usePost<
 		LoginSuccess,
 		FormError<keyof typeof state>
 	>('/auth/token');
-
-	if (data) {
-		setTimeout(() => {
-			setRedirectState({ redirect: true });
-		}, 1000);
-	}
 
 	const handleLogin = () => {
 		const form = new FormData();
@@ -56,7 +50,8 @@ export default function Login() {
 			data: form,
 			headers: { 'Content-Type': 'multipart/form-data' },
 		}).then(({ data }) => {
-			localStorage.setItem('token', data.access_token);
+			localStorage.setItem('token', data.accessToken);
+			setTimeout(() => setUser(data.user), 1000);
 		});
 	};
 
@@ -73,16 +68,13 @@ export default function Login() {
 			{loading && <div>Logging in...</div>}
 			{error && <div>Login failed :(</div>}
 			{data && <div>Login Success!</div>}
-			{data && redirect && <Redirect to="/play"></Redirect>}
-			{alreadyLoggedIn && <Redirect to="/play"></Redirect>}
+			{user.loggedIn && <Redirect to={redirectTo} />}
 			<Input
-				// title="Username"
 				placeholder="Username"
 				onChange={(e) => setState({ username: e.target.value, password })}
 				icon={<IoPersonCircleOutline size={40} />}
 			/>
 			<Input
-				// title="Password"
 				placeholder="Password"
 				type="password"
 				onChange={(e) => setState({ password: e.target.value, username })}

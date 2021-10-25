@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { Button, ButtonLink, CenterContent } from '../common/styles';
-import Title from '../common/Title';
+import { Button, ButtonLink, CenterContent } from '../styles';
+import Title from '../components/Title';
 
 const Header = styled.h1`
 	font-size: 8rem;

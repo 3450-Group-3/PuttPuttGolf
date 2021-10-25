@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import { useUser } from '../hooks';
-import { UserData } from '../types';
 
 export default function Home() {
 	const { user, setUser } = useUser();

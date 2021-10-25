@@ -10,6 +10,8 @@ import {
 	useContext,
 } from 'react';
 import GlobalContext from './global';
+import { UserData } from './types';
+import User from './user';
 
 const useAxios = makeUseAxios({
 	axios: api,
@@ -84,8 +86,13 @@ export function useGlobal() {
 	return useContext(GlobalContext);
 }
 
-// TODO: Add and updateUser function
 export function useUser() {
-	const { user, setUser } = useGlobal();
-	return { user, setUser };
+	const { user, setState, ...globalData } = useGlobal();
+
+	return {
+		user,
+		setUser: (data: UserData) => {
+			setState({ ...globalData, user: new User(data), setState });
+		},
+	};
 }

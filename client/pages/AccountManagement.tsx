@@ -2,9 +2,21 @@ import { Redirect } from 'react-router';
 import styled from 'styled-components';
 import { useGet, usePut, useUser } from '../hooks';
 import { DetailFormError, UserData } from '../types';
-import AccountForm from './AccountForm';
-import PasswordForm from './PasswordForm';
-import { CenterContent, Message } from '../common/styles';
+import AccountForm from '../components/AccountForm';
+import PasswordForm from '../components/PasswordForm';
+import { Message } from '../styles';
+import Themer from '../components/Themer';
+
+const Content = styled.div`
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	margin: auto;
+	padding-top: 2rem;
+	padding-bottom: 2rem;
+`;
 
 export default function AccountManagement() {
 	const { setUser } = useUser();
@@ -36,7 +48,7 @@ export default function AccountManagement() {
 
 	if (data)
 		return (
-			<CenterContent>
+			<Content>
 				{postLoading && <Message>Updating user...</Message>}
 				{postData && <Message>Update user successful!</Message>}
 				{postError && (
@@ -55,7 +67,8 @@ export default function AccountManagement() {
 					defaultValues={data}
 				/>
 				<PasswordForm />
-			</CenterContent>
+				<Themer />
+			</Content>
 		);
 
 	return <div></div>;

@@ -1,7 +1,7 @@
 import React, { InputHTMLAttributes } from 'react';
 import styled from 'styled-components';
 
-import { Title } from './styles';
+import { Title } from '../styles';
 
 const Container = styled.div`
 	display: block;

@@ -117,7 +117,8 @@ export const CenterContent = styled.div`
 	flex-direction: column;
 	align-items: center;
 	margin: auto;
-	margin-left: 60px;
+	padding-top: 2rem;
+	padding-bottom: 2rem;
 `;
 
 export const Message = styled.h2<{ error?: boolean }>`

@@ -1,20 +1,20 @@
 import styled from 'styled-components';
-import { Button } from '../common/styles';
+import { useGlobal } from '../hooks';
+import { Button } from '../styles';
 
 const Content = styled.div`
+	flex: 1;
+	flex-wrap: wrap;
 	display: flex;
 	align-items: center;
-	justify-content: space-evenly;
-	height: 100%;
-	width: 100%;
 `;
 
-interface Props {
-	readonly setTheme: (name: string) => void;
-	readonly theme: string;
-}
+const Div = styled.div`
+	padding: 2rem;
+`;
 
-export default function Themer({ theme, setTheme }: Props) {
+export default function Themer() {
+	const { theme, setState, ...state } = useGlobal();
 	const themeDisplay = [
 		{ name: 'Dark Mode', propName: 'darkMode' },
 		{ name: 'Light Mode', propName: 'lightMode' },
@@ -22,20 +22,20 @@ export default function Themer({ theme, setTheme }: Props) {
 
 	const handleChange = (name: string) => {
 		localStorage.setItem('theme', name);
-		setTheme(name);
+		setState({ theme: name, setState, ...state });
 	};
 
 	return (
 		<Content>
 			{themeDisplay.map(({ name, propName }) => (
-				<div key={name}>
+				<Div key={name}>
 					<Button
 						kind={theme === propName ? 'solid' : 'outline'}
 						onClick={() => handleChange(propName)}
 					>
 						{name}
 					</Button>
-				</div>
+				</Div>
 			))}
 		</Content>
 	);

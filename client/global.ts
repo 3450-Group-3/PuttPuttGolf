@@ -3,8 +3,9 @@ import User from './user';
 import { UserData } from './types';
 
 export interface GlobalState {
+	theme: string;
 	user: User;
-	setUser: (data: UserData) => void;
+	setState: (state: GlobalState) => void;
 }
 
 const GlobalContext = React.createContext<GlobalState>({} as GlobalState);

@@ -4,8 +4,8 @@ import styled from 'styled-components';
 import { usePost } from '../hooks';
 import { DetailFormError, UserData } from '../types';
 
-import Input from '../common/Input';
-import { Button, Message } from '../common/styles';
+import Input from './Input';
+import { Button, Message } from '../styles';
 import { Redirect } from 'react-router';
 
 const Form = styled.form`

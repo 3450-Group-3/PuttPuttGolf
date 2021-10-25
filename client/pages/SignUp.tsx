@@ -1,9 +1,9 @@
 import { Redirect } from 'react-router-dom';
-import AccountForm from './AccountForm';
+import AccountForm from '../components/AccountForm';
 import { usePost } from '../hooks';
-import { CenterContent, Message } from '../common/styles';
+import { CenterContent, Message } from '../styles';
 import { DetailFormError, UserData } from '../types';
-import Title from '../common/Title';
+import Title from '../components/Title';
 
 export default function SignUp() {
 	const [{ data, loading, error }, signUp] = usePost<UserData, DetailFormError>(

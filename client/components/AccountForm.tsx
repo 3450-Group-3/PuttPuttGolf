@@ -6,10 +6,10 @@ import Select, { StylesConfig, SingleValue } from 'react-select';
 import { IoPersonCircleOutline } from 'react-icons/io5';
 import { RiLockPasswordLine } from 'react-icons/ri';
 
-import { Title } from '../common/styles';
+import { Title } from '../styles';
 import { UserData } from '../types';
-import { Button } from '../common/styles';
-import Input from '../common/Input';
+import { Button } from '../styles';
+import Input from './Input';
 
 const Form = styled.form`
 	display: flex;

@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import NotFound from './pages/NotFound';
+import DrinkOrdering from './pages/DrinkOrdering';
 
 const ProtectedRoute = (props: RouteProps) => {
 	if (localStorage.getItem('token')) {
@@ -21,6 +22,7 @@ export default function Routes() {
 			<Route path="/signup" exact component={SignUp} />
 			<Route path="/login" component={Login} />
 			<ProtectedRoute path="/me" component={AccountManagement} />
+			<ProtectedRoute path="/order" component={DrinkOrdering} />
 			<Route path="*" component={NotFound} />
 		</Switch>
 	);

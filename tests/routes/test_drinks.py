@@ -4,7 +4,7 @@ from app import models, schemas
 import sys
 from app.security import AccessToken
 
-test_out_file = file=open("test.json", mode="w+", encoding="utf-8")
+# test_out_file = file=open("test.json", mode="w+", encoding="utf-8")
 
 def auth_token(user: models.User):
     return AccessToken.encode(data={"sub": user.username})
@@ -23,7 +23,7 @@ def test_get_drinks(user: models.User, db: Session, client: TestClient):
 
 def test_post_drink(user: models.User, db: Session, client: TestClient): #todo ask sean about db sessions and persistance
     result = client.post("/api/drinks")
-    print(result.text, file=test_out_file)
+    # print(result.text, file=test_out_file)
     assert result.status_code == 401
 
     token = auth_token(user)
@@ -38,7 +38,7 @@ def test_post_drink(user: models.User, db: Session, client: TestClient): #todo a
             "image_url": "google.com/url.jpg",
             "description": "this is a description"
         })
-        print(result.text, file = test_out_file)
+        # print(result.text, file = test_out_file)
         if role ==  models.UserRole.MANAGER:
             assert result.status_code == 200, result.text
         else:
@@ -59,7 +59,7 @@ def test_put_drink(user: models.User, db: Session, client: TestClient):
             "image_url": "google.com/url.jpg",
             "description": "this is a different description"
         })
-        print(result.text, file = test_out_file)
+        # print(result.text, file = test_out_file)
         if role ==  models.UserRole.MANAGER:
             assert result.status_code == 200, result.text #todo check for updated description
         else:

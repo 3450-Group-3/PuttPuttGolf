@@ -53,7 +53,8 @@ class User(Base):  # type: ignore
     can be used to purchase drinks or sponsor events"""
 
     scores = relationship("Score")
-    tournaments = relationship('Tournament', secondary = 'score')
+    # tournaments = relationship('Tournament', secondary = 'score', back_populates='players')
+    tournaments = relationship("Association", back_populates="user")
 
     def has_role(self, role: UserRole):
         return self.role == role
@@ -117,7 +118,8 @@ class Tournament(Base):  # type: ignore
     hole_count = Column(types.Integer, nullable=False)
 
     # TODO: Implement scores property, increment_score, add_user, and remove_user when Scores table is written
-    players = relationship('User', secondary = 'score')
+    # players = relationship('User', secondary = 'score', back_populates='tournaments')
+    users = relationship("Score")
 
     @property
     def _is_sponsored(self):
@@ -144,6 +146,7 @@ class Tournament(Base):  # type: ignore
     def increment_score(self, user: Union[User, int], increment: int) -> int:
         # Increment a user's score for this tournament
         self.user.score += increment
+        return self.user.score
 
     def complete_tournament(self) -> None:  # TODO
         pass
@@ -158,6 +161,8 @@ class Score(Base):
     __tablename__ = 'score'
 
     id = Column(types.Integer, primary_key=True, index=True, nullable=False)
-    tournment_id = Column(types.Integer,  ForeignKey("tournment.id"), nullable=False)
-    user_id = Column(types.Integer, ForeignKey("user.id"), nullable=False)
+    tournament_id = Column(types.Integer,  ForeignKey("tournments.id"), primary_key=True, nullable=False)
+    user_id = Column(types.Integer, ForeignKey("users.id"), primary_key=True, nullable=False)
     score = Column(types.Integer, index=True, nullable=False)
+
+    user = relationship("User")

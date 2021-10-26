@@ -6,7 +6,11 @@ export default function Home() {
 
 	return (
 		<div>
-			<img src="app/static/images/logo.png" alt="logo"/>
+			<img src="static/images/logo.png" alt="logo"/>
+			<br />
+
+			<p>Welcome to the PuttPuttGolf and Drink App</p>
+
 			<Link to="/me">Account Info</Link>
 			<br />
 

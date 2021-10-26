@@ -71,15 +71,16 @@ $ yarn dev
 ```
 **Note** that this server is just used for compiling and serving JS assets, and shouldn't be accessed directly!
 
-The API server can be started with
-```
-$ poetry exec start
-```
+The API server can be started with  
  **NOTE**:  
  > the `exec` command is provided by a `poetry` plugin, which are only available when you are in a subshell. Before executing any `exec` commands you need to make sure that you're in a subshell with `poetry shell`  
  
  **NOTE**:  
  > the `exec` command provided by the plugin only works in unix shells, if you are on windows, make sure you run `poetry shell` then proceed to run `uvicorn app.main:app --reload --port 3000`. You can also just run the single command `poetry run uvicorn app.main:app --reload --port 3000`. A third option is to make sure you are in the root folder of the project and then using command prompt, then run the batch script `startserver.bat` within the command prompt.  
+```
+$ poetry exec start
+```
+
 
   
     
@@ -94,15 +95,22 @@ Now you should be able to go to [localhost:3000](http://localhost:3000) in your 
 2. In production `ENVIRONMENT` in the `.env` needs to be set to `production` otherwise, it won't serve the bundled JS assets
 
 ## Testing
-```
-$ poetry exec test
-```
+1. Linux
+    ```
+    poetry exec test
+    ```
+2. Windows
+    ```
+    runtests.bat
+    ```
+    
 
 ## Development Notes
 - FastAPI implements the OpenAPI spec, and as such can provide automatic API documentation. If the server is running, the docs should be accessible at [localhost:3000/api/docs](http://localhost:3000/api/docs)
 
 ### Migrations
-To create a migration, edit / create your new models.
+To create a migration, edit / create your new models.  
+**NOTE**: make sure you are in a poetry venv using either `poetry shell` or `poetry run`
 
 Run this command to generate the migration file
 ```

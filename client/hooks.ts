@@ -1,7 +1,17 @@
 import { makeUseAxios, Options } from 'axios-hooks';
 import { Method } from 'axios';
 import api from './api';
-import { RefObject, useEffect } from 'react';
+import {
+	RefObject,
+	useEffect,
+	useLayoutEffect,
+	useState,
+	EffectCallback,
+	useContext,
+} from 'react';
+import GlobalContext from './global';
+import { UserData } from './types';
+import User from './user';
 
 const useAxios = makeUseAxios({
 	axios: api,
@@ -16,7 +26,7 @@ export function useGet<Response, Error = unknown>(
 
 function makeLazy(method: Method) {
 	return <Response, Error = unknown>(
-		url: string,
+		url?: string,
 		options: Omit<Options, 'manual'> = {}
 	) => useAxios<Response, Error>({ url, method }, { manual: true, ...options });
 }
@@ -54,4 +64,35 @@ export function useOnClickOutside<T extends HTMLElement = HTMLElement>(
 
 		// Reload only if ref or handler changes
 	}, [ref, handler]);
+}
+
+export function useWindowSize() {
+	const [size, setSize] = useState([0, 0]);
+	useLayoutEffect(() => {
+		const updateSize = () => setSize([window.innerWidth, window.innerHeight]);
+		window.addEventListener('resize', updateSize);
+		updateSize();
+		return () => window.removeEventListener('resize', updateSize);
+	}, []);
+
+	return size;
+}
+
+export function useMount(callback: EffectCallback) {
+	return useEffect(callback, []);
+}
+
+export function useGlobal() {
+	return useContext(GlobalContext);
+}
+
+export function useUser() {
+	const { user, setState, ...globalData } = useGlobal();
+
+	return {
+		user,
+		setUser: (data: UserData) => {
+			setState({ ...globalData, user: new User(data), setState });
+		},
+	};
 }

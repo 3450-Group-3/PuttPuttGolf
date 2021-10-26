@@ -3,12 +3,13 @@ from fastapi import Depends, HTTPException, status, APIRouter
 from fastapi.security import OAuth2PasswordRequestForm
 
 from ..security import authenticate_user, AccessToken
+from .. import schemas
 from ..dependancies import get_db
 
-auth = APIRouter(prefix="/auth")
+auth = APIRouter(prefix="/auth", tags=["Authorization"])
 
 
-@auth.post("/token")
+@auth.post("/token", response_model=schemas.AuthResponse)
 async def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db),
@@ -23,4 +24,8 @@ async def login_for_access_token(
         )
     else:
         access_token = AccessToken.encode(data={"sub": user.username})
-        return {"access_token": access_token, "token_type": "bearer"}
+        return {
+            "access_token": access_token,
+            "token_type": "bearer",
+            "user": user,
+        }

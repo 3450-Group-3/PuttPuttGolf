@@ -8,14 +8,18 @@ export type ID = string | number;
 
 export enum UserRole {
 	Player = 1,
-	DrinkerMeister = 2,
+	DrinkMeister = 2,
 	Sponsor = 3,
 	Manager = 4,
+	Anonymous = 5,
 }
 
-export interface User {
+export interface UserData {
 	id: ID;
 	username: string;
 	birthdate: Date;
 	role: UserRole;
+	balance: number;
 }
+
+export type Layout = 'mobile' | 'desktop';

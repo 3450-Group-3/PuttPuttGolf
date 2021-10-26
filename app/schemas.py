@@ -34,11 +34,23 @@ class UserIn(InModel):
     birthdate: datetime
 
 
+class UserInUpdate(InModel):
+    username: str
+    birthdate: datetime
+    role: UserRole
+
+
+class PasswordIn(InModel):
+    curr_password: str
+    new_password: str
+
+
 class User(OutModel):
     id: int
     username: str
     birthdate: date
     role: UserRole
+    balance: int
 
     class Config:
         orm_mode = True
@@ -48,13 +60,7 @@ class UserInDB(User):
     hashed_password: str
 
 
-class Token(BaseModel):
-    access_token: str
-    token_type: str
-
-
-
-class Drink(BaseModel):
+class Drink(OutModel):
     name: str
     price: float
     image_url: str
@@ -63,19 +69,33 @@ class Drink(BaseModel):
     class Config:
         orm_mode = True
 
-class Tournament:
-    created_by: User
+
+class TournamentIn(InModel):
+    date: datetime
+    hole_count: int
+
+
+class Tournament(OutModel):
+    date: datetime
+    hole_count: int
+    balance: float
+    completed: bool
+    advertising_banner: Optional[str]
     sponsored_by: Optional[User]
-    date = datetime
-    completed = bool
-    advertising_banner = Optional[str]
-    balance = float
-    hole_count = int
+    created_by: User
 
     class Config:
         orm_mode = True
+        arbitrary_types_allowed = True  # Why is this needed
 
-class Score:
+
+class Score(OutModel):
     score: int
     user: User
     tournament: Tournament
+
+
+class AuthResponse(BaseModel):
+    access_token: str
+    token_type: str
+    user: User

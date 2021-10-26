@@ -26,9 +26,10 @@
 	},
 	"rules": {
 		"linebreak-style": ["error", "unix"],
-		"quotes": ["error", "single"],
+		"quotes": ["warning", "single"],
 		"semi": ["error", "always"],
 		"react/react-in-jsx-scope": 0,
-		"@typescript-eslint/explicit-module-boundary-types": 0
+		"@typescript-eslint/explicit-module-boundary-types": 0,
+		"react/prop-types": 0
 	}
 }

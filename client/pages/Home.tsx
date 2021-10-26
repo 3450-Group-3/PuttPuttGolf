@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
+import { useUser } from '../hooks';
 
 export default function Home() {
-	const token = localStorage.getItem('token');
-	console.log(token);
+	const { user, setUser } = useUser();
 
 	return (
 		<div>
@@ -14,7 +14,7 @@ export default function Home() {
 			<Link to="/me">Account Info</Link>
 			<br />
 
-			{!token ? (
+			{!user.loggedIn ? (
 				<>
 					<Link to="/signup">Sign Up</Link>
 					<br />

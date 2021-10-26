@@ -11,8 +11,8 @@ import { IoPersonCircleOutline } from 'react-icons/io5';
 import Title from '../components/Title';
 
 interface LoginSuccess {
-	accessToken: string;
-	tokenType: string;
+	access_token: string;
+	token_type: string;
 	user: UserData;
 }
 
@@ -28,7 +28,8 @@ const Div = styled.div`
 `;
 
 export default function Login() {
-	const { state: { redirectTo = '/play' } = {} } = useLocation<RedirectState>();
+	const { state: locationState } = useLocation<RedirectState>();
+	const redirectTo = locationState?.redirectTo || '/play';
 	const { user, setUser } = useUser();
 	const [state, setState] = useState({
 		username: '',
@@ -50,7 +51,7 @@ export default function Login() {
 			data: form,
 			headers: { 'Content-Type': 'multipart/form-data' },
 		}).then(({ data }) => {
-			localStorage.setItem('token', data.accessToken);
+			localStorage.setItem('token', data.access_token);
 			setTimeout(() => setUser(data.user), 1000);
 		});
 	};

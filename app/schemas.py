@@ -70,7 +70,6 @@ class Drink(OutModel):
         orm_mode = True
 
 
-
 class TournamentIn(InModel):
     date: datetime
     hole_count: int
@@ -96,7 +95,7 @@ class Score(OutModel):
     tournament: Tournament
 
 
-class AuthResponse(OutModel):
+class AuthResponse(BaseModel):
     access_token: str
     token_type: str
     user: User

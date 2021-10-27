@@ -35,7 +35,7 @@ export default class User {
 	}
 
 	get roleName(): string {
-		return ['Player', 'DrinkMeister', 'Sponsor', 'Manager', 'Anonymous'][
+		return ['Player', 'Drink Meister', 'Sponsor', 'Manager', 'Anonymous'][
 			this.role - 1
 		];
 	}
@@ -49,7 +49,7 @@ export default class User {
 	}
 
 	get isSponsor(): boolean {
-		return this.role === UserRole.Sponsor;
+		return this.role === UserRole.Sponsor || this.role == UserRole.Manager;
 	}
 
 	get isManager(): boolean {

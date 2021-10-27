@@ -61,6 +61,7 @@ class UserInDB(User):
 
 
 class Drink(OutModel):
+    id: int
     name: str
     price: float
     image_url: str

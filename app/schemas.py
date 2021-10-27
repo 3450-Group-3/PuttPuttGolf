@@ -103,7 +103,6 @@ class DrinkOrderLocationUpdateIn(InModel):
     location: str
 
 class DrinkOrderStatusUpdateIn(InModel):
-    id: int
     order_status: DrinkOrderState
 
 class TournamentIn(InModel):

@@ -69,12 +69,6 @@ def create_order(order_data: schemas.DrinkOrderIn, user: models.User = Depends(g
 def update_order_status(id: int, order_data: schemas.DrinkOrderStatusUpdateIn, db: Session = Depends(get_db)):
     order: models.DrinkOrder = db.query(models.DrinkOrder).where(models.DrinkOrder.id == id).first()
 
-    if (order.id != order_data.id):
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            content={"detail" : "Order id mismatch, aborting status update."}
-        )    
-
     if order.order_status != (order_data.order_status - 1):
         return JSONResponse(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -116,4 +110,4 @@ def update_order_customer_location(id: int, order_data: schemas.DrinkOrderLocati
 def delete_order(id: int, db: Session = Depends(get_db)):
     db.query(models.DrinkOrder).where(models.DrinkOrder.id == id).delete()
     db.commit()
-    
+

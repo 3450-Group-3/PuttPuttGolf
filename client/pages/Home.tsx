@@ -1,6 +1,7 @@
 import { useUser } from '../hooks';
 import styled from 'styled-components';
 import { ButtonLink, CenterContent } from '../styles';
+import Title from '../components/Title';
 
 
 export const Description = styled.p`
@@ -13,7 +14,10 @@ export default function Home() {
 	const { user, setUser } = useUser();
 
 	return (
+
 		<CenterContent>
+			<Title>Home</Title>
+
 			<img src="static/images/logo.png"
 			alt="logo"
 			width="400em"

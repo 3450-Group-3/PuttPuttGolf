@@ -102,6 +102,9 @@ class DrinkOrderLocationUpdateIn(InModel):
     id: int
     location: str
 
+class DrinkOrderStatusUpdateIn(InModel):
+    id: int
+    order_status: DrinkOrderState
 
 class TournamentIn(InModel):
     date: datetime

@@ -1,8 +1,8 @@
 """added drinkorder model
 
-Revision ID: 5dcf25b42d25
+Revision ID: c17c79618180
 Revises: d462d0d92c04
-Create Date: 2021-10-27 13:07:25.267103
+Create Date: 2021-10-27 14:17:50.967667
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '5dcf25b42d25'
+revision = 'c17c79618180'
 down_revision = 'd462d0d92c04'
 branch_labels = None
 depends_on = None
@@ -24,8 +24,8 @@ def upgrade():
     sa.Column('order_status', sa.Enum('OPEN', 'INPROGRESS', 'ENROUTE', 'DELIVERED', name='drinkorderstate'), nullable=False),
     sa.Column('time_ordered', sa.DateTime(), nullable=False),
     sa.Column('total_price', sa.Float(), nullable=False),
-    sa.Column('drinks', sa.ARRAY(sa.Integer()), nullable=False),
-    sa.Column('location', sa.ARRAY(sa.Float()), nullable=True),
+    sa.Column('drinks', sa.String(), nullable=False),
+    sa.Column('location', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     with op.batch_alter_table('orders', schema=None) as batch_op:

@@ -89,7 +89,12 @@ def update_order_status(id: int, order_data: schemas.DrinkOrderStatusUpdateIn, d
 @orders.put(
     "/{id}/location", response_model=schemas.DrinkOrderOut
 )
-def update_order_customer_location(id: int, order_data: schemas.DrinkOrderLocationUpdateIn , user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+def update_order_customer_location(
+    id: int, 
+    order_data: schemas.DrinkOrderLocationUpdateIn , 
+    user: models.User = Depends(get_current_user), 
+    db: Session = Depends(get_db)
+):
     order: models.DrinkOrder = db.query(models.DrinkOrder).where(models.DrinkOrder.id == id).first()
 
     if (order.customer_id != user.id):

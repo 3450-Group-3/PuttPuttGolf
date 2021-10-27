@@ -182,8 +182,22 @@ class DrinkOrder(Base):
     order_status = Column(types.Enum(DrinkOrderState), nullable=False, index=True)
     time_ordered = Column(types.DateTime, nullable=False, index=True)
     total_price = Column(types.Float, nullable=False)
-    drinks = Column(types.ARRAY(types.Integer), nullable=False)
-    location = Column(types.ARRAY(types.Float), nullable=True) #[longitude, lattitude]
+    drinks = Column(types.String, nullable=False)
+    """
+    serialized json. 
+    { 
+        "drinkId1" : "quantity", 
+        "drinkId2": "quantity" 
+    }
+    """
+    location = Column(types.String, nullable=True)
+    """
+    serialized json.
+    {
+        "lattitude" : "value",
+        "longitude" : "value"
+    }
+    """
 
 
 class Tournament(Base):  # type: ignore

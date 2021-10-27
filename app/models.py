@@ -178,7 +178,7 @@ class DrinkOrder(Base):
     __tablename__ = "orders"
 
     id = Column(types.Integer, primary_key=True, nullable=False, index=True)
-    customer_username = Column(ForeignKey("users.username"), nullable=False, index=True)
+    customer_id = Column(types.Integer, nullable=False, index=True)
     order_status = Column(types.Enum(DrinkOrderState), nullable=False, index=True)
     time_ordered = Column(types.DateTime, nullable=False, index=True)
     total_price = Column(types.Float, nullable=False)

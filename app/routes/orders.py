@@ -53,8 +53,16 @@ def create_order(order_data: schemas.DrinkOrderIn, user: models.User = Depends(g
         order_status = order_data.order_status,
         time_ordered = order_data.time_ordered,
         total_price = order_data.total_price,
-        drinks = order_data.drinks,
-        location = json.dumps(order_data.location)
+        drinks = json.dumps([
+            { 
+                "drinkId" : order_data.drinks[i].drinkId,
+                "quantity" : order_data.drinks[i].quantity
+            } for i in range(len(order_data.drinks))
+        ]),
+        location = json.dumps({
+            "lattitude" : order_data.location.lattitude,
+            "longitude" : order_data.location.longitude
+        })
     )
 
     db.add(order)

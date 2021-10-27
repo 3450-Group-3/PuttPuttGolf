@@ -78,6 +78,10 @@ class DrinkIn(InModel):
     image_url: str
     description: str
 
+class UserLocation(BaseModel):
+    lattitude: float
+    longitude: float
+
 class DrinkOrderOut(OutModel):
     id: int
     customer_id: int
@@ -96,11 +100,7 @@ class DrinkOrderIn(InModel):
     time_ordered: datetime
     total_price: float
     drinks: str
-    location: str
-
-class DrinkOrderLocationUpdateIn(InModel):
-    id: int
-    location: str
+    location: UserLocation
 
 class DrinkOrderStatusUpdateIn(InModel):
     order_status: DrinkOrderState

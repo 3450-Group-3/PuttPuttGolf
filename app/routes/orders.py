@@ -4,6 +4,7 @@ from starlette import status
 from starlette.responses import JSONResponse
 from app.dependancies import current_user_is_drinkmeister, get_current_user, get_db, current_user_is_manager
 from app import schemas, models
+import json
 
 
 
@@ -53,7 +54,7 @@ def create_order(order_data: schemas.DrinkOrderIn, user: models.User = Depends(g
         time_ordered = order_data.time_ordered,
         total_price = order_data.total_price,
         drinks = order_data.drinks,
-        location = order_data.location
+        location = json.loads(order_data.location)
     )
 
     db.add(order)
@@ -91,7 +92,7 @@ def update_order_status(id: int, order_data: schemas.DrinkOrderStatusUpdateIn, d
 )
 def update_order_customer_location(
     id: int, 
-    order_data: schemas.DrinkOrderLocationUpdateIn , 
+    order_data: schemas.UserLocation , 
     user: models.User = Depends(get_current_user), 
     db: Session = Depends(get_db)
 ):
@@ -103,7 +104,7 @@ def update_order_customer_location(
             content={"detail" : "Attempting to update another users order, aborting."}
         )
     
-    order.location = order_data.location
+    order.location = json.loads(order_data.location)
     db.commit()
     db.refresh(order)
 

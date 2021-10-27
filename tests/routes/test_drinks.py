@@ -3,8 +3,6 @@ from starlette.testclient import TestClient
 from app import models, schemas
 from app.security import AccessToken
 
-test_out_file = file=open("test.json", mode="w+", encoding="utf-8")
-
 def auth_token(user: models.User):
     return AccessToken.encode(data={"sub": user.username})
 

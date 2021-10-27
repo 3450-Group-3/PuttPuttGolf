@@ -80,7 +80,7 @@ class DrinkIn(InModel):
 
 class DrinkOrderOut(OutModel):
     id: int
-    customer_username: str
+    customer_id: int
     order_status: DrinkOrderState
     time_ordered: datetime
     total_price: float
@@ -91,7 +91,7 @@ class DrinkOrderOut(OutModel):
         orm_mode = True
 
 class DrinkOrderIn(InModel):
-    customer_username: str
+    customer_id: int
     order_status: DrinkOrderState
     time_ordered: datetime
     total_price: float

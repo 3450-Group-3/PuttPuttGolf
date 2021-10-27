@@ -82,7 +82,8 @@ class UserLocation(BaseModel):
     lattitude: float
     longitude: float
 
-class DrinkOrderOut(OutModel):
+class DrinkOrderOut(OutModel): #todo ask sean about implicit conversion using a function, want location to be a 
+                                #todo UserLocation which comes from json.loads(string) -> python dict -> UserLocation
     id: int
     customer_id: int
     order_status: DrinkOrderState

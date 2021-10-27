@@ -23,6 +23,7 @@ export interface UserData {
 }
 
 export interface DrinkData {
+	id: number
 	name: string;
 	price: number;
 	imageUrl: string;

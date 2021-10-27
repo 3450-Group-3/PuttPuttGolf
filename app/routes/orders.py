@@ -34,7 +34,8 @@ def get_customer_orders(id: int, db: Session = Depends(get_db)):
 @orders.get(
     "/state/{state}", response_model=list[schemas.DrinkOrderOut], dependencies=[Depends(current_user_is_drinkmeister)]
 )
-def get_order_by_state(state: models.DrinkOrderState, db: Session = Depends(get_db)):
+def get_order_by_state(state: int, db: Session = Depends(get_db)):
+    state = models.DrinkOrderState(state)
     return db.query(models.DrinkOrder).where(models.DrinkOrder.order_status == state).all()
 
 
@@ -78,7 +79,7 @@ def create_order(order_data: schemas.DrinkOrderIn, user: models.User = Depends(g
 def update_order_status(id: int, order_data: schemas.DrinkOrderStatusUpdateIn, db: Session = Depends(get_db)):
     order: models.DrinkOrder = db.query(models.DrinkOrder).where(models.DrinkOrder.id == id).first()
 
-    if order.order_status != (order_data.order_status - 1):
+    if order.order_status.value != (order_data.order_status.value - 1):
         return JSONResponse(
             status_code=status.HTTP_400_BAD_REQUEST,
             content={"detail" : "Attempting to update an order status by more than 1 state"}
@@ -112,7 +113,10 @@ def update_order_customer_location(
             content={"detail" : "Attempting to update another users order, aborting."}
         )
     
-    order.location = json.dumps(order_data.location)
+    order.location = json.dumps({
+            "lattitude" : order_data.lattitude,
+            "longitude" : order_data.longitude
+    })
     db.commit()
     db.refresh(order)
 

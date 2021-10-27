@@ -7,9 +7,16 @@ export default function DrinkOrdering() { //todo list over all drinks returned
 
     console.log(data)
 
+    const tmp = data?.map((drink) => {
+        return (
+            <p key={drink.id}>{drink.name}</p>
+        )
+    })
+
     return (
         <div>
             <h2>Order Drinks</h2>
+            {tmp}
         </div>
     )
 }

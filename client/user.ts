@@ -41,11 +41,11 @@ export default class User {
 	}
 
 	get isPlayer(): boolean {
-		return this.role === UserRole.Player;
+		return this.role === UserRole.Player || this.role === UserRole.Sponsor || this.role == UserRole.Manager;
 	}
 
 	get isDrinkMeister(): boolean {
-		return this.role === UserRole.DrinkMeister;
+		return this.role === UserRole.DrinkMeister || this.role == UserRole.Manager;
 	}
 
 	get isSponsor(): boolean {

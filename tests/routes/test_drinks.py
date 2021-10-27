@@ -71,7 +71,7 @@ def test_put_drink(user: models.User, db: Session, client: TestClient):
         })
         if role ==  models.UserRole.MANAGER:
             assert result.status_code == 200, "this is a different description" in result.text 
-            assert result.status_code == 401
+        assert result.status_code == 401
 
 def test_delete_drink(user: models.User, db: Session, client: TestClient):
     result = client.post("/api/drinks")

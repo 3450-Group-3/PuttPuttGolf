@@ -1,10 +1,7 @@
 from typing import Optional
 from pydantic import BaseModel
 from datetime import date, datetime
-
-from sqlalchemy.sql.sqltypes import String
-from app.models import Drink, UserRole, DrinkOrderState
-
+from app.models import UserRole, DrinkOrderState
 from app.utils import to_camel
 
 
@@ -82,8 +79,13 @@ class UserLocation(BaseModel):
     lattitude: float
     longitude: float
 
+class DrinkOrderQuantityIn(InModel):
+    drinkId: int
+    quantity: int
+
 class DrinkOrderOut(OutModel): #todo ask sean about implicit conversion using a function, want location to be a 
                                 #todo UserLocation which comes from json.loads(string) -> python dict -> UserLocation
+                                #todo same with drinks
     id: int
     customer_id: int
     order_status: DrinkOrderState
@@ -100,7 +102,7 @@ class DrinkOrderIn(InModel):
     order_status: DrinkOrderState
     time_ordered: datetime
     total_price: float
-    drinks: str
+    drinks: list[DrinkOrderQuantityIn]
     location: UserLocation
 
 class DrinkOrderStatusUpdateIn(InModel):

@@ -84,7 +84,7 @@ class DrinkOrderOut(OutModel):
     order_status: DrinkOrderState
     time_ordered: datetime
     total_price: float
-    drinks: list[Drink]
+    drinks: list[int]
     location: list[float]
 
     class Config:
@@ -95,7 +95,7 @@ class DrinkOrderIn(InModel):
     order_status: DrinkOrderState
     time_ordered: datetime
     total_price: float
-    drinks: list[Drink]
+    drinks: list[int]
     location: list[float]
 
 class DrinkOrderLocationUpdateIn(InModel):

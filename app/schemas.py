@@ -1,7 +1,9 @@
 from typing import Optional
 from pydantic import BaseModel
 from datetime import date, datetime
-from app.models import UserRole
+
+from sqlalchemy.sql.sqltypes import String
+from app.models import Drink, UserRole, DrinkOrderState
 
 from app.utils import to_camel
 
@@ -75,6 +77,31 @@ class DrinkIn(InModel):
     price: float
     image_url: str
     description: str
+
+class DrinkOrderOut(OutModel):
+    id: int
+    customer_username: str
+    order_status: DrinkOrderState
+    time_ordered: datetime
+    total_price: float
+    drinks: list[Drink]
+    location: list[float]
+
+    class Config:
+        orm_mode = True
+
+class DrinkOrderIn(InModel):
+    customer_username: str
+    order_status: DrinkOrderState
+    time_ordered: datetime
+    total_price: float
+    drinks: list[Drink]
+    location: list[float]
+
+class DrinkOrderLocationUpdateIn(InModel):
+    id: int
+    location: list[float]
+
 
 class TournamentIn(InModel):
     date: datetime

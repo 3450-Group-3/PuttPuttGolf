@@ -156,6 +156,36 @@ class Drink(Base):
         return drink
 
 
+class DrinkOrderState(enum.Enum):
+    OPEN = 1
+    """
+    Order has not been accepted by any meister
+    """
+    INPROGRESS = 2
+    """
+    Order has been claimed by a meister and is being made
+    """
+    ENROUTE = 3
+    """
+    Order has been made by the meister and is being delivered
+    """
+    DELIVERED = 4
+    """
+    Order has been delivered to the customer
+    """
+
+class DrinkOrder(Base):
+    __tablename__ = "orders"
+
+    id = Column(types.Integer, primary_key=True, nullable=False, index=True)
+    customer_username = Column(ForeignKey("users.username"), nullable=False, index=True)
+    order_status = Column(types.Enum(DrinkOrderState), nullable=False, index=True)
+    time_ordered = Column(types.DateTime, nullable=False, index=True)
+    total_price = Column(types.Float, nullable=False)
+    drinks = Column(types.ARRAY(Drink), nullable=False)
+    location = Column(types.ARRAY(types.Float), nullable=True) #[longitude, lattitude]
+
+
 class Tournament(Base):  # type: ignore
     __tablename__ = "tournaments"
 

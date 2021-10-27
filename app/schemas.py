@@ -60,7 +60,8 @@ class UserInDB(User):
     hashed_password: str
 
 
-class Drink(OutModel):
+class DrinkOut(OutModel):
+    id: int
     name: str
     price: float
     image_url: str
@@ -69,6 +70,11 @@ class Drink(OutModel):
     class Config:
         orm_mode = True
 
+class DrinkIn(InModel):
+    name: str
+    price: float
+    image_url: str
+    description: str
 
 class TournamentIn(InModel):
     date: datetime

@@ -5,17 +5,17 @@ from sqlalchemy.orm.session import Session
 from starlette import status
 from starlette.responses import JSONResponse
 
-from app.dependancies import current_user_is_manager, get_db
+from app.dependancies import current_user_is_manager, get_current_user, get_db
 from app import schemas, models
 from app.security import Password
 
-tournaments = APIRouter(prefix="/tournaments")
+tournaments = APIRouter(prefix="/tournaments", tags=["Tournament Crud"])
 
 
 @tournaments.get(
     "",
     response_model=list[schemas.Tournament],
-    dependencies=[Depends(current_user_is_manager)],
+    dependencies=[Depends(get_current_user)],
 )
 def get_tournaments(db: Session = Depends(get_db)):
     return db.query(models.Tournament).all()
@@ -24,7 +24,7 @@ def get_tournaments(db: Session = Depends(get_db)):
 @tournaments.get(
     "/{id}",
     response_model=schemas.Tournament,
-    dependencies=[Depends(current_user_is_manager)],
+    dependencies=[Depends(get_current_user)],
 )
 def get_tournament(id: int, db: Session = Depends(get_db)):
     tournament = db.query(models.Tournament).where(models.Tournament.id == id).first()

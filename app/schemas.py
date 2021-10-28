@@ -70,11 +70,13 @@ class DrinkOut(OutModel):
     class Config:
         orm_mode = True
 
+
 class DrinkIn(InModel):
     name: str
     price: float
     image_url: str
     description: str
+
 
 class TournamentIn(InModel):
     date: datetime
@@ -82,6 +84,7 @@ class TournamentIn(InModel):
 
 
 class Tournament(OutModel):
+    id: int
     date: datetime
     hole_count: int
     balance: float

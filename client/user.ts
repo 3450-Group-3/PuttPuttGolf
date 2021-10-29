@@ -1,33 +1,39 @@
 import { UserData, ID, UserRole } from './types';
 
+interface UserOptions extends UserData {
+	anonymous?: boolean;
+}
+
 export default class User {
 	readonly id: ID;
 	readonly username: string;
 	readonly birthdate: Date;
 	readonly anonymous: boolean;
 	readonly balance: number;
-	private readonly role: UserRole;
+	readonly role: UserRole;
 
-	constructor(data: UserData, anonymous: boolean = false) {
+	constructor(data: UserOptions) {
 		this.id = data.id;
 		this.username = data.username;
 		this.birthdate = data.birthdate;
 		this.role = data.role;
 		this.balance = data.balance;
-		this.anonymous = anonymous;
+		this.anonymous = data.anonymous || false;
 	}
 
 	static anonymousUser(): User {
-		return new User(
-			{
-				id: -1,
-				username: 'Anonymous User',
-				birthdate: new Date(),
-				role: UserRole.Anonymous,
-				balance: 0,
-			},
-			true
-		);
+		return new User(this.anonymousData());
+	}
+
+	static anonymousData(): UserOptions {
+		return {
+			id: -1,
+			username: 'Anonymous User',
+			birthdate: new Date(),
+			role: UserRole.Anonymous,
+			balance: 0,
+			anonymous: true,
+		};
 	}
 
 	toString() {
@@ -41,7 +47,11 @@ export default class User {
 	}
 
 	get isPlayer(): boolean {
-		return this.role === UserRole.Player || this.role === UserRole.Sponsor || this.role == UserRole.Manager;
+		return (
+			this.role === UserRole.Player ||
+			this.role === UserRole.Sponsor ||
+			this.role == UserRole.Manager
+		);
 	}
 
 	get isDrinkMeister(): boolean {

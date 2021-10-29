@@ -84,6 +84,7 @@ export default function AccountForm({ onSubmit, type, defaultValues }: Props) {
 		{ value: 1, label: 'User' },
 		{ value: 2, label: 'Drink Meister' },
 		{ value: 3, label: 'Sponsor' },
+		{ value: 4, label: 'Manager' },
 	];
 
 	return (

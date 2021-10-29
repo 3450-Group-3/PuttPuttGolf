@@ -23,3 +23,7 @@ export interface UserData {
 }
 
 export type Layout = 'mobile' | 'desktop';
+
+export interface Status {
+	status: 'ok' | 'error';
+}

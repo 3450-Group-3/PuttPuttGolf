@@ -21,7 +21,8 @@ export function useGet<Response, Error = unknown>(
 	url: string,
 	options: Options = {}
 ) {
-	return useAxios<Response, Error>(url, options)[0];
+	const result = useAxios<Response, Error>(url, options);
+	return { ...result[0], refetch: result[1] };
 }
 
 function makeLazy(method: Method) {

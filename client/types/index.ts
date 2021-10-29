@@ -22,6 +22,14 @@ export interface UserData {
 	balance: number;
 }
 
+export interface DrinkData {
+	id: number
+	name: string;
+	price: number;
+	imageUrl: string;
+	balance: number;
+}
+
 export type Layout = 'mobile' | 'desktop';
 
 export type Status = { status: 'ok' | 'error' };

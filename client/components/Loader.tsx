@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components';
+import { Message } from '../styles';
 
 const Svg = styled.svg`
 	margin: auto;
@@ -93,7 +94,7 @@ export default function Loader<E>({
 		);
 	}
 	if (error) {
-		return <div>{errorMessage}</div>;
+		return <Message error>{errorMessage}</Message>;
 	}
 	return null;
 }

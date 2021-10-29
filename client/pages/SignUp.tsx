@@ -5,25 +5,34 @@ import { usePost, useRedirect } from '../hooks';
 import { CenterContent, Message } from '../styles';
 import { DetailFormError, RedirectState, UserData } from '../types';
 import Title from '../components/Title';
+import Loader from '../components/Loader';
 
 export default function SignUp() {
 	const redirectTo = useRedirect('/login');
 	const [{ data, loading, error }, signUp] = usePost<UserData, DetailFormError>(
 		'/users'
 	);
-
+	console.log(error?.response?.data.detail);
 	return (
 		<CenterContent>
 			<Title>Sign Up</Title>
-			{loading && <Message>Creating Account...</Message>}
-			{error && (
-				<Message error>
-					{error?.response?.data.detail ||
-						'Something went wrong, please try again'}
-				</Message>
+			{(loading || error) && (
+				<Loader
+					loading={loading}
+					loadingMessage="Creating Account..."
+					error={error}
+					errorMessage={
+						error?.response?.data.detail ||
+						'Something went wrong, please try again'
+					}
+				/>
 			)}
 			{data && <Redirect to={redirectTo} />}
-			<AccountForm onSubmit={(data) => signUp({ data })} type="creating" />
+			<AccountForm
+				onSubmit={(data) => signUp({ data })}
+				type="creating"
+				defaultValues={{ birthdate: new Date() }}
+			/>
 		</CenterContent>
 	);
 }

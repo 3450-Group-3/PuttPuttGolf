@@ -62,7 +62,7 @@ async def current_user_is_manager(
 async def current_user_is_sponsor(
     user: models.User = Depends(get_current_user),
 ) -> models.User:
-    if user.is_sponsor:
+    if user.is_sponsor or user.is_manager:
         return user
     else:
         raise permission_exception
@@ -71,7 +71,7 @@ async def current_user_is_sponsor(
 async def current_user_is_drinkmeister(
     user: models.User = Depends(get_current_user),
 ) -> models.User:
-    if user.is_drink_meister:
+    if user.is_drink_meister or user.is_manager:
         return user
     else:
         raise permission_exception

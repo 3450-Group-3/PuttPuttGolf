@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { RiLockPasswordLine } from 'react-icons/ri';
-import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import Input from '../components/Input';
 import { Button } from '../styles';
-import { usePost, useUser } from '../hooks';
+import { usePost, useRedirect, useUser } from '../hooks';
 import { FormError, UserData } from '../types';
 import { IoPersonCircleOutline } from 'react-icons/io5';
 import Title from '../components/Title';
@@ -15,8 +14,6 @@ interface LoginSuccess {
 	token_type: string;
 	user: UserData;
 }
-
-type RedirectState = { redirectTo?: string };
 
 const Div = styled.div`
 	text-align: center;
@@ -28,8 +25,7 @@ const Div = styled.div`
 `;
 
 export default function Login() {
-	const { state: locationState } = useLocation<RedirectState>();
-	const redirectTo = locationState?.redirectTo || '/play';
+	const redirectTo = useRedirect('/play');
 	const { user, setUser } = useUser();
 	const [state, setState] = useState({
 		username: '',

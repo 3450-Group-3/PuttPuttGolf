@@ -31,3 +31,7 @@ export interface DrinkData {
 }
 
 export type Layout = 'mobile' | 'desktop';
+
+export type Status = { status: 'ok' | 'error' };
+
+export type RedirectState = { redirectTo?: string };

@@ -1,9 +1,11 @@
 import enum
+import json
 
 from typing import Optional, Union
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy import types
 from sqlalchemy.orm import Session, relationship
+from functools import cache, cached_property
 
 from .db import Base
 
@@ -78,11 +80,11 @@ class User(Base):  # type: ignore
 
     @property
     def is_drink_meister(self):
-        return self.has_role(UserRole.DRINK_MEISTER) or self.has_role(UserRole.MANAGER)
+        return self.has_role(UserRole.DRINK_MEISTER) 
 
     @property
     def is_sponsor(self):
-        return self.has_role(UserRole.SPONSOR) or self.has_role(UserRole.MANAGER)
+        return self.has_role(UserRole.SPONSOR)
 
     @property
     def is_player(self):
@@ -182,15 +184,13 @@ class DrinkOrder(Base):
     order_status = Column(types.Enum(DrinkOrderState), nullable=False, index=True)
     time_ordered = Column(types.DateTime, nullable=False, index=True)
     total_price = Column(types.Float, nullable=False)
-    drinks = Column(types.String, nullable=False)
-    """
-    serialized json. 
-    { 
-        "drinkId1" : "quantity", 
-        "drinkId2": "quantity" 
-    }
-    """
-    location = Column(types.String, nullable=True)
+    drinks_json = Column(types.String, nullable=False)
+    location_json = Column(types.String, nullable=True)
+    
+    @property
+    @cache
+    def location(self):
+        return json.loads(self.location_json)
     """
     serialized json.
     {
@@ -198,6 +198,25 @@ class DrinkOrder(Base):
         "longitude" : "value"
     }
     """
+    @location.setter
+    def location(self):
+        self.location_json = json.dumps(self.location)
+
+
+    @property
+    @cache
+    def drinks(self):
+        return json.loads(self.drinks_json)
+    """
+    serialized json. 
+    { 
+        "drinkId1" : "quantity", 
+        "drinkId2": "quantity" 
+    }
+    """
+    @drinks.setter
+    def drinks(self):
+        self.drinks_json = json.dumps(self.drinks)
 
 
 class Tournament(Base):  # type: ignore

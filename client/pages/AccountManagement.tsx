@@ -1,11 +1,13 @@
 import { Redirect } from 'react-router';
 import styled from 'styled-components';
+import { useParams } from 'react-router-dom';
 import { useGet, usePut, useUser } from '../hooks';
 import { DetailFormError, UserData } from '../types';
 import AccountForm from '../components/AccountForm';
 import PasswordForm from '../components/PasswordForm';
 import { Message } from '../styles';
 import Themer from '../components/Themer';
+import User from '../user';
 
 const Content = styled.div`
 	display: flex;
@@ -19,10 +21,11 @@ const Content = styled.div`
 `;
 
 export default function AccountManagement() {
-	const { setUser } = useUser();
+	const { id = 'me' } = useParams<{ id?: string | undefined }>();
+	const { user, setUser } = useUser();
 	// Retrive the user data to make sure we use the most up-to-date info
 	const { data, loading, error } = useGet<UserData, DetailFormError>(
-		'/users/me'
+		`/users/${id}`
 	);
 
 	const [
@@ -41,8 +44,17 @@ export default function AccountManagement() {
 		);
 	}
 
-	if (postData && data && postData.username !== data.username) {
+	if (
+		postData &&
+		data &&
+		postData.username !== data.username &&
+		data.id === user.id
+	) {
+		// TODO: Since state updates are asyn, we
+		// can't redirect right afterwards, or the
+		// state update fails to propogate
 		localStorage.removeItem('token');
+		setUser(User.anonymousData());
 		return <Redirect to="/login" />;
 	}
 
@@ -59,9 +71,11 @@ export default function AccountManagement() {
 				)}
 				<AccountForm
 					onSubmit={(data) =>
-						updateUser({ url: '/users/me', data }).then((res) =>
-							setUser(res.data)
-						)
+						updateUser({ url: `/users/${id}`, data }).then((res) => {
+							if (res.data.id === user.id) {
+								setUser(res.data);
+							}
+						})
 					}
 					type="updating"
 					defaultValues={data}

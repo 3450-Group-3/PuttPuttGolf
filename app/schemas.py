@@ -80,20 +80,18 @@ class UserLocation(BaseModel):
     lattitude: float
     longitude: float
 
-class DrinkOrderQuantityIn(InModel):
+class DrinkOrderQuantity(BaseModel):
     drinkId: int
     quantity: int
 
-class DrinkOrderOut(OutModel): #todo ask sean about implicit conversion using a function, want location to be a 
-                                #todo UserLocation which comes from json.loads(string) -> python dict -> UserLocation
-                                #todo same with drinks
+class DrinkOrderOut(OutModel): 
     id: int
     customer_id: int
     order_status: DrinkOrderState
     time_ordered: datetime
     total_price: float
-    drinks: str
-    location: str
+    drinks: list[DrinkOrderQuantity]
+    location: UserLocation
 
     class Config:
         orm_mode = True
@@ -103,7 +101,7 @@ class DrinkOrderIn(InModel):
     order_status: DrinkOrderState
     time_ordered: datetime
     total_price: float
-    drinks: list[DrinkOrderQuantityIn]
+    drinks: list[DrinkOrderQuantity]
     location: UserLocation
 
 class DrinkOrderStatusUpdateIn(InModel):

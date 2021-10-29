@@ -35,7 +35,13 @@ def get_customer_orders(id: int, db: Session = Depends(get_db)):
     "/state/{state}", response_model=list[schemas.DrinkOrderOut], dependencies=[Depends(current_user_is_drinkmeister)]
 )
 def get_order_by_state(state: int, db: Session = Depends(get_db)):
-    state = models.DrinkOrderState(state)
+    try:
+        state = models.DrinkOrderState(state)
+    except ValueError as e:
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content={"detail" : str(state) + " is not a valid DrinkOrderState. Valid states are OPEN = 1, INPROGRESS = 2, ENROUTE = 3, DELIVERED = 4"}
+        )
     return db.query(models.DrinkOrder).where(models.DrinkOrder.order_status == state).all()
 
 
@@ -54,13 +60,13 @@ def create_order(order_data: schemas.DrinkOrderIn, user: models.User = Depends(g
         order_status = order_data.order_status,
         time_ordered = order_data.time_ordered,
         total_price = order_data.total_price,
-        drinks = json.dumps([
+        drinks_json = json.dumps([
             { 
                 "drinkId" : order_data.drinks[i].drinkId,
                 "quantity" : order_data.drinks[i].quantity
             } for i in range(len(order_data.drinks))
         ]),
-        location = json.dumps({
+        location_json = json.dumps({
             "lattitude" : order_data.location.lattitude,
             "longitude" : order_data.location.longitude
         })
@@ -113,7 +119,7 @@ def update_order_customer_location(
             content={"detail" : "Attempting to update another users order, aborting."}
         )
     
-    order.location = json.dumps({
+    order.location_json = json.dumps({
             "lattitude" : order_data.lattitude,
             "longitude" : order_data.longitude
     })

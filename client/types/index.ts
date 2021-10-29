@@ -24,6 +24,6 @@ export interface UserData {
 
 export type Layout = 'mobile' | 'desktop';
 
-export interface Status {
-	status: 'ok' | 'error';
-}
+export type Status = { status: 'ok' | 'error' };
+
+export type RedirectState = { redirectTo?: string };

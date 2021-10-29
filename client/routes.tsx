@@ -12,8 +12,6 @@ import UserManagement from './pages/UserManagement';
 const AuthRoute = (props: RouteProps) => {
 	const { user } = useUser();
 
-	console.log(props);
-
 	if (user.loggedIn) {
 		return <Route {...props} />;
 	}
@@ -41,7 +39,10 @@ const PermissionRoute = ({
 	if (!user.loggedIn) {
 		return (
 			<Redirect
-				to={{ pathname: '/login', state: { redirectTo: props.path } }}
+				to={{
+					pathname: '/login',
+					state: { redirectTo: props.location?.pathname },
+				}}
 			/>
 		);
 	}
@@ -53,8 +54,6 @@ const PermissionRoute = ({
 };
 
 export default function Routes() {
-	const { user } = useUser();
-
 	return (
 		<Switch>
 			<Route path="/" exact component={Home} />

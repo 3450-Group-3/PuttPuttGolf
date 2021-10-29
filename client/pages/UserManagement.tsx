@@ -117,7 +117,11 @@ export default function UserManagement() {
 		<div>
 			<Header>
 				<h2>User Management</h2>
-				<ButtonLink to="/signup">New User</ButtonLink>
+				<ButtonLink
+					to={{ pathname: '/signup', state: { redirectTo: '/admin/users' } }}
+				>
+					New User
+				</ButtonLink>
 			</Header>
 			<Title>User Management</Title>
 			{content()}

@@ -10,8 +10,9 @@ import {
 	useContext,
 } from 'react';
 import GlobalContext from './global';
-import { UserData } from './types';
+import { UserData, RedirectState } from './types';
 import User from './user';
+import { useLocation } from 'react-router';
 
 const useAxios = makeUseAxios({
 	axios: api,
@@ -81,6 +82,11 @@ export function useWindowSize() {
 
 export function useMount(callback: EffectCallback) {
 	return useEffect(callback, []);
+}
+
+export function useRedirect(defaultRedirect: string) {
+	const { state } = useLocation<RedirectState>();
+	return state?.redirectTo || defaultRedirect;
 }
 
 export function useGlobal() {

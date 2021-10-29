@@ -4,12 +4,12 @@ import styled from 'styled-components';
 import { Title } from '../styles';
 
 const Container = styled.div`
-	display: block;
 	margin-bottom: 10px;
 	border: none;
 	font-size: 17px;
 	display: flex;
 	flex-direction: column;
+	max-width: 300px;
 `;
 
 const InputContainer = styled.div`
@@ -60,10 +60,11 @@ interface Props extends InputHTMLAttributes<HTMLInputElement> {
 	readonly error?: string;
 	readonly title?: string;
 	readonly icon?: React.ReactNode;
+	readonly noError?: boolean;
 }
 
 const Input = React.forwardRef<HTMLInputElement, Props>(
-	({ title, error, icon, ...props }, ref) => {
+	({ title, error, icon, noError = false, ...props }, ref) => {
 		return (
 			<Container>
 				{title && <Title>{title}</Title>}
@@ -71,7 +72,7 @@ const Input = React.forwardRef<HTMLInputElement, Props>(
 					<TextInput ref={ref} {...props} />
 					{icon && <Icon>{icon}</Icon>}
 				</InputContainer>
-				<Error>{error}</Error>
+				{!noError && <Error>{error}</Error>}
 			</Container>
 		);
 	}

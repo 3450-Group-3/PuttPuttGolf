@@ -28,11 +28,7 @@ export default function SignUp() {
 				/>
 			)}
 			{data && <Redirect to={redirectTo} />}
-			<AccountForm
-				onSubmit={(data) => signUp({ data })}
-				type="creating"
-				defaultValues={{ birthdate: new Date() }}
-			/>
+			<AccountForm onSubmit={(data) => signUp({ data })} type="creating" />
 		</CenterContent>
 	);
 }

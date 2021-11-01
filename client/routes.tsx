@@ -4,14 +4,53 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import NotFound from './pages/NotFound';
+import { useUser } from './hooks';
+import User from './user';
+import UserManagement from './pages/UserManagement';
 
-const ProtectedRoute = (props: RouteProps) => {
-	if (localStorage.getItem('token')) {
+/**  User must be logged in */
+const AuthRoute = (props: RouteProps) => {
+	const { user } = useUser();
+
+	if (user.loggedIn) {
 		return <Route {...props} />;
 	}
+
 	return (
-		<Redirect to={{ pathname: '/login', state: { redirectTo: props.path } }} />
+		<Redirect
+			to={{
+				pathname: '/login',
+				state: { redirectTo: props.location?.pathname },
+			}}
+		/>
 	);
+};
+
+interface IPermissionRoute {
+	hasPermission: (user: User) => boolean;
+}
+/**  User must be have some permission */
+const PermissionRoute = ({
+	hasPermission,
+	...props
+}: RouteProps & IPermissionRoute) => {
+	const { user } = useUser();
+
+	if (!user.loggedIn) {
+		return (
+			<Redirect
+				to={{
+					pathname: '/login',
+					state: { redirectTo: props.location?.pathname },
+				}}
+			/>
+		);
+	}
+	if (hasPermission(user)) {
+		return <Route {...props} />;
+	}
+
+	return <NotFound />;
 };
 
 export default function Routes() {
@@ -20,7 +59,13 @@ export default function Routes() {
 			<Route path="/" exact component={Home} />
 			<Route path="/signup" exact component={SignUp} />
 			<Route path="/login" component={Login} />
-			<ProtectedRoute path="/me" component={AccountManagement} />
+			<AuthRoute path="/users/:id" component={AccountManagement} />
+			<AuthRoute path="/me" component={AccountManagement} />
+			<PermissionRoute
+				path="/admin/users"
+				hasPermission={(user) => user.isManager}
+				component={UserManagement}
+			/>
 			<Route path="*" component={NotFound} />
 		</Switch>
 	);

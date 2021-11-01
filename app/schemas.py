@@ -1,8 +1,7 @@
 from typing import Optional
 from pydantic import BaseModel
 from datetime import date, datetime
-from app.models import UserRole
-
+from app.models import UserRole, DrinkOrderState
 from app.utils import to_camel
 
 
@@ -77,6 +76,36 @@ class DrinkIn(InModel):
     image_url: str
     description: str
 
+class UserLocation(BaseModel):
+    lattitude: float
+    longitude: float
+
+class DrinkOrderQuantity(BaseModel):
+    drinkId: int
+    quantity: int
+
+class DrinkOrderOut(OutModel): 
+    id: int
+    customer_id: int
+    order_status: DrinkOrderState
+    time_ordered: datetime
+    total_price: float
+    drinks: list[DrinkOrderQuantity]
+    location: UserLocation
+
+    class Config:
+        orm_mode = True
+
+class DrinkOrderIn(InModel):
+    customer_id: int
+    order_status: DrinkOrderState
+    time_ordered: datetime
+    total_price: float
+    drinks: list[DrinkOrderQuantity]
+    location: UserLocation
+
+class DrinkOrderStatusUpdateIn(InModel):
+    order_status: DrinkOrderState
 
 class TournamentIn(InModel):
     date: datetime

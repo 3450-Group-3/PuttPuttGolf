@@ -1,9 +1,11 @@
 import enum
+import json
 
 from typing import Optional, Union
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy import types
 from sqlalchemy.orm import Session, relationship
+from functools import cache, cached_property
 
 from .db import Base
 
@@ -78,11 +80,11 @@ class User(Base):  # type: ignore
 
     @property
     def is_drink_meister(self):
-        return self.has_role(UserRole.DRINK_MEISTER) or self.has_role(UserRole.MANAGER)
+        return self.has_role(UserRole.DRINK_MEISTER) 
 
     @property
     def is_sponsor(self):
-        return self.has_role(UserRole.SPONSOR) or self.has_role(UserRole.MANAGER)
+        return self.has_role(UserRole.SPONSOR)
 
     @property
     def is_player(self):
@@ -154,6 +156,67 @@ class Drink(Base):
         db.refresh(drink)
 
         return drink
+
+
+class DrinkOrderState(enum.Enum):
+    OPEN = 1
+    """
+    Order has not been accepted by any meister
+    """
+    INPROGRESS = 2
+    """
+    Order has been claimed by a meister and is being made
+    """
+    ENROUTE = 3
+    """
+    Order has been made by the meister and is being delivered
+    """
+    DELIVERED = 4
+    """
+    Order has been delivered to the customer
+    """
+
+class DrinkOrder(Base):
+    __tablename__ = "orders"
+
+    id = Column(types.Integer, primary_key=True, nullable=False, index=True)
+    customer_id = Column(types.Integer, nullable=False, index=True)
+    order_status = Column(types.Enum(DrinkOrderState), nullable=False, index=True)
+    time_ordered = Column(types.DateTime, nullable=False, index=True)
+    total_price = Column(types.Float, nullable=False)
+    drinks_json = Column(types.String, nullable=False)
+    location_json = Column(types.String, nullable=True)
+    
+    @property
+    @cache
+    def location(self):
+        return json.loads(self.location_json)
+    """
+    serialized json.
+    {
+        "lattitude" : "value",
+        "longitude" : "value"
+    }
+    """
+    @location.setter
+    def location(self):
+        self.location_json = json.dumps(self.location)
+
+
+    @property
+    @cache
+    def drinks(self):
+        return json.loads(self.drinks_json)
+    """
+    serialized json. 
+    { 
+        "drinkId1" : "quantity", 
+        "drinkId2": "quantity" 
+    }
+    """
+    @drinks.setter
+    def drinks(self):
+        self.drinks_json = json.dumps(self.drinks)
 
 
 class Tournament(Base):  # type: ignore

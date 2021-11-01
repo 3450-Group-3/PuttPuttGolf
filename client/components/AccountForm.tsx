@@ -67,7 +67,7 @@ interface Inputs extends Omit<UserData, 'id'> {
 interface Props {
 	onSubmit: SubmitHandler<Inputs>;
 	type: 'creating' | 'updating';
-	defaultValues?: UserData;
+	defaultValues?: Partial<UserData>;
 }
 
 export default function AccountForm({ onSubmit, type, defaultValues }: Props) {
@@ -76,6 +76,7 @@ export default function AccountForm({ onSubmit, type, defaultValues }: Props) {
 		handleSubmit,
 		control,
 		formState: { errors },
+		watch,
 	} = useForm<Inputs>({ defaultValues: defaultValues });
 	const theme = useContext(ThemeContext);
 	const selectedStyles = useMemo(() => selectedStylesConfig(theme), [theme]);
@@ -84,6 +85,7 @@ export default function AccountForm({ onSubmit, type, defaultValues }: Props) {
 		{ value: 1, label: 'User' },
 		{ value: 2, label: 'Drink Meister' },
 		{ value: 3, label: 'Sponsor' },
+		{ value: 4, label: 'Manager' },
 	];
 
 	return (
@@ -122,12 +124,12 @@ export default function AccountForm({ onSubmit, type, defaultValues }: Props) {
 					valueAsDate: true,
 				})}
 			/>
-			{defaultValues && (
+			{type === 'updating' && (
 				<>
 					<Title>Role</Title>
 					<Controller
 						control={control}
-						defaultValue={defaultValues.role}
+						defaultValue={defaultValues?.role || 0}
 						name="role"
 						render={({ field: { onChange, value } }) => (
 							<Select

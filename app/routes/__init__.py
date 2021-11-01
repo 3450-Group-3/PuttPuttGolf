@@ -13,6 +13,7 @@ from .auth import auth
 from .drinks import drinks
 from .users import users
 from .tournaments import tournaments
+from .orders import orders
 from ..dependancies import get_current_user, get_db
 from ..schemas import User
 
@@ -21,7 +22,7 @@ api.include_router(auth)
 api.include_router(users)
 api.include_router(tournaments)
 api.include_router(drinks)
-
+api.include_router(orders)
 
 @api.get("/{path:path}")
 def api_catch():

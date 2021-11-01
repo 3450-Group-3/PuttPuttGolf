@@ -14,21 +14,30 @@ export enum UserRole {
 	Anonymous = 5,
 }
 
+export interface Enrollment {
+	score: number;
+	userId: number;
+	tournamentId: number;
+}
+
 export interface UserData {
 	id: ID;
 	username: string;
 	birthdate: Date;
 	role: UserRole;
 	balance: number;
+	enrollments: Enrollment[];
 }
 
 export interface DrinkData {
-	id: number
+	id: number;
 	name: string;
 	price: number;
 	imageUrl: string;
 	balance: number;
 }
+
+export interface TournamentData {}
 
 export type Layout = 'mobile' | 'desktop';
 

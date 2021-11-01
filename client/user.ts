@@ -1,4 +1,4 @@
-import { UserData, ID, UserRole } from './types';
+import { UserData, ID, UserRole, Enrollment } from './types';
 
 interface UserOptions extends UserData {
 	anonymous?: boolean;
@@ -11,6 +11,7 @@ export default class User {
 	readonly anonymous: boolean;
 	readonly balance: number;
 	readonly role: UserRole;
+	readonly enrollments: Enrollment[];
 
 	constructor(data: UserOptions) {
 		this.id = data.id;
@@ -18,6 +19,7 @@ export default class User {
 		this.birthdate = data.birthdate;
 		this.role = data.role;
 		this.balance = data.balance;
+		this.enrollments = data.enrollments;
 		this.anonymous = data.anonymous || false;
 	}
 
@@ -33,6 +35,7 @@ export default class User {
 			role: UserRole.Anonymous,
 			balance: 0,
 			anonymous: true,
+			enrollments: [],
 		};
 	}
 

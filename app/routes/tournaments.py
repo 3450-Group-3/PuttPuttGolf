@@ -145,7 +145,7 @@ def remove_user(
 
 @tournaments.post("/update_score", dependencies=[Depends(get_current_user)])
 def update_score(
-    score_data: schemas.Score,
+    score_data: schemas.TournamentEnrollment,
     db: Session = Depends(get_db),
 ):
     tournament: Optional[models.Tournament] = (

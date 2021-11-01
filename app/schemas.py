@@ -1,8 +1,8 @@
-from typing import Optional
+from __future__ import annotations
+from typing import Optional, List
 from pydantic import BaseModel
 from datetime import date, datetime
-from app.models import UserRole, DrinkOrderState
-from app.utils import to_camel
+from app.utils import to_camel, DrinkOrderState, UserRole
 
 
 class InModel(BaseModel):
@@ -23,6 +23,15 @@ class OutModel(BaseModel):
 
     def dict(self, **kwargs):
         return {to_camel(key): value for key, value in super().dict(**kwargs).items()}
+
+
+class TournamentEnrollment(OutModel):
+    score: int
+    tournament_id: int
+    user_id: int
+
+    class Config:
+        orm_mode = True
 
 
 class UserIn(InModel):
@@ -50,6 +59,7 @@ class User(OutModel):
     birthdate: date
     role: UserRole
     balance: int
+    enrollments: list[TournamentEnrollment]
 
     class Config:
         orm_mode = True
@@ -76,15 +86,18 @@ class DrinkIn(InModel):
     image_url: str
     description: str
 
+
 class UserLocation(BaseModel):
     lattitude: float
     longitude: float
+
 
 class DrinkOrderQuantity(BaseModel):
     drinkId: int
     quantity: int
 
-class DrinkOrderOut(OutModel): 
+
+class DrinkOrderOut(OutModel):
     id: int
     customer_id: int
     order_status: DrinkOrderState
@@ -96,6 +109,7 @@ class DrinkOrderOut(OutModel):
     class Config:
         orm_mode = True
 
+
 class DrinkOrderIn(InModel):
     customer_id: int
     order_status: DrinkOrderState
@@ -104,8 +118,10 @@ class DrinkOrderIn(InModel):
     drinks: list[DrinkOrderQuantity]
     location: UserLocation
 
+
 class DrinkOrderStatusUpdateIn(InModel):
     order_status: DrinkOrderState
+
 
 class TournamentIn(InModel):
     date: datetime
@@ -127,13 +143,10 @@ class Tournament(OutModel):
         arbitrary_types_allowed = True  # Why is this needed
 
 
-class Score(OutModel):
-    score: int
-    user: User
-    tournament: Tournament
-
-
 class AuthResponse(BaseModel):
     access_token: str
     token_type: str
     user: User
+
+
+TournamentEnrollment.update_forward_refs()

@@ -8,38 +8,7 @@ from sqlalchemy.orm import Session, relationship
 from functools import cache, cached_property
 
 from .db import Base
-
-
-class UserRole(enum.Enum):
-    PLAYER = 1
-    """
-    Permissions:
-    - Enter a tournament
-    - Purchase Drinks
-    - Look at their account information
-    - Add to their Account Balance
-    """
-    DRINK_MEISTER = 2
-    """
-    Permissions:
-    - All player Permissions
-    - Look at the Drink Queue
-    - Accept a drink order
-    - Fufill that drink order
-    """
-    SPONSOR = 3
-    """
-    Permissions:
-    - All player Permissions
-    - Sponsor a Tournament
-    """
-    MANAGER = 4
-    """
-    Permissions:
-    - All User permissions
-    - Edit other user's information
-    - Force reset their password
-    """
+from .utils import UserRole, DrinkOrderState
 
 
 class User(Base):  # type: ignore
@@ -80,7 +49,7 @@ class User(Base):  # type: ignore
 
     @property
     def is_drink_meister(self):
-        return self.has_role(UserRole.DRINK_MEISTER) 
+        return self.has_role(UserRole.DRINK_MEISTER)
 
     @property
     def is_sponsor(self):
@@ -88,7 +57,7 @@ class User(Base):  # type: ignore
 
     @property
     def is_player(self):
-        return self.has_role(UserRole.PLAYER) 
+        return self.has_role(UserRole.PLAYER)
 
     def update_balance(self, value: float, db: Session):
         assert isinstance(value, (float, int))
@@ -104,7 +73,7 @@ class Drink(Base):
     price = Column(types.FLOAT, nullable=False)
     image_url = Column(types.String)
     description = Column(types.String)
-    
+
     @staticmethod
     def add_drink(
         db: Session,
@@ -114,10 +83,7 @@ class Drink(Base):
         image_url: str = "",
     ) -> "Drink":
         drink = Drink(
-            name = name,
-            price = price, 
-            description = description, 
-            image_url = image_url
+            name=name, price=price, description=description, image_url=image_url
         )
 
         db.add(drink)
@@ -140,11 +106,7 @@ class Drink(Base):
 
     @staticmethod
     def update_drink(
-        db: Session,
-        name: str,
-        price: float,
-        image_url: str,
-        description: str
+        db: Session, name: str, price: float, image_url: str, description: str
     ) -> "Drink":
         drink = db.query(Drink).where(Drink.name == name).first()
 
@@ -158,24 +120,6 @@ class Drink(Base):
         return drink
 
 
-class DrinkOrderState(enum.Enum):
-    OPEN = 1
-    """
-    Order has not been accepted by any meister
-    """
-    INPROGRESS = 2
-    """
-    Order has been claimed by a meister and is being made
-    """
-    ENROUTE = 3
-    """
-    Order has been made by the meister and is being delivered
-    """
-    DELIVERED = 4
-    """
-    Order has been delivered to the customer
-    """
-
 class DrinkOrder(Base):
     __tablename__ = "orders"
 
@@ -186,11 +130,12 @@ class DrinkOrder(Base):
     total_price = Column(types.Float, nullable=False)
     drinks_json = Column(types.String, nullable=False)
     location_json = Column(types.String, nullable=True)
-    
+
     @property
     @cache
     def location(self):
         return json.loads(self.location_json)
+
     """
     serialized json.
     {
@@ -198,22 +143,24 @@ class DrinkOrder(Base):
         "longitude" : "value"
     }
     """
+
     @location.setter
     def location(self):
         self.location_json = json.dumps(self.location)
-
 
     @property
     @cache
     def drinks(self):
         return json.loads(self.drinks_json)
+
     """
-    serialized json. 
-    { 
-        "drinkId1" : "quantity", 
-        "drinkId2": "quantity" 
+    serialized json.
+    {
+        "drinkId1" : "quantity",
+        "drinkId2": "quantity"
     }
     """
+
     @drinks.setter
     def drinks(self):
         self.drinks_json = json.dumps(self.drinks)

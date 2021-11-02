@@ -37,7 +37,6 @@ export default function TournamentForm({ onSubmit, defaultValues }: Props) {
 			<Controller
 				name="date"
 				control={control}
-				defaultValue={new Date()}
 				render={({ field: { value, onChange } }) => (
 					<DateTimePicker
 						value={value}

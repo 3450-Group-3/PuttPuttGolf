@@ -15,9 +15,7 @@ const onSameDay = (first: Date, second: Date) =>
 	first.getDate() === second.getDate();
 
 const before = (first: Date, second: Date) =>
-	first.getFullYear() < second.getFullYear() ||
-	first.getMonth() < second.getMonth() ||
-	first.getDate() < second.getDate();
+	first.getTime() < second.getTime() && !onSameDay(first, second);
 
 const CalendarWrapper = styled.div`
 	.tournament {
@@ -125,7 +123,14 @@ export default function Tournaments() {
 						})}
 					</h2>
 					{user.isManager && (
-						<ButtonLink to="/tournaments/new">Create Tournament</ButtonLink>
+						<ButtonLink
+							to={{
+								pathname: '/tournaments/new',
+								state: { startDate: selectedDate },
+							}}
+						>
+							Create Tournament
+						</ButtonLink>
 					)}
 				</Header>
 

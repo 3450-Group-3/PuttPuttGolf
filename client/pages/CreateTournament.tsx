@@ -3,9 +3,10 @@ import { CenterContent } from '../styles';
 import { TournamentData } from '../types';
 import Loader from '../components/Loader';
 import TournamentForm from '../components/TournamentForm';
-import { Redirect } from 'react-router';
+import { Redirect, useLocation } from 'react-router';
 
 export default function CreateTournament() {
+	const { state } = useLocation<{ startDate?: Date }>();
 	const [{ data, loading, error }, create] =
 		usePost<TournamentData>('/tournaments');
 
@@ -18,7 +19,12 @@ export default function CreateTournament() {
 			return <Redirect to="/tournaments" />;
 		}
 
-		return <TournamentForm onSubmit={(data) => create({ data })} />;
+		return (
+			<TournamentForm
+				onSubmit={(data) => create({ data })}
+				defaultValues={{ date: state?.startDate || new Date() }}
+			/>
+		);
 	};
 
 	return (

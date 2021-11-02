@@ -149,8 +149,8 @@ def test_add_user(user: models.User, db: Session, client: TestClient):
     token = auth_token(user)
 
     res = client.post(
-        "/api/tournaments/add_user",
-        json=create_tournament_json(tournament),
+        f"/api/tournaments/{tournament.id}/add_user",
+        json={"userId": user.id},
         headers={"Authorization": f"Bearer {token}"},
     )
 
@@ -166,8 +166,8 @@ def test_remove_user(user: models.User, db: Session, client: TestClient):
     token = auth_token(user)
 
     res = client.post(
-        "/api/tournaments/remove_user",
-        json=create_tournament_json(tournament),
+        f"/api/tournaments/{tournament.id}/remove_user",
+        json={"userId": user.id},
         headers={"Authorization": f"Bearer {token}"},
     )
 
@@ -183,18 +183,8 @@ def test_update_score(user: models.User, db: Session, client: TestClient):
     token = auth_token(user)
 
     res = client.post(
-        "/api/tournaments/update_score",
-        json={
-            "score": 10,
-            "user": {
-                "id": user.id,
-                "username": user.username,
-                "birthdate": str(user.birthdate),
-                "role": user.role.value,
-                "balance": user.balance,
-            },
-            "tournament": create_tournament_json(tournament),
-        },
+        f"/api/tournaments/{tournament.id}/update_score",
+        json={"score": 10, "userId": user.id},
         headers={"Authorization": f"Bearer {token}"},
     )
 
@@ -203,18 +193,8 @@ def test_update_score(user: models.User, db: Session, client: TestClient):
 
     # Properly increments/decrements score, not sets it
     res = client.post(
-        "/api/tournaments/update_score",
-        json={
-            "score": -2,
-            "user": {
-                "id": user.id,
-                "username": user.username,
-                "birthdate": str(user.birthdate),
-                "role": user.role.value,
-                "balance": user.balance,
-            },
-            "tournament": create_tournament_json(tournament),
-        },
+        f"/api/tournaments/{tournament.id}/update_score",
+        json={"score": -2, "userId": user.id},
         headers={"Authorization": f"Bearer {token}"},
     )
 

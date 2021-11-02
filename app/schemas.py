@@ -137,6 +137,7 @@ class Tournament(OutModel):
     advertising_banner: Optional[str]
     sponsored_by: Optional[User]
     created_by: User
+    enrollments: list[TournamentEnrollment]
 
     class Config:
         orm_mode = True
@@ -147,6 +148,15 @@ class AuthResponse(BaseModel):
     access_token: str
     token_type: str
     user: User
+
+
+class AddOrRemoveUser(InModel):
+    user_id: int
+
+
+class IncrementScore(InModel):
+    score: int
+    user_id: int
 
 
 TournamentEnrollment.update_forward_refs()

@@ -46,6 +46,13 @@ export interface TournamentData {
 	readonly balance: number;
 	readonly completed: boolean;
 	readonly advertisingBanner: null;
+	readonly enrollments: TournamentEnrollment[];
+}
+
+export interface TournamentEnrollment {
+	score: number;
+	tournamentId: number;
+	userId: number;
 }
 
 export type Layout = 'mobile' | 'desktop';

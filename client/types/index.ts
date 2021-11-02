@@ -27,7 +27,7 @@ export interface DrinkData {
 	name: string;
 	price: number;
 	imageUrl: string;
-	balance: number;
+	description: string;
 }
 
 export type Layout = 'mobile' | 'desktop';

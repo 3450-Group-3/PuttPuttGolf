@@ -128,6 +128,14 @@ class TournamentIn(InModel):
     hole_count: int
 
 
+class TournamentUpdate(InModel):
+    date: datetime
+    hole_count: int
+    advertising_banner: Optional[str]
+    balance: float
+    completed: bool
+
+
 class Tournament(OutModel):
     id: int
     date: datetime

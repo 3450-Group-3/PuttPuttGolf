@@ -68,7 +68,7 @@ def create_tournament(
     dependencies=[Depends(current_user_is_manager)],
 )
 def update_tournament(
-    id: int, t_data: schemas.Tournament, db: Session = Depends(get_db)
+    id: int, t_data: schemas.TournamentUpdate, db: Session = Depends(get_db)
 ):
     tournament: Optional[models.Tournament] = (
         db.query(models.Tournament).where(models.Tournament.id == id).first()

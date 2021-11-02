@@ -109,16 +109,6 @@ export default function Tournaments() {
 		}
 	};
 
-	const renderTournaments = () => {
-		return (
-			<TournamentsContainer>
-				{selectedTournaments.map((tournament, idx) => (
-					<TournamentBox tournament={tournament} key={tournament.id} />
-				))}
-			</TournamentsContainer>
-		);
-	};
-
 	return (
 		<CenterContent>
 			<Title>Tournaments</Title>
@@ -140,7 +130,11 @@ export default function Tournaments() {
 				</Header>
 
 				{selectedTournaments.length > 0 ? (
-					renderTournaments()
+					<TournamentsContainer>
+						{selectedTournaments.map((tournament, idx) => (
+							<TournamentBox tournament={tournament} key={tournament.id} />
+						))}
+					</TournamentsContainer>
 				) : (
 					<h3>No Tournaments Scheduled</h3>
 				)}

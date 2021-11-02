@@ -9,6 +9,7 @@ import User from './user';
 import UserManagement from './pages/UserManagement';
 import Tournaments from './pages/Tournaments';
 import CreateTournament from './pages/CreateTournament';
+import EditTournament from './pages/EditTournament';
 
 /**  User must be logged in */
 const AuthRoute = (props: RouteProps) => {
@@ -71,6 +72,11 @@ export default function Routes() {
 			/>
 			<AuthRoute path="/tournaments" exact component={Tournaments} />
 			<AuthRoute path="/tournaments/new" exact component={CreateTournament} />
+			<AuthRoute
+				path="/tournaments/:id/edit"
+				exact
+				component={EditTournament}
+			/>
 
 			<Route path="*" component={NotFound} />
 		</Switch>

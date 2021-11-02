@@ -5,6 +5,7 @@ import { TournamentData } from '../types';
 import { usePost, useUser } from '../hooks';
 import { useState } from 'react';
 import { AiOutlineEdit, AiOutlineDelete } from 'react-icons/ai';
+import { SiGithubsponsors } from 'react-icons/si';
 
 const MoreWrapper = styled.div`
 	position: absolute;
@@ -44,10 +45,6 @@ const Tournament = styled.div`
 	position: relative;
 	transition: background-color 0.3s ease;
 
-	&:hover {
-		background-color: #000000c7;
-	}
-
 	&:hover > ${MoreWrapper} {
 		display: flex;
 	}
@@ -70,7 +67,7 @@ export default function TournamentBox({ tournament }: Props) {
 	);
 
 	const [userRegistered, setUserRegistered] = useState(
-		() => tournament.enrollments.find((e) => e.userId === user.id) !== undefined
+		() => !!tournament.enrollments.find((e) => e.userId === user.id)
 	);
 
 	return (
@@ -103,6 +100,18 @@ export default function TournamentBox({ tournament }: Props) {
 				>
 					Register
 				</Button>
+			)}
+			{user.isSponsor && (
+				<div style={{ marginTop: '20px' }}>
+					<ButtonLink
+						kind="text"
+						to={`/tournaments/${tournament.id}/sponsor`}
+						fontSize={18}
+						text={tournament.sponsoredBy !== null ? 'green' : undefined}
+					>
+						<SiGithubsponsors size={14} /> Sponsor
+					</ButtonLink>
+				</div>
 			)}
 			{user.isManager && (
 				<MoreWrapper onClick={() => setMoreOpen(!moreOpen)}>

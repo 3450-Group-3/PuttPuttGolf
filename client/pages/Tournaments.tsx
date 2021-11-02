@@ -102,7 +102,7 @@ export default function Tournaments() {
 		return (
 			<TournamentsContainer>
 				{selectedTournaments.map((tournament, idx) => (
-					<TournamentBox tournament={tournament} key={idx} />
+					<TournamentBox tournament={tournament} key={tournament.id} />
 				))}
 			</TournamentsContainer>
 		);

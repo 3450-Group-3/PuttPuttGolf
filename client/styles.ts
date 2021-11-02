@@ -74,7 +74,7 @@ const ButtonStyles = css<ButtonProps>`
 		kind === 'outline' ? `1px solid ${background || theme.accent}` : 'none'};
 
 	color: ${({ text, theme, kind = 'solid' }) =>
-		text || kind === 'outline' ? theme.textColor : 'white'} !important;
+		text || (kind === 'outline' ? theme.textColor : 'white')} !important;
 
 	box-shadow: ${({ kind = 'solid' }) =>
 		kind === 'text' ? 'none' : '0px 0px 50px 6px rgba(0, 0, 0, 0.3);'};

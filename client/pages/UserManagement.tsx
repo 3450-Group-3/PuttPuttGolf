@@ -119,9 +119,8 @@ export default function UserManagement() {
 						},
 						{ displayName: 'Role', dataName: 'roleName', align: 'right' },
 						{
-							displayName: 'actions',
+							displayName: '',
 							dataName: 'roleName',
-							hidden: true,
 							render: (user, item) => (
 								<div style={{ display: 'flex' }}>
 									<Action to={`/users/${user.id}`}>

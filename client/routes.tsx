@@ -7,6 +7,7 @@ import NotFound from './pages/NotFound';
 import { useUser } from './hooks';
 import User from './user';
 import UserManagement from './pages/UserManagement';
+import Tournaments from './pages/Tournaments';
 
 /**  User must be logged in */
 const AuthRoute = (props: RouteProps) => {
@@ -58,14 +59,17 @@ export default function Routes() {
 		<Switch>
 			<Route path="/" exact component={Home} />
 			<Route path="/signup" exact component={SignUp} />
-			<Route path="/login" component={Login} />
+			<Route path="/login" exact component={Login} />
 			<AuthRoute path="/users/:id" component={AccountManagement} />
-			<AuthRoute path="/me" component={AccountManagement} />
+			<AuthRoute path="/me" exact component={AccountManagement} />
 			<PermissionRoute
 				path="/admin/users"
+				exact
 				hasPermission={(user) => user.isManager}
 				component={UserManagement}
 			/>
+			<AuthRoute path="/tournaments" exact component={Tournaments} />
+
 			<Route path="*" component={NotFound} />
 		</Switch>
 	);

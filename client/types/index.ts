@@ -23,11 +23,22 @@ export interface UserData {
 }
 
 export interface DrinkData {
-	id: number
+	id: number;
 	name: string;
 	price: number;
 	imageUrl: string;
 	balance: number;
+}
+
+export interface TournamentData {
+	readonly id: ID;
+	readonly date: string;
+	readonly holeCount: number;
+	readonly createdBy: UserData;
+	readonly sponsoredBy: UserData | null;
+	readonly balance: number;
+	readonly completed: boolean;
+	readonly advertisingBanner: null;
 }
 
 export type Layout = 'mobile' | 'desktop';

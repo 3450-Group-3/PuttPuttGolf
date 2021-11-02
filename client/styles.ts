@@ -63,6 +63,7 @@ interface ButtonProps {
 	background?: string;
 	text?: string;
 	kind?: 'solid' | 'outline' | 'text';
+	fontSize?: string | number;
 }
 
 const ButtonStyles = css<ButtonProps>`
@@ -81,7 +82,12 @@ const ButtonStyles = css<ButtonProps>`
 	box-sizing: border-box;
 	padding: 10px 20px;
 	border-radius: 3px;
-	font-size: 20px;
+	font-size: ${({ fontSize = '20px' }) => {
+		if (typeof fontSize === 'string') {
+			return fontSize;
+		}
+		return `${fontSize}px`;
+	}};
 	line-height: 20px;
 	font-weight: 400 !important;
 	font-family: 'Montserrat', sans-serif;

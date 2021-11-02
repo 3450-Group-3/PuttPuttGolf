@@ -1,49 +1,28 @@
-import DateTimePicker, { Props } from 'react-datetime-picker';
+import DateTimePicker, { Props as PickerProps } from 'react-datetime-picker';
 import { AiOutlineCalendar } from 'react-icons/ai';
-import styled from 'styled-components';
+import Input, { Props as InputProps } from './Input';
 
-const DatePickerWrapper = styled.div`
-	.picker {
-		margin-bottom: 10px;
-		border: none;
-		font-size: 17px;
-		display: flex;
-		flex-direction: column;
-		max-width: 300px;
-		background-color: ${({ theme }) => theme.secondary};
-		box-sizing: border-box;
-		border-radius: 3px;
-
-		.react-datetime-picker__wrapper {
-			height: 60px;
-			border: none;
-			padding: 0px 8px;
-		}
-
-		.react-datetime-picker__calendar-button {
-			color: ${({ theme }) => theme.textColor};
-		}
-
-		&:focus-within {
-			border: 1px solid grey;
-		}
-
-		input,
-		select {
-			color: ${({ theme }) => theme.textColor};
-		}
-	}
-`;
-
-export default function CreateTournament(props: Props) {
+type Props = Omit<InputProps, 'children'> & PickerProps;
+export default function Picker({
+	title,
+	error,
+	icon,
+	noError = false,
+	...props
+}: Props) {
 	return (
-		<DatePickerWrapper>
+		<Input
+			icon={<AiOutlineCalendar size={40} />}
+			title={title}
+			error={error}
+			noError={noError}
+		>
 			<DateTimePicker
 				{...props}
 				className="picker"
-				calendarIcon={<AiOutlineCalendar size={40} />}
+				calendarIcon={null}
 				clearIcon={null}
 			/>
-		</DatePickerWrapper>
+		</Input>
 	);
 }

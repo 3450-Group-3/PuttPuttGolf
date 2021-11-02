@@ -50,6 +50,16 @@ const Tournament = styled.div`
 	}
 `;
 
+const HoleCount = styled.h3`
+	margin: 0px;
+	margin-bottom: 10px;
+`;
+
+const Time = styled.h4`
+	margin: 0px;
+  margin-bottom: 10px;
+`;
+
 interface Props {
 	readonly tournament: Omit<TournamentData, 'date'> & { date: Date };
 }
@@ -76,7 +86,8 @@ export default function TournamentBox({ tournament }: Props) {
 				src={tournament.advertisingBanner || '/static/images/logo.png'}
 				width="100%"
 			/>
-			<h3>{new Date(tournament.date).toLocaleTimeString()}</h3>
+			<HoleCount>{tournament.holeCount} Holes</HoleCount>
+			<Time>{new Date(tournament.date).toLocaleTimeString()}</Time>
 			{userRegistered ? (
 				<Button
 					kind="outline"

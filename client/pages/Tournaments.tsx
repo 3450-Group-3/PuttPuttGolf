@@ -4,7 +4,7 @@ import Loader from '../components/Loader';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import Title from '../components/Title';
-import { useGet, useUser } from '../hooks';
+import { useGet, usePageFocus, useUser } from '../hooks';
 import { ButtonLink, CenterContent } from '../styles';
 import { TournamentData } from '../types';
 import TournamentBox from '../components/TournamentBox';
@@ -57,9 +57,14 @@ export default function Tournaments() {
 		data: tournamentData,
 		loading,
 		error,
+		refetch,
 	} = useGet<TournamentData[]>('/tournaments');
 
 	const [selectedDate, setSelectedDate] = useState(new Date());
+
+	usePageFocus(() => {
+		refetch();
+	});
 
 	const tournaments = useMemo(() => {
 		if (tournamentData) {

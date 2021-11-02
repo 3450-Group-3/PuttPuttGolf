@@ -50,13 +50,33 @@ a {
 	&:visited {
 		color: ${({ theme }) => theme.accent};
 	}
-}
 
+}
 
 #app {
 	height: 100%;
 	overflow-x: hidden;
 }
+
+.picker {
+		margin: 2px;
+		flex: 1;
+		.react-datetime-picker__wrapper {
+			width: 100%;
+			height: 60px;
+			border: none;
+			box-sizing: border-box;
+		}
+
+		.react-datetime-picker__calendar-button {
+			color: ${({ theme }) => theme.textColor};
+		}
+
+		input,
+		select {
+			color: ${({ theme }) => theme.textColor};
+		}
+	}
 `;
 
 interface ButtonProps {

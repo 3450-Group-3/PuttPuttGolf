@@ -41,25 +41,25 @@ export default function DrinkOrdering() {
     return (
         <Content>
             <h2>Order Drinks</h2>
-                <DrinkGridLayout>
-                    {data?.map((drink) => {
-                        return (
-                            <DrinkThumbnail key={drink.id} onClick={() => {
-                                setDrinkData({
-                                    id: drink.id,
-                                    name: drink.name,
-                                    price: drink.price,
-                                    imageUrl: drink.imageUrl,
-                                    description: drink.description
-                                })
-                                setDrinkClicked(true)
-                            }}>
-                                <img src={drink.imageUrl} alt="Image for drink" height="100em" width="100em"></img>
-                                <p>{drink.name}</p>
-                            </DrinkThumbnail>
-                        )
-                    })}
-                </DrinkGridLayout>
+                {!drinkClicked && <DrinkGridLayout>
+                {data?.map((drink) => {
+                    return (
+                        <DrinkThumbnail key={drink.id} onClick={() => {
+                            setDrinkData({
+                                id: drink.id,
+                                name: drink.name,
+                                price: drink.price,
+                                imageUrl: drink.imageUrl,
+                                description: drink.description
+                            })
+                            setDrinkClicked(true)
+                        }}>
+                            <img src={drink.imageUrl} alt="Image for drink" height="100em" width="100em"></img>
+                            <p>{drink.name}</p>
+                        </DrinkThumbnail>
+                    )
+                })}
+                </DrinkGridLayout>}
                 {drinkClicked && <DrinkModal drinkData={drinkData1} setDrinkClicked={setDrinkClicked}/>}
         </Content>
     )

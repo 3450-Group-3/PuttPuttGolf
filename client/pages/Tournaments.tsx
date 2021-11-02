@@ -8,6 +8,7 @@ import { useGet, usePageFocus, useUser } from '../hooks';
 import { ButtonLink, CenterContent } from '../styles';
 import { TournamentData } from '../types';
 import TournamentBox from '../components/TournamentBox';
+import api from '../api';
 
 const onSameDay = (first: Date, second: Date) =>
 	first.getFullYear() === second.getFullYear() &&
@@ -137,7 +138,17 @@ export default function Tournaments() {
 				{selectedTournaments.length > 0 ? (
 					<TournamentsContainer>
 						{selectedTournaments.map((tournament, idx) => (
-							<TournamentBox tournament={tournament} key={tournament.id} />
+							<TournamentBox
+								tournament={tournament}
+								key={tournament.id}
+								onDelete={(id) => {
+									if (confirm('Are you sure?')) {
+										api.delete(`/tournaments/${id}`).then((response) => {
+											refetch();
+										});
+									}
+								}}
+							/>
 						))}
 					</TournamentsContainer>
 				) : (

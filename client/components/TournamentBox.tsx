@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Button, ButtonLink } from '../styles';
 import { IoEllipsisVerticalSharp } from 'react-icons/io5';
-import { TournamentData } from '../types';
+import { ID, TournamentData } from '../types';
 import { usePost, useUser } from '../hooks';
 import { useState } from 'react';
 import { AiOutlineEdit, AiOutlineDelete } from 'react-icons/ai';
@@ -57,14 +57,15 @@ const HoleCount = styled.h3`
 
 const Time = styled.h4`
 	margin: 0px;
-  margin-bottom: 10px;
+	margin-bottom: 10px;
 `;
 
 interface Props {
 	readonly tournament: Omit<TournamentData, 'date'> & { date: Date };
+	readonly onDelete: (id: ID) => void;
 }
 
-export default function TournamentBox({ tournament }: Props) {
+export default function TournamentBox({ tournament, onDelete }: Props) {
 	const { user } = useUser();
 	const [moreOpen, setMoreOpen] = useState(false);
 
@@ -134,7 +135,7 @@ export default function TournamentBox({ tournament }: Props) {
 					<ButtonLink kind="text" to={`/tournaments/${tournament.id}/edit`}>
 						<AiOutlineEdit size={20} />
 					</ButtonLink>
-					<Button kind="text">
+					<Button kind="text" onClick={() => onDelete(tournament.id)}>
 						<AiOutlineDelete size={20} />
 					</Button>
 				</More>

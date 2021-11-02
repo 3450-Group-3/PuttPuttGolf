@@ -4,8 +4,8 @@ import Loader from '../components/Loader';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import Title from '../components/Title';
-import { useGet, usePost, useUser } from '../hooks';
-import { Button, ButtonLink, CenterContent } from '../styles';
+import { useGet, useUser } from '../hooks';
+import { ButtonLink, CenterContent } from '../styles';
 import { TournamentData } from '../types';
 import TournamentBox from '../components/TournamentBox';
 
@@ -24,11 +24,17 @@ const CalendarWrapper = styled.div`
 		background-color: ${({ theme }) => theme.accent};
 		color: white;
 	}
+
+	.react-calendar {
+		margin: auto;
+		width: 80%;
+	}
 `;
 
 const DayContent = styled.div`
 	border-top: 1px solid ${({ theme }) => theme.accent};
-	width: 70%;
+	width: 80%;
+	min-height: 40vh;
 	margin-top: 2rem;
 `;
 
@@ -124,7 +130,7 @@ export default function Tournaments() {
 						})}
 					</h2>
 					{user.isManager && (
-						<ButtonLink to="/tournament/new">Create Tournament</ButtonLink>
+						<ButtonLink to="/tournaments/new">Create Tournament</ButtonLink>
 					)}
 				</Header>
 

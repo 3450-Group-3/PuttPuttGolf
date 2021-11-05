@@ -34,7 +34,7 @@ def get_tournament(id: int, db: Session = Depends(get_db)):
 
 
 @tournaments.post("", response_model=schemas.Tournament)
-async def create_tournament(
+def create_tournament(
     t_data: schemas.TournamentIn,
     curr_user=Depends(current_user_is_manager),
     db: Session = Depends(get_db),

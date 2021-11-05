@@ -29,10 +29,10 @@ def create_tournament_json(tournament: models.Tournament):
     return {
         "id": tournament.id,
         "date": str(tournament.date),
-        "hole_count": tournament.hole_count,
+        "holeCount": tournament.hole_count,
         "balance": tournament.balance,
         "completed": tournament.completed,
-        "advertising_banner": tournament.advertising_banner,
+        "advertisingBanner": tournament.advertising_banner,
         "created_by": {
             "id": tournament.created_by.id,
             "username": tournament.created_by.username,

@@ -88,7 +88,7 @@ export default function TournamentBox({ tournament, onDelete }: Props) {
 				width="100%"
 			/>
 			<HoleCount>{tournament.holeCount} Holes</HoleCount>
-			<Time>{new Date(tournament.date).toLocaleTimeString()}</Time>
+			<Time>{tournament.date.toLocaleTimeString()}</Time>
 			{userRegistered ? (
 				<Button
 					kind="outline"

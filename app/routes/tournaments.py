@@ -1,9 +1,6 @@
 from typing import Literal, Optional
-from fastapi import APIRouter, Depends
-from fastapi.exceptions import HTTPException
+from fastapi import APIRouter, Depends, Request
 from sqlalchemy.orm.session import Session
-from starlette import status
-from starlette.responses import JSONResponse
 
 from app.dependancies import current_user_is_manager, get_current_user, get_db
 from app import schemas, models
@@ -36,17 +33,12 @@ def get_tournament(id: int, db: Session = Depends(get_db)):
     return tournament
 
 
-@tournaments.post(
-    "",
-    response_model=schemas.Tournament,
-    dependencies=[],
-)
-def create_tournament(
+@tournaments.post("", response_model=schemas.Tournament)
+async def create_tournament(
     t_data: schemas.TournamentIn,
     curr_user=Depends(current_user_is_manager),
     db: Session = Depends(get_db),
 ):
-
     tournament = models.Tournament(
         date=t_data.date,
         hole_count=t_data.hole_count,

@@ -20,8 +20,7 @@ const before = (first: Date, second: Date) =>
 
 const CalendarWrapper = styled.div`
 	.tournament {
-		background-color: ${({ theme }) => theme.accent};
-		color: white;
+		border: 1px solid ${({ theme }) => theme.accent};
 	}
 
 	.react-calendar {
@@ -68,7 +67,12 @@ export default function Tournaments() {
 	const tournaments = useMemo(() => {
 		if (tournamentData) {
 			return tournamentData.map((tournament) => {
-				return { ...tournament, date: new Date(tournament.date) };
+				const date = new Date(tournament.date);
+
+				return {
+					...tournament,
+					date: new Date(date.getTime() - date.getTimezoneOffset() * 60000),
+				};
 			});
 		}
 		return [];
@@ -96,12 +100,21 @@ export default function Tournaments() {
 						onChange={setSelectedDate}
 						value={selectedDate}
 						tileClassName={({ date }) => {
-							if (tournaments.find((t) => onSameDay(t.date, date))) {
+							if (
+								tournaments.find((t) => onSameDay(t.date, date)) &&
+								!before(date, now)
+							) {
 								return 'tournament';
 							}
 							return null;
 						}}
-						tileDisabled={({ date }) => before(date, now)}
+						tileDisabled={({ view, date }) => {
+							if (view === 'month') {
+								return before(date, now);
+							} else {
+								return false;
+							}
+						}}
 					/>
 				</CalendarWrapper>
 			);

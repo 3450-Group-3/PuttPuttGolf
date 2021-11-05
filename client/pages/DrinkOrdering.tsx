@@ -3,6 +3,8 @@ import { useGet } from "../hooks"
 import { DetailFormError, DrinkData } from "../types"
 import { useState } from "react";
 import DrinkModal from "../components/DrinkModal";
+import { Button } from "../styles";
+import Input from '../components/Input';
 
 const Content = styled.div`
     text-align: center;
@@ -21,6 +23,13 @@ const DrinkThumbnail = styled.div`
     margin: auto;
     padding: .25em;
 `;
+
+const QtyContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    flex-wrap: nowrap;
+    align-items: baseline;
+`
 
 export interface drinkSelection {
     drinkID: number
@@ -44,6 +53,8 @@ export default function DrinkOrdering() {
         imageUrl: "",
         description: ""
     });
+    const [qtySelected, setQtySelected] = useState(1);
+    const [qtyPostive, setQtyPositive] = useState(true);
 
     console.log(data)
 
@@ -71,7 +82,55 @@ export default function DrinkOrdering() {
                     )
                 })}
                 </DrinkGridLayout>}
-                {drinkClicked && <DrinkModal drinkData={drinkData1} setDrinkClicked={setDrinkClicked} addToCart={addToCart}/>}
+                {drinkClicked && 
+                <DrinkModal drinkData={drinkData1} />}
+                {!qtyPostive && <p style={{color: "red"}}>The drink quantity must be a more than 0.</p> } 
+                {drinkClicked &&
+                <div>
+                    <QtyContainer>
+                        <Button onClick={() => {
+                            if (!isNaN(qtySelected)){
+                                setQtySelected(qtySelected - 1)
+                            } else {
+                                setQtySelected(0)
+                            }
+                        }}>-</Button> 
+                        <Input
+                            value={qtySelected.toString()}
+                            type="number"
+                            onChange={(e) => {
+                                setQtySelected(parseInt(e.target.value))
+                            }}
+                            min="1"
+                        />
+                        <Button onClick={() => {
+                            if (!isNaN(qtySelected)){
+                                setQtySelected(qtySelected + 1)
+                            } else {
+                                setQtySelected(0)
+                            }
+                        }}>+</Button>
+                    </QtyContainer>
+                    <br/>
+                    <Button onClick={() => {
+                        if (qtySelected > 0 && !isNaN(qtySelected)){
+                            addToCart({
+                            drinkID: drinkData1.id,
+                            drinkQty: qtySelected
+                            })
+                            setQtyPositive(true)
+                            setDrinkClicked(false)
+                        } else {
+                            setQtyPositive(false)
+                        }
+                        setQtySelected(1)
+                    }}>Add to cart</Button>
+                    <Button onClick={() => {
+                        setDrinkClicked(false)
+                        setQtySelected(1)
+                        setQtyPositive(true)
+                    }}>Cancel</Button>
+                </div>}
         </Content>
     )
 }

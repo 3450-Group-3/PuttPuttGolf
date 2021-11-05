@@ -22,6 +22,16 @@ const DrinkThumbnail = styled.div`
     padding: .25em;
 `;
 
+export interface drinkSelection {
+    drinkID: number
+    drinkQty: number
+}
+
+const cart: drinkSelection[] = []; 
+
+function addToCart(drink: drinkSelection) {
+    cart.push(drink);
+}
 
 export default function DrinkOrdering() { 
 
@@ -41,6 +51,7 @@ export default function DrinkOrdering() {
     return (
         <Content>
             <h2>Order Drinks</h2>
+            <button onClick={() => {console.log(cart)}}>click</button>
                 {!drinkClicked && <DrinkGridLayout>
                 {data?.map((drink) => {
                     return (
@@ -60,7 +71,7 @@ export default function DrinkOrdering() {
                     )
                 })}
                 </DrinkGridLayout>}
-                {drinkClicked && <DrinkModal drinkData={drinkData1} setDrinkClicked={setDrinkClicked}/>}
+                {drinkClicked && <DrinkModal drinkData={drinkData1} setDrinkClicked={setDrinkClicked} addToCart={addToCart}/>}
         </Content>
     )
 }

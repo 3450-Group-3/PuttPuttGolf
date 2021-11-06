@@ -82,7 +82,7 @@ export default function DrinkOrdering({ layout }: Props) {
     const [qtyPostive, setQtyPositive] = useState(true);
     const [viewCart, setViewCart] = useState(false);
 
-    console.log(data)
+    // console.log(data)
 
     
     return (

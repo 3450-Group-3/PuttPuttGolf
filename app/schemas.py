@@ -97,10 +97,7 @@ class DrinkOrderOut(OutModel):
         orm_mode = True
 
 class DrinkOrderIn(InModel):
-    customer_id: int
-    order_status: DrinkOrderState
     time_ordered: datetime
-    total_price: float
     drinks: list[DrinkOrderQuantity]
     location: UserLocation
 

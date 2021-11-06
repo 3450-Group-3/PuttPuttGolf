@@ -54,12 +54,16 @@ def create_order(order_data: schemas.DrinkOrderIn, user: models.User = Depends(g
             status_code=status.HTTP_400_BAD_REQUEST,
             content={"detail": "Drink Meisters are unable to place orders"}
         )
+
+    price = 0
+    for drink in order_data.drinks:
+        price += db.query(models.Drink).where(models.Drink.id == drink.drinkId).first().price * drink.quantity
     
     order = models.DrinkOrder(
-        customer_id = order_data.customer_id,
-        order_status = order_data.order_status,
+        customer_id = user.id,
+        order_status = models.DrinkOrderState.OPEN,
         time_ordered = order_data.time_ordered,
-        total_price = order_data.total_price,
+        total_price = price,
         drinks_json = json.dumps([
             { 
                 "drinkId" : order_data.drinks[i].drinkId,

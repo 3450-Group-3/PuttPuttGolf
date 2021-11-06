@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { MdApartment } from "react-icons/md";
 import styled from "styled-components";
+import DrinkCart from "../components/DrinkCart";
 import DrinkModal from "../components/DrinkModal";
 import Input from '../components/Input';
 import { useGet } from "../hooks";
@@ -32,13 +34,6 @@ const QtyContainer = styled.div`
     align-items: baseline;
 `
 
-const HeaderContainer = styled.div`
-    display: flex;
-    justify-content: center;
-    flex-wrap: nowrap;
-    align-items: baseline;
-`
-
 //todo ask sean about the layoutSwitch and how to setup. Rn its not differentiating between mobile and desktop
 const Header = styled.div`
     display: grid;
@@ -56,20 +51,21 @@ const HeaderCartButton = styled.div`
     align-self: center;
 `
 
-export interface drinkSelection {
-    drinkID: number
-    drinkQty: number
-}
+const cart: Map<number, number> = new Map();
 
-const cart: drinkSelection[] = []; 
-
-function addToCart(drink: drinkSelection) {
-    cart.push(drink);
+function addToCart(drinkId: number, drinkQty: number) {
+    const currQty = cart.get(drinkId)
+    if (currQty == undefined){
+        cart.set(drinkId, drinkQty)
+    } else {
+        cart.set(drinkId, currQty + drinkQty)
+    }
 }
 
 interface Props {
 	layout: Layout;
 }
+
 
 export default function DrinkOrdering({ layout }: Props) { 
 
@@ -84,6 +80,7 @@ export default function DrinkOrdering({ layout }: Props) {
     });
     const [qtySelected, setQtySelected] = useState(1);
     const [qtyPostive, setQtyPositive] = useState(true);
+    const [viewCart, setViewCart] = useState(false);
 
     console.log(data)
 
@@ -95,77 +92,81 @@ export default function DrinkOrdering({ layout }: Props) {
                     <h2>Order Drinks</h2>
                 </HeaderText>
                 <HeaderCartButton>
-                    <Button onClick={() => {console.log(cart)}}>View Cart</Button>
+                    {!viewCart && <Button onClick={() => {
+                        setViewCart(true)
+                        setDrinkClicked(false)
+                    }}>View Cart</Button>}
+                    {viewCart && <Button onClick={() => {
+                        setViewCart(false)
+                    }} >Back</Button>}
                 </HeaderCartButton>
             </Header>
-                {!drinkClicked && <DrinkGridLayout>
-                {data?.map((drink) => {
-                    return (
-                        <DrinkThumbnail key={drink.id} onClick={() => {
-                            setDrinkData({
-                                id: drink.id,
-                                name: drink.name,
-                                price: drink.price,
-                                imageUrl: drink.imageUrl,
-                                description: drink.description
-                            })
-                            setDrinkClicked(true)
-                        }}>
-                            <img src={drink.imageUrl} alt="Image for drink" height="100em" width="100em"></img>
-                            <p>{drink.name}</p>
-                        </DrinkThumbnail>
-                    )
-                })}
-                </DrinkGridLayout>}
-                {drinkClicked && <DrinkModal drinkData={drinkData1} />}
-                {!qtyPostive && <p style={{color: "red"}}>The drink quantity must be a more than 0.</p> } 
-                {drinkClicked &&
-                    <div>
-                        <QtyContainer>
-                            <Button onClick={() => {
-                                if (!isNaN(qtySelected)){
-                                    setQtySelected(qtySelected - 1)
-                                } else {
-                                    setQtySelected(0)
-                                }
-                            }}>-</Button> 
-                            <Input
-                                value={qtySelected.toString()}
-                                type="number"
-                                onChange={(e) => {
-                                    setQtySelected(parseInt(e.target.value))
-                                }}
-                                min="1"
-                            />
-                            <Button onClick={() => {
-                                if (!isNaN(qtySelected)){
-                                    setQtySelected(qtySelected + 1)
-                                } else {
-                                    setQtySelected(0)
-                                }
-                            }}>+</Button>
-                        </QtyContainer>
-                        <br/>
+            {!drinkClicked && !viewCart && <DrinkGridLayout>
+            {data?.map((drink) => {
+                return (
+                    <DrinkThumbnail key={drink.id} onClick={() => {
+                        setDrinkData({
+                            id: drink.id,
+                            name: drink.name,
+                            price: drink.price,
+                            imageUrl: drink.imageUrl,
+                            description: drink.description
+                        })
+                        setDrinkClicked(true)
+                    }}>
+                        <img src={drink.imageUrl} alt="Image for drink" height="100em" width="100em"></img>
+                        <p>{drink.name}</p>
+                    </DrinkThumbnail>
+                )
+            })}
+            </DrinkGridLayout>}
+            {drinkClicked && <DrinkModal drinkData={drinkData1} />}
+            {!qtyPostive && <p style={{color: "red"}}>The drink quantity must be a more than 0.</p> } 
+            {drinkClicked &&
+                <div>
+                    <QtyContainer>
                         <Button onClick={() => {
-                            if (qtySelected > 0 && !isNaN(qtySelected)){
-                                addToCart({
-                                drinkID: drinkData1.id,
-                                drinkQty: qtySelected
-                                })
-                                setQtyPositive(true)
-                                setDrinkClicked(false)
+                            if (!isNaN(qtySelected)){
+                                setQtySelected(qtySelected - 1)
                             } else {
-                                setQtyPositive(false)
+                                setQtySelected(0)
                             }
-                            setQtySelected(1)
-                        }}>Add to cart</Button>
+                        }}>-</Button> 
+                        <Input
+                            value={qtySelected.toString()}
+                            type="number"
+                            onChange={(e) => {
+                                setQtySelected(parseInt(e.target.value))
+                            }}
+                            min="1"
+                        />
                         <Button onClick={() => {
-                            setDrinkClicked(false)
-                            setQtySelected(1)
+                            if (!isNaN(qtySelected)){
+                                setQtySelected(qtySelected + 1)
+                            } else {
+                                setQtySelected(0)
+                            }
+                        }}>+</Button>
+                    </QtyContainer>
+                    <br/>
+                    <Button onClick={() => {
+                        if (qtySelected > 0 && !isNaN(qtySelected)){
+                            addToCart(drinkData1.id, qtySelected)
                             setQtyPositive(true)
-                        }}>Cancel</Button>
-                    </div>
-                }
+                            setDrinkClicked(false)
+                        } else {
+                            setQtyPositive(false)
+                        }
+                        setQtySelected(1)
+                    }}>Add to cart</Button>
+                    <Button onClick={() => {
+                        setDrinkClicked(false)
+                        setQtySelected(1)
+                        setQtyPositive(true)
+                    }}>Cancel</Button>
+                </div>
+            }
+            {viewCart && <DrinkCart drinkMap={cart} />}
         </Content>
     )
 }

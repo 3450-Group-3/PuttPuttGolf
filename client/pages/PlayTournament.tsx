@@ -1,8 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import axios from 'axios';
+import { useMemo, useState } from 'react';
 import { Redirect } from 'react-router';
 import styled from 'styled-components';
-import Input from '../components/Input';
 import Loader from '../components/Loader';
 import { useGet, usePost, useRedirect } from '../hooks';
 import {

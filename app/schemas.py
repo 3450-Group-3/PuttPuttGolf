@@ -34,6 +34,14 @@ class TournamentEnrollment(OutModel):
         orm_mode = True
 
 
+class TournamentEnrollmentUser(OutModel):
+    score: int
+    user: User
+
+    class Config:
+        orm_mode = True
+
+
 class UserIn(InModel):
     """Form data for creating a user"""
 
@@ -137,6 +145,7 @@ class Tournament(OutModel):
     advertising_banner: Optional[str]
     sponsored_by: Optional[User]
     created_by: User
+    enrollments: list[TournamentEnrollmentUser]
 
     class Config:
         orm_mode = True
@@ -150,3 +159,4 @@ class AuthResponse(BaseModel):
 
 
 TournamentEnrollment.update_forward_refs()
+TournamentEnrollmentUser.update_forward_refs()

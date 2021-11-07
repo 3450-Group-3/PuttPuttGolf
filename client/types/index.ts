@@ -20,6 +20,11 @@ export interface Enrollment {
 	tournamentId: number;
 }
 
+export interface EnrollmentUser {
+	score: number;
+	user: UserData;
+}
+
 export interface UserData {
 	id: ID;
 	username: string;
@@ -46,6 +51,7 @@ export interface TournamentData {
 	advertisingBanner: string;
 	sponsoredBy: UserData;
 	createdBy: UserData;
+	enrollments: EnrollmentUser[];
 }
 
 export type Layout = 'mobile' | 'desktop';

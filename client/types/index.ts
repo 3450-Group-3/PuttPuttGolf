@@ -37,7 +37,16 @@ export interface DrinkData {
 	balance: number;
 }
 
-export interface TournamentData {}
+export interface TournamentData {
+	id: number;
+	date: Date;
+	holeCount: number;
+	balance: number;
+	completed: boolean;
+	advertisingBanner: string;
+	sponsoredBy: UserData;
+	createdBy: UserData;
+}
 
 export type Layout = 'mobile' | 'desktop';
 

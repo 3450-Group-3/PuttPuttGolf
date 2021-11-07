@@ -31,11 +31,13 @@ export default function Leaderboard() {
 
 	const content = () => {
 		if (loading || error) {
-			<Loader
-				loading={loading}
-				loadingMessage="Loading Tournament Scores..."
-				error={error}
-			/>;
+			return (
+				<Loader
+					loading={loading}
+					loadingMessage="Loading Tournament Scores..."
+					error={error}
+				/>
+			);
 		}
 
 		if (data) {

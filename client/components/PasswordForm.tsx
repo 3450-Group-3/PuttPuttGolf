@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { usePost } from '../hooks';
 import { DetailFormError, UserData } from '../types';
 
-import Input from './Input';
+import TextInput from './TextInput';
 import { Button, Message } from '../styles';
 import { Redirect } from 'react-router';
 
@@ -51,7 +51,7 @@ export default function PasswordForm() {
 				</Message>
 			)}
 
-			<Input
+			<TextInput
 				title="Current Password"
 				placeholder="8 - 20 Characters"
 				type="password"
@@ -60,7 +60,7 @@ export default function PasswordForm() {
 				{...register('currPassword', { required: 'Current Password Required' })}
 			/>
 
-			<Input
+			<TextInput
 				title="New Password"
 				placeholder="8 - 20 Characters"
 				type="password"

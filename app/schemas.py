@@ -136,6 +136,14 @@ class TournamentIn(InModel):
     hole_count: int
 
 
+class TournamentUpdate(InModel):
+    date: datetime
+    hole_count: int
+    advertising_banner: Optional[str]
+    balance: float
+    completed: bool
+
+
 class Tournament(OutModel):
     id: int
     date: datetime
@@ -156,6 +164,15 @@ class AuthResponse(BaseModel):
     access_token: str
     token_type: str
     user: User
+
+
+class AddOrRemoveUser(InModel):
+    user_id: int
+
+
+class IncrementScore(InModel):
+    score: int
+    user_id: int
 
 
 TournamentEnrollment.update_forward_refs()

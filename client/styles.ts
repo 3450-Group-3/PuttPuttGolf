@@ -50,19 +50,40 @@ a {
 	&:visited {
 		color: ${({ theme }) => theme.accent};
 	}
-}
 
+}
 
 #app {
 	height: 100%;
 	overflow-x: hidden;
 }
+
+.picker {
+		margin: 2px;
+		flex: 1;
+		.react-datetime-picker__wrapper {
+			width: 100%;
+			height: 60px;
+			border: none;
+			box-sizing: border-box;
+		}
+
+		.react-datetime-picker__calendar-button {
+			color: ${({ theme }) => theme.textColor};
+		}
+
+		input,
+		select {
+			color: ${({ theme }) => theme.textColor};
+		}
+	}
 `;
 
 interface ButtonProps {
 	background?: string;
 	text?: string;
 	kind?: 'solid' | 'outline' | 'text';
+	fontSize?: string | number;
 }
 
 const ButtonStyles = css<ButtonProps>`
@@ -73,7 +94,7 @@ const ButtonStyles = css<ButtonProps>`
 		kind === 'outline' ? `1px solid ${background || theme.accent}` : 'none'};
 
 	color: ${({ text, theme, kind = 'solid' }) =>
-		text || kind === 'outline' ? theme.textColor : 'white'} !important;
+		text || (kind === 'outline' ? theme.textColor : 'white')} !important;
 
 	box-shadow: ${({ kind = 'solid' }) =>
 		kind === 'text' ? 'none' : '0px 0px 50px 6px rgba(0, 0, 0, 0.3);'};
@@ -81,7 +102,12 @@ const ButtonStyles = css<ButtonProps>`
 	box-sizing: border-box;
 	padding: 10px 20px;
 	border-radius: 3px;
-	font-size: 20px;
+	font-size: ${({ fontSize = '20px' }) => {
+		if (typeof fontSize === 'string') {
+			return fontSize;
+		}
+		return `${fontSize}px`;
+	}};
 	line-height: 20px;
 	font-weight: 400 !important;
 	font-family: 'Montserrat', sans-serif;

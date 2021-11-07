@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
-import { useDelete, useGet } from '../hooks';
+import React, { useMemo, useState } from 'react';
+import { useDebounceEffect, useDelete, useGet, usePageFocus } from '../hooks';
 import { ID, Status, UserData } from '../types';
 import User from '../user';
 import Title from '../components/Title';
@@ -12,13 +12,27 @@ import {
 	AiOutlineTrophy,
 	AiOutlineDelete,
 } from 'react-icons/ai';
+import { FiUserPlus } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
+import TextInput from '../components/TextInput';
+
+const Content = styled.div`
+	width: clamp(300px, 80%, 100%);
+	padding: 0px 50px;
+	display: flex;
+	flex-direction: column;
+	overflow-x: auto;
+`;
 
 const Header = styled.div`
 	display: flex;
 	margin-top: 3rem;
 	align-items: center;
-	justify-content: space-between;
+	flex-wrap: wrap;
+`;
+
+const UserTitle = styled.h2`
+	margin-right: 20px;
 `;
 
 const Shared = css<{ hoverColor?: string }>`
@@ -52,12 +66,26 @@ export default function UserManagement() {
 	const { data, loading, error, refetch } = useGet<UserData[]>('/users');
 	const [deleteData, deleteUser] = useDelete<Status>();
 
+	const [search, setSearch] = useState('');
+
+	useDebounceEffect(
+		() => {
+			refetch({ params: { search } });
+		},
+		500,
+		[search]
+	);
+
 	const users = useMemo(() => {
 		if (data) {
 			return data.map((data) => new User(data));
 		}
 		return [];
 	}, [data]);
+
+	usePageFocus(() => {
+		refetch();
+	});
 
 	const handleDelete = async (id: ID) => {
 		if (confirm('Deleting a User is permenant. Are you sure?')) {
@@ -83,12 +111,16 @@ export default function UserManagement() {
 					columns={[
 						{ displayName: 'Username', dataName: 'username', width: '600px' },
 						{ displayName: 'Balance', dataName: 'balance', align: 'right' },
-						{ displayName: 'Birthdate', dataName: 'birthdate', align: 'right' },
+						{
+							displayName: 'Birthdate',
+							dataName: 'birthdate',
+							align: 'right',
+							width: '100px',
+						},
 						{ displayName: 'Role', dataName: 'roleName', align: 'right' },
 						{
-							displayName: 'actions',
+							displayName: '',
 							dataName: 'roleName',
-							hidden: true,
 							render: (user, item) => (
 								<div style={{ display: 'flex' }}>
 									<Action to={`/users/${user.id}`}>
@@ -114,17 +146,24 @@ export default function UserManagement() {
 	};
 
 	return (
-		<div>
+		<Content>
 			<Header>
-				<h2>User Management</h2>
+				<UserTitle>User Management</UserTitle>
+				<TextInput
+					placeholder="Search"
+					noError
+					value={search}
+					onChange={(e) => setSearch(e.target.value)}
+				/>
 				<ButtonLink
 					to={{ pathname: '/signup', state: { redirectTo: '/admin/users' } }}
+					style={{ marginLeft: 'auto' }}
 				>
-					New User
+					<FiUserPlus /> New User
 				</ButtonLink>
 			</Header>
 			<Title>User Management</Title>
 			{content()}
-		</div>
+		</Content>
 	);
 }

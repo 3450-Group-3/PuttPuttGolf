@@ -16,8 +16,8 @@ export enum UserRole {
 
 export interface Enrollment {
 	score: number;
-	userId: number;
-	tournamentId: number;
+	userId: ID;
+	tournamentId: ID;
 }
 
 export interface EnrollmentUser {
@@ -43,15 +43,20 @@ export interface DrinkData {
 }
 
 export interface TournamentData {
-	id: number;
-	date: Date;
-	holeCount: number;
-	balance: number;
-	completed: boolean;
-	advertisingBanner: string;
-	sponsoredBy: UserData;
-	createdBy: UserData;
-	enrollments: EnrollmentUser[];
+	readonly id: ID;
+	readonly date: string;
+	readonly holeCount: number;
+	readonly createdBy: UserData;
+	readonly sponsoredBy: UserData | null;
+	readonly balance: number;
+	readonly completed: boolean;
+	readonly advertisingBanner: null;
+	readonly enrollments: TournamentEnrollment[];
+}
+
+export interface TournamentEnrollment {
+	score: number;
+	user: UserData;
 }
 
 export type Layout = 'mobile' | 'desktop';

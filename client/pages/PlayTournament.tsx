@@ -11,7 +11,7 @@ import {
 	Button,
 	Header,
 } from '../styles';
-import { TournamentData, Enrollment, UserData } from '../types';
+import { TournamentData, Enrollment, UserData, ID } from '../types';
 
 interface EnrollmentData {
 	score: number;
@@ -60,11 +60,6 @@ export default function PlayTournament() {
 		refetch: refetchTournaments,
 	} = useGet<TournamentData[]>('/tournaments');
 
-	const [
-		{ data: postData, error: postError, loading: postLoading },
-		updateScore,
-	] = usePost<Enrollment>(`/tournaments/update_score`);
-
 	const enrollments = useMemo(() => {
 		if (userData && tournamentsData) {
 			const userTournaments = tournamentsData.filter((tournament) => {
@@ -107,12 +102,18 @@ export default function PlayTournament() {
 		);
 	}, [enrollments]);
 
-	const handleSubmitHole = (strokes: number, tournamentId: number) => {
+	const [
+		{ data: postData, error: postError, loading: postLoading },
+		updateScore,
+	] = usePost<Enrollment>(
+		`/tournaments/${activeTournament?.tournament.id}/update_score`
+	);
+
+	const handleSubmitHole = (strokes: number, tournamentId: ID) => {
 		updateScore({
 			data: {
 				score: strokes,
-				tournament_id: tournamentId,
-				user_id: userData!.id,
+				userId: userData!.id,
 			},
 		});
 

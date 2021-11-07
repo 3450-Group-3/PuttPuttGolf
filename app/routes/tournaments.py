@@ -150,7 +150,7 @@ def update_score(
 ):
     tournament: Optional[models.Tournament] = (
         db.query(models.Tournament)
-        .where(models.Tournament.id == score_data.tournament.id)
+        .where(models.Tournament.id == score_data.tournament_id)
         .first()
     )
 
@@ -158,7 +158,7 @@ def update_score(
         return not_found("Tournament")
 
     user: Optional[models.User] = (
-        db.query(models.User).where(models.User.id == score_data.user.id).first()
+        db.query(models.User).where(models.User.id == score_data.user_id).first()
     )
 
     if not user:

@@ -9,6 +9,7 @@ import User from './user';
 import UserManagement from './pages/UserManagement';
 import PlayTournament from './pages/PlayTournament';
 import Leaderboard from './pages/Leaderboard';
+import Leaderboards from './pages/Leaderboards';
 import Tournaments from './pages/Tournaments';
 import CreateTournament from './pages/CreateTournament';
 import EditTournament from './pages/EditTournament';
@@ -67,7 +68,6 @@ export default function Routes() {
 			<AuthRoute path="/users/:id" component={AccountManagement} />
 			<AuthRoute path="/me" exact component={AccountManagement} />
 			<AuthRoute path="/play" component={PlayTournament} />
-			<AuthRoute path="/tournaments/:id/leaderboard" component={Leaderboard} />
 			<PermissionRoute
 				path="/admin/users"
 				exact
@@ -81,6 +81,8 @@ export default function Routes() {
 				exact
 				component={EditTournament}
 			/>
+			<AuthRoute path="/tournaments/:id/leaderboard" component={Leaderboard} />
+			<AuthRoute path="/tournaments/leaderboards" component={Leaderboards} />
 
 			<Route path="*" component={NotFound} />
 		</Switch>

@@ -166,4 +166,11 @@ def update_score(
 
     tournament.increment_score(db, user, score_data.score)
 
-    return JSONResponse(status_code=status.HTTP_200_OK)
+    return (
+        db.query(models.TournamentEnrollment)
+        .where(
+            models.TournamentEnrollment.tournament_id == tournament.id,
+            models.TournamentEnrollment.user_id == user.id,
+        )
+        .first()
+    )

@@ -1,20 +1,6 @@
 import styled from 'styled-components';
-import { Button, ButtonLink, CenterContent } from '../styles';
+import { Button, ButtonLink, CenterContent, Header, Text } from '../styles';
 import Title from '../components/Title';
-
-const Header = styled.h1`
-	font-size: 8rem;
-	font-family: 'Roboto';
-	font-weight: bold;
-	margin: 0;
-`;
-
-const Text = styled.p`
-	font-weight: bold;
-	font-size: 1.5rem;
-	text-align: center;
-	padding: 0px 10px;
-`;
 
 export default function NotFound() {
 	return (

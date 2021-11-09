@@ -97,7 +97,6 @@ class DrinkOrderOut(OutModel):
         orm_mode = True
 
 class DrinkOrderIn(InModel):
-    time_ordered: datetime
     drinks: list[DrinkOrderQuantity]
     location: UserLocation
 

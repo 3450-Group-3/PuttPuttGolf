@@ -1,3 +1,4 @@
+from datetime import datetime
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm.session import Session
 from starlette import status
@@ -62,7 +63,7 @@ def create_order(order_data: schemas.DrinkOrderIn, user: models.User = Depends(g
     order = models.DrinkOrder(
         customer_id = user.id,
         order_status = models.DrinkOrderState.OPEN,
-        time_ordered = order_data.time_ordered,
+        time_ordered = datetime.now(),
         total_price = price,
         drinks_json = json.dumps([
             { 

@@ -167,7 +167,7 @@ export default function DrinkOrdering({ layout }: Props) {
                     }}>Cancel</Button>
                 </div>
             }
-            {viewCart && <DrinkCart drinkMap={cart} />}
+            {viewCart && <DrinkCart drinkMap={cart} setViewCart={setViewCart} />}
         </Content>
     )
 }

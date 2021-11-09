@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Redirect } from "react-router";
 import styled from "styled-components";
 import { usePost } from "../hooks";
 import { Button } from "../styles";
@@ -6,7 +7,8 @@ import { DetailFormError, DrinkData } from "../types";
 import { Pair } from "../utils";
 
 interface Props {
-    drinkMap: Map<number, Pair<DrinkData, number>>
+    drinkMap: Map<number, Pair<DrinkData, number>>,
+    setViewCart: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 interface drinkSelection {
@@ -34,7 +36,7 @@ interface DrinkOrder {
 }
 
 
-export default function DrinkCart({drinkMap} : Props) {
+export default function DrinkCart({drinkMap, setViewCart} : Props) {
     
     const [{data, loading, error}, submitOrder] = usePost<DrinkOrder, DetailFormError>("/orders")
     const [successfullyPlacedOrder, setSuccessfullyPlaceOrder] = useState(false);
@@ -54,7 +56,9 @@ export default function DrinkCart({drinkMap} : Props) {
                 }
             }
         }).then(({data}) => {
-            console.log(data)
+            drinkMap.clear()
+            setSuccessfullyPlaceOrder(true)
+            setTimeout(() => {setViewCart(false)}, 2000)
         })
     }
 
@@ -90,6 +94,7 @@ export default function DrinkCart({drinkMap} : Props) {
                 )
             })}
             <Button onClick={() => {placeOrder()}}>Place Order</Button>
+            {successfullyPlacedOrder && <h2>Successfully placed your order</h2>}
         </div>
     )
 

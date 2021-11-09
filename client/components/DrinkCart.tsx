@@ -32,17 +32,17 @@ interface DrinkOrder {
 
 export default function DrinkCart({drinkMap} : Props) {
     
-    const[{data, loading, error}, submitOrder] = usePost<DrinkOrder, DetailFormError>("/drinks")
+    const[{data, loading, error}, submitOrder] = usePost<DrinkOrder, DetailFormError>("/orders")
 
     function placeOrder() {
         submitOrder({
             data: {
-                drinks: [ drinks.map((drink) => {
+                drinks: drinks.map((drink) => {
                     return {
                         drinkId: drink.drinkID,
                         quantity: drink.drinkQty
                     }
-                })],
+                }),
                 location: {
                     longitude: 69,
                     lattitude: 420

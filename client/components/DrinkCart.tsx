@@ -42,6 +42,9 @@ export default function DrinkCart({drinkMap, setViewCart} : Props) {
     const [successfullyPlacedOrder, setSuccessfullyPlaceOrder] = useState(false);
 
     function placeOrder() {
+        if (drinks.length == 0) {
+            return
+        }
         submitOrder({
             data: {
                 drinks: drinks.map((drink) => {
@@ -83,6 +86,8 @@ export default function DrinkCart({drinkMap, setViewCart} : Props) {
 
     return (
         <div>
+            {successfullyPlacedOrder && <h2>Successfully placed your order</h2>}
+            {drinks.length == 0 && <h2>There are currently no items in your cart</h2>}
             {drinks.map((drinkOrder, counter) => {
         
                 return (
@@ -94,7 +99,6 @@ export default function DrinkCart({drinkMap, setViewCart} : Props) {
                 )
             })}
             <Button onClick={() => {placeOrder()}}>Place Order</Button>
-            {successfullyPlacedOrder && <h2>Successfully placed your order</h2>}
         </div>
     )
 

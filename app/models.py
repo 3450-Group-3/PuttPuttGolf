@@ -186,7 +186,7 @@ class DrinkOrder(Base):
     total_price = Column(types.Float, nullable=False)
     drinks_json = Column(types.String, nullable=False)
     location_json = Column(types.String, nullable=True)
-    drink_meister_id = Column(types.Integer, nullable=True)
+    drink_meister_id = Column(types.Integer, nullable=True, index=True)
     
     @property
     @cache

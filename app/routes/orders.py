@@ -32,7 +32,7 @@ def get_customer_orders(id: int, db: Session = Depends(get_db)):
     user: models.User = db.query(models.User).where(models.User.id == id).first()
     if (user.is_drink_meister):
         return db.query(models.DrinkOrder).where(models.DrinkOrder.drink_meister_id == id).all()
-        
+
     return db.query(models.DrinkOrder).where(models.DrinkOrder.customer_id == id).all()
 
 
@@ -90,7 +90,7 @@ def create_order(order_data: schemas.DrinkOrderIn, user: models.User = Depends(g
 @orders.post(
     "/{id}", response_model=schemas.DrinkOrderOut
 )
-def assign_dm_to_order(id: int, drinkmeister: Depends(current_user_is_drinkmeister), db: Session = Depends(get_db)):
+def assign_dm_to_order(id: int, drinkmeister: models.User = Depends(current_user_is_drinkmeister), db: Session = Depends(get_db)):
     order: models.DrinkOrder = db.query(models.DrinkOrder).where(models.DrinkOrder.id == id).first()
     if (order.drink_meister_id):
         return JSONResponse(

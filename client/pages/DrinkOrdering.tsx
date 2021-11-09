@@ -7,7 +7,7 @@ import Input from '../components/Input';
 import { useGet } from "../hooks";
 import { Button } from "../styles";
 import { DetailFormError, DrinkData, Layout } from "../types";
-import { layoutSwitch } from "../utils";
+import { layoutSwitch, Pair } from "../utils";
 
 const Content = styled.div`
     text-align: center;
@@ -51,14 +51,15 @@ const HeaderCartButton = styled.div`
     align-self: center;
 `
 
-const cart: Map<number, number> = new Map();
 
-function addToCart(drinkId: number, drinkQty: number) {
-    const currQty = cart.get(drinkId)
+const cart: Map<number, Pair<DrinkData, number>> = new Map();
+
+function addToCart(drinkId: number, drinkData: DrinkData, drinkQty: number) {
+    const currQty = cart.get(drinkId)?.second
     if (currQty == undefined){
-        cart.set(drinkId, drinkQty)
+        cart.set(drinkId, new Pair<DrinkData, number>(drinkData, drinkQty))
     } else {
-        cart.set(drinkId, currQty + drinkQty)
+        cart.set(drinkId, new Pair<DrinkData, number>(drinkData, currQty + drinkQty))
     }
 }
 
@@ -151,7 +152,7 @@ export default function DrinkOrdering({ layout }: Props) {
                     <br/>
                     <Button onClick={() => {
                         if (qtySelected > 0 && !isNaN(qtySelected)){
-                            addToCart(drinkData1.id, qtySelected)
+                            addToCart(drinkData1.id, drinkData1, qtySelected)
                             setQtyPositive(true)
                             setDrinkClicked(false)
                         } else {

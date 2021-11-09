@@ -1,19 +1,23 @@
+import { useState } from "react";
 import styled from "styled-components";
-import { usePost } from "../hooks";
+import { useGet, usePost } from "../hooks";
 import { Button } from "../styles";
-import { DetailFormError } from "../types";
+import { DetailFormError, DrinkData } from "../types";
+import { Pair } from "../utils";
 
 interface Props {
-    drinkMap: Map<number, number>
+    drinkMap: Map<number, Pair<DrinkData, number>>
 }
 
 interface drinkSelection {
     drinkID: number
-    drinkQty: number
+    drinkQty: number,
+    drinkName: string
 }
 
-const Drink = styled.div`
-    border: 1px solid black
+const CartItem = styled.div`
+    border: 1px solid black;
+    margin-bottom: 2em;
 `
 
 interface DrinkOrder {
@@ -33,6 +37,7 @@ interface DrinkOrder {
 export default function DrinkCart({drinkMap} : Props) {
     
     const[{data, loading, error}, submitOrder] = usePost<DrinkOrder, DetailFormError>("/orders")
+    const [successfullyPlacedOrder, setSuccessfullyPlaceOrder] = useState(false);
 
     function placeOrder() {
         submitOrder({
@@ -59,7 +64,8 @@ export default function DrinkCart({drinkMap} : Props) {
         // console.log("key value" + key + "value value" + value)
         drinks.push({
             drinkID: key,
-            drinkQty: value
+            drinkQty: value.second,
+            drinkName: value.first.name
         })
     })
 
@@ -69,12 +75,13 @@ export default function DrinkCart({drinkMap} : Props) {
     return (
         <div>
             {drinks.map((drinkOrder, counter) => {
+        
                 return (
-                    <Drink key={drinkOrder.drinkID}>
-                        <p>Item number: {counter}</p>
-                        <p>Drink ID: {drinkOrder.drinkID}</p>
-                        <p>Drink Qty: {drinkOrder.drinkQty}</p>
-                    </Drink>
+                    <CartItem key={drinkOrder.drinkID}>
+                        <p>Drink: {drinkOrder.drinkName}</p>
+                        <p>Qty: {drinkOrder.drinkQty}</p>
+                        <Button style={{marginLeft: "auto", marginRight: 0}}>Remove</Button>
+                    </CartItem>
                 )
             })}
             <Button onClick={() => {placeOrder()}}>Place Order</Button>

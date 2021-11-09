@@ -8,6 +8,7 @@ import { useUser } from './hooks';
 import User from './user';
 import UserManagement from './pages/UserManagement';
 import DrinkOrdering from './pages/DrinkOrdering';
+import DrinkOrderFufillment from './pages/DrinkOrderFufillment';
 
 /**  User must be logged in */
 const AuthRoute = (props: RouteProps) => {
@@ -68,6 +69,11 @@ export default function Routes() {
 				component={UserManagement}
 			/>
 			<AuthRoute path="/order" component={DrinkOrdering} />
+			<PermissionRoute
+				path="/dm/orders"
+				hasPermission={(user) => user.isDrinkMeister}
+				component={DrinkOrderFufillment}
+			/>
 			<Route path="*" component={NotFound} />
 		</Switch>
 	);

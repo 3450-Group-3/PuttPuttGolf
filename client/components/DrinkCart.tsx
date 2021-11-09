@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { useGet, usePost } from "../hooks";
+import { usePost } from "../hooks";
 import { Button } from "../styles";
 import { DetailFormError, DrinkData } from "../types";
 import { Pair } from "../utils";
@@ -36,7 +36,7 @@ interface DrinkOrder {
 
 export default function DrinkCart({drinkMap} : Props) {
     
-    const[{data, loading, error}, submitOrder] = usePost<DrinkOrder, DetailFormError>("/orders")
+    const [{data, loading, error}, submitOrder] = usePost<DrinkOrder, DetailFormError>("/orders")
     const [successfullyPlacedOrder, setSuccessfullyPlaceOrder] = useState(false);
 
     function placeOrder() {
@@ -58,10 +58,11 @@ export default function DrinkCart({drinkMap} : Props) {
         })
     }
 
-    const drinks: drinkSelection[] = [];
+    const [dummy, setDummy] = useState(false);
+
+    const drinks : drinkSelection[] = [];
 
     drinkMap.forEach((value, key) => {
-        // console.log("key value" + key + "value value" + value)
         drinks.push({
             drinkID: key,
             drinkQty: value.second,
@@ -69,9 +70,13 @@ export default function DrinkCart({drinkMap} : Props) {
         })
     })
 
-    // console.log(drinkMap)
-    // console.log(drinks)
+    function removeDrink(drinkOrder: drinkSelection) {
+        drinkMap.delete(drinkOrder.drinkID);
+        setDummy(!dummy)
+    }
     
+    console.log("Drinks before map", drinks)
+
     return (
         <div>
             {drinks.map((drinkOrder, counter) => {
@@ -80,7 +85,7 @@ export default function DrinkCart({drinkMap} : Props) {
                     <CartItem key={drinkOrder.drinkID}>
                         <p>Drink: {drinkOrder.drinkName}</p>
                         <p>Qty: {drinkOrder.drinkQty}</p>
-                        <Button style={{marginLeft: "auto", marginRight: 0}}>Remove</Button>
+                        <Button style={{marginLeft: "auto", marginRight: 0}} onClick={() => {removeDrink(drinkOrder)}}>Remove</Button>
                     </CartItem>
                 )
             })}

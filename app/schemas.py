@@ -92,6 +92,7 @@ class DrinkOrderOut(OutModel):
     total_price: float
     drinks: list[DrinkOrderQuantity]
     location: UserLocation
+    drink_meister_id: int 
 
     class Config:
         orm_mode = True

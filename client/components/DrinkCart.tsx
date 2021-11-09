@@ -87,7 +87,7 @@ export default function DrinkCart({drinkMap, setViewCart} : Props) {
     return (
         <div>
             {successfullyPlacedOrder && <h2>Successfully placed your order</h2>}
-            {drinks.length == 0 && <h2>There are currently no items in your cart</h2>}
+            {drinks.length == 0 && !successfullyPlacedOrder && <h2>There are currently no items in your cart</h2>}
             {drinks.map((drinkOrder, counter) => {
         
                 return (

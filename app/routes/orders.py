@@ -78,7 +78,8 @@ def create_order(order_data: schemas.DrinkOrderIn, user: models.User = Depends(g
         location_json = json.dumps({
             "lattitude" : order_data.location.lattitude,
             "longitude" : order_data.location.longitude
-        })
+        }),
+        drink_meister_id = -1
     )
 
     db.add(order)
@@ -92,12 +93,11 @@ def create_order(order_data: schemas.DrinkOrderIn, user: models.User = Depends(g
 )
 def assign_dm_to_order(id: int, drinkmeister: models.User = Depends(current_user_is_drinkmeister), db: Session = Depends(get_db)):
     order: models.DrinkOrder = db.query(models.DrinkOrder).where(models.DrinkOrder.id == id).first()
-    if (order.drink_meister_id):
+    if (order.drink_meister_id != -1):
         return JSONResponse(
             status_code=status.HTTP_400_BAD_REQUEST,
-            content={"detail": "This order has already been claimed by another drinkmeister"}
+            content={"detail": "This order has already been claimed by a drinkmeister"}
         )
-
     order.drink_meister_id = drinkmeister.id
 
     db.commit()

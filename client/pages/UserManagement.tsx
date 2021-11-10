@@ -14,7 +14,7 @@ import {
 } from 'react-icons/ai';
 import { FiUserPlus } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
-import Input from '../components/Input';
+import TextInput from '../components/TextInput';
 
 const Content = styled.div`
 	width: clamp(300px, 80%, 100%);
@@ -119,9 +119,8 @@ export default function UserManagement() {
 						},
 						{ displayName: 'Role', dataName: 'roleName', align: 'right' },
 						{
-							displayName: 'actions',
+							displayName: '',
 							dataName: 'roleName',
-							hidden: true,
 							render: (user, item) => (
 								<div style={{ display: 'flex' }}>
 									<Action to={`/users/${user.id}`}>
@@ -150,7 +149,7 @@ export default function UserManagement() {
 		<Content>
 			<Header>
 				<UserTitle>User Management</UserTitle>
-				<Input
+				<TextInput
 					placeholder="Search"
 					noError
 					value={search}

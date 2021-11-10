@@ -1,8 +1,9 @@
 import styled from 'styled-components';
 
-const Table = styled.table`
+const TableS = styled.table`
 	table-layout: fixed;
 	border-collapse: collapse;
+	width: 100%;
 `;
 
 const THead = styled.thead`
@@ -26,11 +27,10 @@ const Heading = styled.th`
 
 type Column<T> = {
 	readonly displayName: string;
-	readonly dataName: keyof T;
+	readonly dataName?: keyof T;
 	readonly align?: 'right' | 'left' | 'center';
 	readonly width?: string;
 	readonly render?: (data: T, item: Column<T>) => React.ReactNode;
-	readonly hidden?: boolean;
 };
 
 interface Props<T extends Record<string, any>> {
@@ -38,9 +38,9 @@ interface Props<T extends Record<string, any>> {
 	readonly data: T[];
 }
 
-export default function TableC<T>(props: Props<T>) {
+export default function Table<T>(props: Props<T>) {
 	return (
-		<Table>
+		<TableS>
 			<THead>
 				<tr>
 					{props.columns.map((item, idx) => (
@@ -52,7 +52,7 @@ export default function TableC<T>(props: Props<T>) {
 							}}
 							scope="col"
 						>
-							{item.hidden ? '' : item.displayName}
+							{item.displayName}
 						</Heading>
 					))}
 				</tr>
@@ -62,12 +62,16 @@ export default function TableC<T>(props: Props<T>) {
 					<Row key={idx}>
 						{props.columns.map((item, idx) => (
 							<Cell key={idx} style={{ textAlign: item.align || 'left' }}>
-								{item.render ? item.render(row, item) : row[item.dataName]}
+								{item.render
+									? item.render(row, item)
+									: item.dataName
+									? row[item.dataName]
+									: ''}
 							</Cell>
 						))}
 					</Row>
 				))}
 			</TBody>
-		</Table>
+		</TableS>
 	);
 }

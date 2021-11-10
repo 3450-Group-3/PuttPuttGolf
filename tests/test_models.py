@@ -42,6 +42,9 @@ class TestTournamentModel:
         tournament.increment_score(db, user, 5)
         assert user.enrollments[0].score == 5
 
+        tournament.increment_score(db, user, -2)
+        assert user.enrollments[0].score == 3
+
         tournament.remove_user(db, user)
         with pytest.raises(ValueError):
             tournament.increment_score(db, user, 5)

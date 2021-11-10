@@ -1,4 +1,4 @@
-import { useContext, useMemo, useReducer, useState } from 'react';
+import { useContext, useMemo } from 'react';
 import { ThemeContext, DefaultTheme } from 'styled-components';
 
 import styled from 'styled-components';
@@ -11,7 +11,7 @@ import { AiOutlineCalendar } from 'react-icons/ai';
 import { Title } from '../styles';
 import { UserData } from '../types';
 import { Button } from '../styles';
-import Input from './Input';
+import TextInput from './TextInput';
 
 const Form = styled.form`
 	display: flex;
@@ -93,7 +93,7 @@ export default function AccountForm({ onSubmit, type, defaultValues }: Props) {
 
 	return (
 		<Form onSubmit={handleSubmit(onSubmit)}>
-			<Input
+			<TextInput
 				title="Username"
 				placeholder="mini_golfer89"
 				error={errors.username?.message}
@@ -104,7 +104,7 @@ export default function AccountForm({ onSubmit, type, defaultValues }: Props) {
 				})}
 			/>
 			{type === 'creating' && (
-				<Input
+				<TextInput
 					title="Password"
 					placeholder="8 - 20 Characters"
 					type="password"
@@ -117,7 +117,7 @@ export default function AccountForm({ onSubmit, type, defaultValues }: Props) {
 					})}
 				/>
 			)}
-			<Input
+			<TextInput
 				title="Date of Birth"
 				placeholder="MM / DD / YYYY"
 				icon={<AiOutlineCalendar size={40} />}

@@ -12,7 +12,7 @@ from . import models
 
 class AccessToken:
     ALGORITHM = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES = 30
+    ACCESS_TOKEN_EXPIRE_MINUTES = 300
 
     @staticmethod
     def encode(data: dict, expires_delta: Optional[timedelta] = None):
@@ -77,6 +77,5 @@ def get_user(db: Session, username: str):
     user: Optional[models.User] = (
         db.query(models.User).where(models.User.username == username).first()
     )
-      
-    return user
 
+    return user

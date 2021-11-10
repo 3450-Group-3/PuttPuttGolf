@@ -1,9 +1,8 @@
 import { Redirect } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
 import AccountForm from '../components/AccountForm';
 import { usePost, useRedirect } from '../hooks';
-import { CenterContent, Message } from '../styles';
-import { DetailFormError, RedirectState, UserData } from '../types';
+import { CenterContent } from '../styles';
+import { DetailFormError, UserData } from '../types';
 import Title from '../components/Title';
 import Loader from '../components/Loader';
 

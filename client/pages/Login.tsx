@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { RiLockPasswordLine } from 'react-icons/ri';
 import styled from 'styled-components';
-import Input from '../components/Input';
+import TextInput from '../components/TextInput';
 import { Button } from '../styles';
 import { usePost, useRedirect, useUser } from '../hooks';
 import { FormError, UserData } from '../types';
@@ -66,12 +66,12 @@ export default function Login() {
 			{error && <div>Login failed :(</div>}
 			{data && <div>Login Success!</div>}
 			{user.loggedIn && <Redirect to={redirectTo} />}
-			<Input
+			<TextInput
 				placeholder="Username"
 				onChange={(e) => setState({ username: e.target.value, password })}
 				icon={<IoPersonCircleOutline size={40} />}
 			/>
-			<Input
+			<TextInput
 				placeholder="Password"
 				type="password"
 				onChange={(e) => setState({ password: e.target.value, username })}

@@ -1,16 +1,16 @@
 import { useState } from "react";
-import { MdApartment } from "react-icons/md";
 import styled from "styled-components";
 import DrinkCart from "../components/DrinkCart";
 import DrinkModal from "../components/DrinkModal";
 import Input from '../components/Input';
-import { useGet } from "../hooks";
+import { useGet, useWindowSize } from "../hooks";
 import { Button } from "../styles";
-import { DetailFormError, DrinkData, Layout } from "../types";
-import { layoutSwitch, Pair } from "../utils";
+import { DetailFormError, DrinkData } from "../types";
+import { Pair } from "../utils";
 
 const Content = styled.div`
     text-align: center;
+    width: 100%;
 `;
 
 const DrinkGridLayout = styled.div`
@@ -34,14 +34,6 @@ const QtyContainer = styled.div`
     align-items: baseline;
 `
 
-//todo ask sean about the layoutSwitch and how to setup. Rn its not differentiating between mobile and desktop
-const Header = styled.div`
-    display: grid;
-    grid-template-columns: ${layoutSwitch(
-        "[filler1] 40% [header-text] 20% [filler2] 20% [cart-button] 10% [filler3] 10%", 
-        "[filler1] auto [header-text] auto [filler2] auto [cart-button] auto [filler3] auto"
-    )};
-`
 const HeaderText = styled.div`
     grid-column: header-text / filler2;
 `
@@ -63,12 +55,23 @@ function addToCart(drinkId: number, drinkData: DrinkData, drinkQty: number) {
     }
 }
 
-interface Props {
-	layout: Layout;
-}
+export default function DrinkOrdering() { 
+    function layoutSwitch(desktop: string, mobile: string): string {
+        const [width] = useWindowSize();
+        if (width > 650) {
+            return desktop;
+        } else {
+            return mobile;
+        }
+    }
 
-
-export default function DrinkOrdering({ layout }: Props) { 
+    const Header = styled.div`
+    display: grid;
+    grid-template-columns: ${layoutSwitch(
+        "[filler1] 40% [header-text] 20% [filler2] 20% [cart-button] 10% [filler3] 10%", 
+        "[filler1] auto [header-text] auto [filler2] auto [cart-button] auto [filler3] auto"
+    )};
+`
 
     const { data, loading, error} = useGet<DrinkData[],  DetailFormError>("/drinks");
     const [drinkClicked, setDrinkClicked] = useState(false);
@@ -88,7 +91,7 @@ export default function DrinkOrdering({ layout }: Props) {
     
     return (
         <Content>
-            <Header layout={layout}>
+            <Header>
                 <HeaderText>
                     <h2>Order Drinks</h2>
                 </HeaderText>

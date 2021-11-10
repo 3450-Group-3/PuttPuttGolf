@@ -47,6 +47,10 @@ const config: Configuration = {
 					},
 				],
 			},
+			{
+				test: /\.css$/i,
+				use: ['style-loader', 'css-loader'],
+			},
 		],
 	},
 	plugins: [new ReactRefreshWebpackPlugin(), new ForkTsCheckerWebpackPlugin()],

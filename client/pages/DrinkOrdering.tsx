@@ -2,7 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import DrinkCart from "../components/DrinkCart";
 import DrinkModal from "../components/DrinkModal";
-import Input from '../components/Input';
+import TextInput from "../components/TextInput";
 import { useGet, useWindowSize } from "../hooks";
 import { Button } from "../styles";
 import { DetailFormError, DrinkData } from "../types";
@@ -136,7 +136,7 @@ export default function DrinkOrdering() {
                                 setQtySelected(0)
                             }
                         }}>-</Button> 
-                        <Input
+                        <TextInput
                             value={qtySelected.toString()}
                             type="number"
                             onChange={(e) => {

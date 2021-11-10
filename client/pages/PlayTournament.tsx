@@ -44,7 +44,7 @@ function sameDay(d1: Date, d2: Date) {
 }
 
 export default function PlayTournament() {
-	const redirectTo = useRedirect('/');
+	const redirectTo = useRedirect('/tournaments/leaderboards');
 
 	const {
 		data: userData,

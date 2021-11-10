@@ -34,7 +34,7 @@ export interface DrinkData {
 	name: string;
 	price: number;
 	imageUrl: string;
-	balance: number;
+	description: string;
 }
 
 export interface TournamentData {

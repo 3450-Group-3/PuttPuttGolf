@@ -10,6 +10,7 @@ import UserManagement from './pages/UserManagement';
 import Tournaments from './pages/Tournaments';
 import CreateTournament from './pages/CreateTournament';
 import EditTournament from './pages/EditTournament';
+import Sponsor from './pages/Sponsor';
 
 /**  User must be logged in */
 const AuthRoute = (props: RouteProps) => {
@@ -62,6 +63,7 @@ export default function Routes() {
 			<Route path="/" exact component={Home} />
 			<Route path="/signup" exact component={SignUp} />
 			<Route path="/login" exact component={Login} />
+			<AuthRoute path="/tournaments/:id/sponsor" component={Sponsor} />
 			<AuthRoute path="/users/:id" component={AccountManagement} />
 			<AuthRoute path="/me" exact component={AccountManagement} />
 			<PermissionRoute

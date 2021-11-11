@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Redirect } from 'react-router';
 import styled from 'styled-components';
+import Input from '../components/Input';
 import Loader from '../components/Loader';
 import { useGet, usePost, useRedirect } from '../hooks';
 import {
@@ -12,6 +13,7 @@ import {
 	Header,
 } from '../styles';
 import { TournamentData, Enrollment, UserData } from '../types';
+import { MdSportsGolf } from 'react-icons/md';
 
 interface EnrollmentData {
 	score: number;
@@ -22,7 +24,7 @@ const ChangeStrokeContainer = styled.div`
 	display: flex;
 	justify-content: space-between;
 	width: 15rem;
-	padding: 2rem;
+	padding-bottom: 2rem;
 `;
 
 const PageHeader = styled.div`
@@ -165,7 +167,16 @@ export default function PlayTournament() {
 
 					<Header>{score}</Header>
 
-					<Title>Current Strokes: {strokes}</Title>
+					<Input
+						title="Current Strokes"
+						placeholder="e.g. 1"
+						icon={<MdSportsGolf size={40} />}
+						value={strokes}
+						onChange={(e) => {
+							if (!isNaN(Number(e.target.value)))
+								setStrokes(Number(e.target.value));
+						}}
+					/>
 
 					<ChangeStrokeContainer>
 						<Button onClick={() => setStrokes(strokes + 1)}>+1 Stroke</Button>

@@ -16,6 +16,7 @@ export enum UserRole {
 
 export interface Enrollment {
 	score: number;
+	currentHole: number;
 	userId: number;
 	tournamentId: number;
 }

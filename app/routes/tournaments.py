@@ -143,9 +143,13 @@ def remove_user(
     return JSONResponse(status_code=status.HTTP_200_OK)
 
 
-@tournaments.post("/update_score", dependencies=[Depends(get_current_user)])
+@tournaments.post(
+    "/update_score",
+    dependencies=[Depends(get_current_user)],
+    response_model=schemas.TournamentEnrollment,
+)
 def update_score(
-    score_data: schemas.TournamentEnrollment,
+    score_data: schemas.TournamentEnrollmentIn,
     db: Session = Depends(get_db),
 ):
     tournament: Optional[models.Tournament] = (
@@ -164,13 +168,4 @@ def update_score(
     if not user:
         return not_found("User")
 
-    tournament.increment_score(db, user, score_data.score)
-
-    return (
-        db.query(models.TournamentEnrollment)
-        .where(
-            models.TournamentEnrollment.tournament_id == tournament.id,
-            models.TournamentEnrollment.user_id == user.id,
-        )
-        .first()
-    )
+    return tournament.increment_score(db, user, score_data.score)

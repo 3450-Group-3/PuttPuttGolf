@@ -66,6 +66,7 @@ def create_order(order_data: schemas.DrinkOrderIn, user: models.User = Depends(g
     
     order = models.DrinkOrder(
         customer_id = user.id,
+        customer_name = db.query(models.User).where(models.User.id == user.id).first().username,
         order_status = models.DrinkOrderState.OPEN,
         time_ordered = datetime.now(),
         total_price = price,

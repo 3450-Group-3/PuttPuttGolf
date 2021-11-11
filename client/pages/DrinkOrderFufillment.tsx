@@ -3,7 +3,7 @@ import DeliverDrinkOrder from "../components/DeliverDrinkOrder"
 import OpenDrinkList from "../components/OpenDrinkList"
 import SelectedDrinkOrder from "../components/SelectedDrinkOrder"
 import { useGet, useUser } from "../hooks"
-import { DetailFormError } from "../types"
+import { DetailFormError, DrinkData } from "../types"
 
 
 interface DrinkOrderQuantity {
@@ -18,13 +18,14 @@ interface UserLocation {
 
 export interface DrinkOrderData {
     id: number
-    customer_id: number
-    order_status: DrinkOrderState
-    time_ordered: string
-    total_price: number
+    customerId: number
+    customerName: string
+    orderStatus: DrinkOrderState
+    timeOrdered: string
+    totalPrice: number
     drinks: DrinkOrderQuantity[]
     location: UserLocation
-    drink_meister_id: number 
+    drinkMeisterId: number 
 }
 
 export enum DrinkOrderState {
@@ -49,7 +50,7 @@ export default function DrinkOrderFufillment() {
         if (data.length > 0){
             setHasAcceptedOrder(true)
             if (!orderReadyToBeDelivered){
-                if (data[0].order_status == DrinkOrderState.ENROUTE){
+                if (data[0].orderStatus == DrinkOrderState.ENROUTE){
                     setOrderReadyToBeDelivered(true)
                 }
             }

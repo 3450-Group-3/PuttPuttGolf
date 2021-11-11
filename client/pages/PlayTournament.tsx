@@ -13,12 +13,18 @@ import {
 	Header,
 } from '../styles';
 import { TournamentData, Enrollment, UserData } from '../types';
-import { MdSportsGolf } from 'react-icons/md';
+import { MdLeaderboard, MdSportsGolf } from 'react-icons/md';
 
 interface EnrollmentData {
 	score: number;
 	tournament: TournamentData;
 }
+
+const ButtonLinkIcon = styled(ButtonLink)`
+	svg {
+		margin-right: 0.5em;
+	}
+`;
 
 const ChangeStrokeContainer = styled.div`
 	display: flex;
@@ -83,6 +89,7 @@ export default function PlayTournament() {
 				return {
 					tournament: tournament,
 					score: enrollment!.score,
+					currentHole: enrollment!.currentHole,
 				};
 			});
 		}
@@ -98,7 +105,6 @@ export default function PlayTournament() {
 		/>;
 	}
 
-	const [hole, setHole] = useState(1);
 	const [strokes, setStrokes] = useState(0);
 
 	const activeTournament = useMemo(() => {
@@ -113,17 +119,16 @@ export default function PlayTournament() {
 		updateScore({
 			data: {
 				score: strokes,
-				tournament_id: tournamentId,
-				user_id: userData!.id,
+				tournamentId: tournamentId,
+				userId: userData!.id,
 			},
 		});
-
-		setHole(hole + 1);
 		setStrokes(0);
 	};
 
 	if (postData && activeTournament) {
 		activeTournament.score = postData.score;
+		activeTournament.currentHole = postData.currentHole;
 	}
 
 	const content = () => {
@@ -140,10 +145,22 @@ export default function PlayTournament() {
 				);
 			}
 
-			const { score, tournament } = activeTournament;
+			const { score, tournament, currentHole } = activeTournament;
 
-			if (hole > tournament!.holeCount) {
-				return <Redirect to={redirectTo} />;
+			if (currentHole > tournament!.holeCount) {
+				return (
+					<CenterContent>
+						<Title>You're done!</Title>
+						<Text>
+							You've finished playing in this tournament. View its leaderboard
+							here:
+						</Text>
+						<ButtonLinkIcon to={`/tournaments/${tournament.id}/leaderboard`}>
+							<MdLeaderboard />
+							Leaderboard
+						</ButtonLinkIcon>
+					</CenterContent>
+				);
 			}
 
 			return (
@@ -160,7 +177,7 @@ export default function PlayTournament() {
 							height="100px"
 						/>
 						<Title>
-							Current Hole: {hole} / {tournament!.holeCount}
+							Current Hole: {currentHole} / {tournament!.holeCount}
 						</Title>
 						<ScoreTitle>Your Score:</ScoreTitle>
 					</PageHeader>

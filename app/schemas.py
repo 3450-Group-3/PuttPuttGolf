@@ -29,6 +29,7 @@ class TournamentEnrollment(OutModel):
     score: int
     tournament_id: int
     user_id: int
+    current_hole: int
 
     class Config:
         orm_mode = True
@@ -37,9 +38,16 @@ class TournamentEnrollment(OutModel):
 class TournamentEnrollmentUser(OutModel):
     score: int
     user: User
+    current_hole: int
 
     class Config:
         orm_mode = True
+
+
+class TournamentEnrollmentIn(InModel):
+    score: int
+    tournament_id: int
+    user_id: int
 
 
 class UserIn(InModel):
@@ -119,10 +127,6 @@ class DrinkOrderOut(OutModel):
 
 
 class DrinkOrderIn(InModel):
-    customer_id: int
-    order_status: DrinkOrderState
-    time_ordered: datetime
-    total_price: float
     drinks: list[DrinkOrderQuantity]
     location: UserLocation
 

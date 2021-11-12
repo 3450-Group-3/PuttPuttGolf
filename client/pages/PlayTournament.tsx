@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Redirect } from 'react-router';
 import styled from 'styled-components';
+import Input from '../components/Input';
 import Loader from '../components/Loader';
 import { useGet, usePost, useRedirect } from '../hooks';
 import {
@@ -11,18 +12,21 @@ import {
 	Button,
 	Header,
 } from '../styles';
-import { TournamentData, Enrollment, UserData, ID } from '../types';
+import { TournamentData, TournamentEnrollment, UserData, ID } from '../types';
+import { MdLeaderboard, MdSportsGolf } from 'react-icons/md';
+import TextInput from '../components/TextInput';
 
-interface EnrollmentData {
-	score: number;
-	tournament: TournamentData;
-}
+const ButtonLinkIcon = styled(ButtonLink)`
+	svg {
+		margin-right: 0.5em;
+	}
+`;
 
 const ChangeStrokeContainer = styled.div`
 	display: flex;
 	justify-content: space-between;
 	width: 15rem;
-	padding: 2rem;
+	padding-bottom: 2rem;
 `;
 
 const PageHeader = styled.div`
@@ -44,28 +48,26 @@ function sameDay(d1: Date, d2: Date) {
 }
 
 export default function PlayTournament() {
-	const redirectTo = useRedirect('/tournaments/leaderboards');
-
 	const {
 		data: userData,
 		error: userError,
 		loading: userLoading,
-		refetch: refetchUser,
 	} = useGet<UserData>('/users/me');
 
 	const {
 		data: tournamentsData,
 		error: tournamentsError,
 		loading: tournamentsLoading,
-		refetch: refetchTournaments,
 	} = useGet<TournamentData[]>('/tournaments');
 
-	const enrollments = useMemo(() => {
+	const [{ data: postData }, updateScore] = usePost<TournamentEnrollment>();
+
+	const getEnrollments = () => {
 		if (userData && tournamentsData) {
 			const userTournaments = tournamentsData.filter((tournament) => {
 				return userData.enrollments
 					.map((enrollment) => enrollment.tournamentId)
-					.includes(tournament.id);
+					.includes(Number(tournament.id));
 			});
 
 			return userTournaments.map((tournament) => {
@@ -76,53 +78,38 @@ export default function PlayTournament() {
 				return {
 					tournament: tournament,
 					score: enrollment!.score,
+					currentHole: enrollment!.currentHole,
 				};
 			});
 		}
 
 		return [];
-	}, [userData, tournamentsData]);
+	};
 
-	if (userLoading || userError) {
-		<Loader
-			loading={userLoading}
-			loadingMessage="Loading User Data"
-			error={userError}
-		/>;
-	}
+	const enrollments = getEnrollments();
 
-	const [hole, setHole] = useState(1);
 	const [strokes, setStrokes] = useState(0);
 
-	const activeTournament = useMemo(() => {
-		return enrollments.find(
-			(enrollment) =>
-				enrollment.tournament &&
-				sameDay(new Date(enrollment.tournament.date), new Date())
-		);
-	}, [enrollments]);
-
-	const [
-		{ data: postData, error: postError, loading: postLoading },
-		updateScore,
-	] = usePost<Enrollment>(
-		`/tournaments/${activeTournament?.tournament.id}/update_score`
+	const activeTournament = enrollments.find(
+		(enrollment) =>
+			enrollment.tournament &&
+			sameDay(new Date(enrollment.tournament.date), new Date())
 	);
 
 	const handleSubmitHole = (strokes: number, tournamentId: ID) => {
 		updateScore({
+			url: `/tournaments/${tournamentId}/update_score`,
 			data: {
 				score: strokes,
 				userId: userData!.id,
 			},
 		});
-
-		setHole(hole + 1);
 		setStrokes(0);
 	};
 
 	if (postData && activeTournament) {
 		activeTournament.score = postData.score;
+		activeTournament.currentHole = postData.currentHole;
 	}
 
 	const content = () => {
@@ -139,10 +126,22 @@ export default function PlayTournament() {
 				);
 			}
 
-			const { score, tournament } = activeTournament;
+			const { score, tournament, currentHole } = activeTournament;
 
-			if (hole > tournament!.holeCount) {
-				return <Redirect to={redirectTo} />;
+			if (currentHole > tournament.holeCount) {
+				return (
+					<CenterContent>
+						<Title>You're done!</Title>
+						<Text>
+							You've finished playing in this tournament. View its leaderboard
+							here:
+						</Text>
+						<ButtonLinkIcon to={`/tournaments/${tournament.id}/leaderboard`}>
+							<MdLeaderboard />
+							Leaderboard
+						</ButtonLinkIcon>
+					</CenterContent>
+				);
 			}
 
 			return (
@@ -159,14 +158,22 @@ export default function PlayTournament() {
 							height="100px"
 						/>
 						<Title>
-							Current Hole: {hole} / {tournament!.holeCount}
+							Current Hole: {currentHole} / {tournament.holeCount}
 						</Title>
 						<ScoreTitle>Your Score:</ScoreTitle>
 					</PageHeader>
 
 					<Header>{score}</Header>
 
-					<Title>Current Strokes: {strokes}</Title>
+					<TextInput
+						title="Current Strokes"
+						icon={<MdSportsGolf size={40} />}
+						value={strokes}
+						onChange={(e) => {
+							if (!isNaN(Number(e.target.value)))
+								setStrokes(Number(e.target.value));
+						}}
+					/>
 
 					<ChangeStrokeContainer>
 						<Button onClick={() => setStrokes(strokes + 1)}>+1 Stroke</Button>
@@ -178,7 +185,9 @@ export default function PlayTournament() {
 						</Button>
 					</ChangeStrokeContainer>
 
-					<Button onClick={() => handleSubmitHole(strokes, tournament!.id)}>
+					<Button
+						onClick={() => handleSubmitHole(strokes, Number(tournament.id))}
+					>
 						Submit
 					</Button>
 				</CenterContent>
@@ -186,5 +195,23 @@ export default function PlayTournament() {
 		}
 	};
 
-	return <>{content()}</>;
+	return (
+		<>
+			{(userLoading || userError) && (
+				<Loader
+					loading={userLoading}
+					loadingMessage="Loading User Data"
+					error={userError}
+				/>
+			)}
+			{(tournamentsLoading || tournamentsError) && (
+				<Loader
+					loading={tournamentsLoading}
+					loadingMessage="Loading User Data"
+					error={tournamentsError}
+				/>
+			)}
+			{content()}
+		</>
+	);
 }

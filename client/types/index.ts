@@ -14,15 +14,17 @@ export enum UserRole {
 	Anonymous = 5,
 }
 
-export interface Enrollment {
+export interface TournamentEnrollment {
 	score: number;
 	userId: ID;
 	tournamentId: ID;
+	currentHole: number;
 }
 
-export interface EnrollmentUser {
+export interface TournamentEnrollmentUser {
 	score: number;
 	user: UserData;
+	currentHole: number;
 }
 
 export interface UserData {
@@ -31,7 +33,7 @@ export interface UserData {
 	birthdate: Date;
 	role: UserRole;
 	balance: number;
-	enrollments: Enrollment[];
+	enrollments: TournamentEnrollment[];
 }
 
 export interface DrinkData {
@@ -39,7 +41,7 @@ export interface DrinkData {
 	name: string;
 	price: number;
 	imageUrl: string;
-	balance: number;
+	description: string;
 }
 
 export interface TournamentData {
@@ -51,12 +53,7 @@ export interface TournamentData {
 	readonly balance: number;
 	readonly completed: boolean;
 	readonly advertisingBanner: null;
-	readonly enrollments: TournamentEnrollment[];
-}
-
-export interface TournamentEnrollment {
-	score: number;
-	user: UserData;
+	readonly enrollments: TournamentEnrollmentUser[];
 }
 
 export type Layout = 'mobile' | 'desktop';

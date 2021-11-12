@@ -62,7 +62,7 @@ class User(Base):  # type: ignore
     def update_balance(self, value: float, db: Session):
         assert isinstance(value, (float, int))
         self.balance = value
-        db.add(self)
+        db.commit()
 
 
 class Drink(Base):

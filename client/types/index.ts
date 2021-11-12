@@ -3,6 +3,7 @@ export type FormError<Keys extends string, Values = string[]> = Record<
 	Values
 >;
 export type DetailFormError = FormError<'detail', string>;
+export type MessageError = FormError<'message', string>;
 
 export type ID = string | number;
 

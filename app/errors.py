@@ -7,3 +7,8 @@ class ResourceNotFound(Exception):
     def __init__(self, resource: str, search_params: dict = None):
         self.resource = resource
         self.search_params = search_params or {}
+
+
+class ValidationError(Exception):
+    def __init__(self, message: str):
+        self.detail = message

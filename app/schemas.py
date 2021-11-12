@@ -163,4 +163,8 @@ class IncrementScore(InModel):
     user_id: int
 
 
+class BalanceUpdate(BaseModel):
+    balance: float
+
+
 TournamentEnrollment.update_forward_refs()

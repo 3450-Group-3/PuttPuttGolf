@@ -45,6 +45,7 @@ export default function Leaderboard() {
 				return {
 					score: enrollment.score,
 					username: enrollment.user.username,
+					currentHole: enrollment.currentHole,
 					rank: -1,
 				};
 			});
@@ -91,6 +92,22 @@ export default function Leaderboard() {
 									) : (
 										<div>{enrollment.username}</div>
 									),
+							},
+							{
+								displayName: 'Holes Completed',
+								dataName: 'currentHole',
+								render: (enrollment, item) => {
+									const holes = Math.min(
+										enrollment.currentHole,
+										data.holeCount
+									);
+
+									return enrollment.username === user.username ? (
+										<CurrUserCell>{holes}</CurrUserCell>
+									) : (
+										<div>{holes}</div>
+									);
+								},
 							},
 							{
 								displayName: 'Score',

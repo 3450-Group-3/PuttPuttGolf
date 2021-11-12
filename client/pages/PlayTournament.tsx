@@ -12,8 +12,9 @@ import {
 	Button,
 	Header,
 } from '../styles';
-import { TournamentData, Enrollment, UserData } from '../types';
+import { TournamentData, TournamentEnrollment, UserData } from '../types';
 import { MdLeaderboard, MdSportsGolf } from 'react-icons/md';
+import TextInput from '../components/TextInput';
 
 interface EnrollmentData {
 	score: number;
@@ -52,33 +53,29 @@ function sameDay(d1: Date, d2: Date) {
 }
 
 export default function PlayTournament() {
-	const redirectTo = useRedirect('/');
-
 	const {
 		data: userData,
 		error: userError,
 		loading: userLoading,
-		refetch: refetchUser,
 	} = useGet<UserData>('/users/me');
 
 	const {
 		data: tournamentsData,
 		error: tournamentsError,
 		loading: tournamentsLoading,
-		refetch: refetchTournaments,
 	} = useGet<TournamentData[]>('/tournaments');
 
 	const [
 		{ data: postData, error: postError, loading: postLoading },
 		updateScore,
-	] = usePost<Enrollment>(`/tournaments/update_score`);
+	] = usePost<TournamentEnrollment>(`/tournaments/update_score`);
 
 	const enrollments = useMemo(() => {
 		if (userData && tournamentsData) {
 			const userTournaments = tournamentsData.filter((tournament) => {
 				return userData.enrollments
 					.map((enrollment) => enrollment.tournamentId)
-					.includes(tournament.id);
+					.includes(Number(tournament.id));
 			});
 
 			return userTournaments.map((tournament) => {
@@ -96,14 +93,6 @@ export default function PlayTournament() {
 
 		return [];
 	}, [userData, tournamentsData]);
-
-	if (userLoading || userError) {
-		<Loader
-			loading={userLoading}
-			loadingMessage="Loading User Data"
-			error={userError}
-		/>;
-	}
 
 	const [strokes, setStrokes] = useState(0);
 
@@ -184,9 +173,8 @@ export default function PlayTournament() {
 
 					<Header>{score}</Header>
 
-					<Input
+					<TextInput
 						title="Current Strokes"
-						placeholder="e.g. 1"
 						icon={<MdSportsGolf size={40} />}
 						value={strokes}
 						onChange={(e) => {
@@ -205,7 +193,9 @@ export default function PlayTournament() {
 						</Button>
 					</ChangeStrokeContainer>
 
-					<Button onClick={() => handleSubmitHole(strokes, tournament!.id)}>
+					<Button
+						onClick={() => handleSubmitHole(strokes, Number(tournament!.id))}
+					>
 						Submit
 					</Button>
 				</CenterContent>
@@ -213,5 +203,23 @@ export default function PlayTournament() {
 		}
 	};
 
-	return <>{content()}</>;
+	return (
+		<>
+			{(userLoading || userError) && (
+				<Loader
+					loading={userLoading}
+					loadingMessage="Loading User Data"
+					error={userError}
+				/>
+			)}
+			{(tournamentsLoading || tournamentsError) && (
+				<Loader
+					loading={tournamentsLoading}
+					loadingMessage="Loading User Data"
+					error={tournamentsError}
+				/>
+			)}
+			{content()}
+		</>
+	);
 }

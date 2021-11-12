@@ -8,6 +8,7 @@ import {
 	useState,
 	EffectCallback,
 	useContext,
+	DependencyList,
 } from 'react';
 import GlobalContext from './global';
 import { UserData, RedirectState } from './types';
@@ -87,6 +88,22 @@ export function useMount(callback: EffectCallback) {
 export function useRedirect(defaultRedirect: string) {
 	const { state } = useLocation<RedirectState>();
 	return state?.redirectTo || defaultRedirect;
+}
+
+export function usePageFocus(callback: EffectCallback) {
+	const location = useLocation();
+	useEffect(callback, [location]);
+}
+
+export function useDebounceEffect(
+	callback: EffectCallback,
+	delay: number,
+	deps?: DependencyList
+) {
+	useEffect(() => {
+		const handler = setTimeout(callback, delay);
+		return () => clearTimeout(handler);
+	}, deps);
 }
 
 export function useGlobal() {

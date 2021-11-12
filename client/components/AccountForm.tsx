@@ -1,20 +1,23 @@
 import { useContext, useMemo } from 'react';
 import { ThemeContext, DefaultTheme } from 'styled-components';
+
 import styled from 'styled-components';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import Select, { StylesConfig, SingleValue } from 'react-select';
 import { IoPersonCircleOutline } from 'react-icons/io5';
 import { RiLockPasswordLine } from 'react-icons/ri';
+import { AiOutlineCalendar } from 'react-icons/ai';
 
 import { Title } from '../styles';
 import { UserData } from '../types';
 import { Button } from '../styles';
-import Input from './Input';
+import TextInput from './TextInput';
 
 const Form = styled.form`
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
+	max-width: 300px;
 `;
 
 interface Option {
@@ -67,7 +70,7 @@ interface Inputs extends Omit<UserData, 'id'> {
 interface Props {
 	onSubmit: SubmitHandler<Inputs>;
 	type: 'creating' | 'updating';
-	defaultValues?: Partial<UserData>;
+	defaultValues?: UserData;
 }
 
 export default function AccountForm({ onSubmit, type, defaultValues }: Props) {
@@ -90,7 +93,7 @@ export default function AccountForm({ onSubmit, type, defaultValues }: Props) {
 
 	return (
 		<Form onSubmit={handleSubmit(onSubmit)}>
-			<Input
+			<TextInput
 				title="Username"
 				placeholder="mini_golfer89"
 				error={errors.username?.message}
@@ -101,7 +104,7 @@ export default function AccountForm({ onSubmit, type, defaultValues }: Props) {
 				})}
 			/>
 			{type === 'creating' && (
-				<Input
+				<TextInput
 					title="Password"
 					placeholder="8 - 20 Characters"
 					type="password"
@@ -114,14 +117,21 @@ export default function AccountForm({ onSubmit, type, defaultValues }: Props) {
 					})}
 				/>
 			)}
-			<Input
+			<TextInput
 				title="Date of Birth"
-				placeholder="username"
-				type="date"
+				placeholder="MM / DD / YYYY"
+				icon={<AiOutlineCalendar size={40} />}
 				error={errors.birthdate?.message}
 				{...register('birthdate', {
 					required: 'Date of Birth Required',
-					valueAsDate: true,
+					setValueAs: (v) => {
+						const date = new Date(v);
+						return isNaN(date.getTime()) ? null : date;
+					},
+					pattern: {
+						value: /[0-9]{2}\/[0-9]{2}\/[0-9]{4}/,
+						message: 'Must follow MM / DD / YYYY format',
+					},
 				})}
 			/>
 			{type === 'updating' && (

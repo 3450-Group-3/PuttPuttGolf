@@ -35,13 +35,19 @@ def get_relevant_user(
     response_model=list[schemas.User],
     dependencies=[Depends(current_user_is_manager)],
 )
-def list_users(db: Session = Depends(get_db)):
+def list_users(db: Session = Depends(get_db), search: str = None):
     """List all users
 
     # Permissions:
     Must be a manager
     """
-    return db.query(models.User).all()
+    if search:
+        return (
+            db.query(models.User).filter(models.User.username.like(f"%{search}%")).all()
+        )
+
+    else:
+        return db.query(models.User).all()
 
 
 @users.get("/{id}", response_model=schemas.User)

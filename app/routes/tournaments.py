@@ -134,7 +134,11 @@ def remove_user(
     return {"status": "ok"}
 
 
-@tournaments.post("/{id}/update_score", dependencies=[Depends(get_current_user)])
+@tournaments.post(
+    "/{id}/update_score",
+    dependencies=[Depends(get_current_user)],
+    response_model=schemas.TournamentEnrollment,
+)
 def update_score(
     id: int,
     increment: schemas.IncrementScore,

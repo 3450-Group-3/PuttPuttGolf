@@ -16,11 +16,6 @@ import { TournamentData, TournamentEnrollment, UserData } from '../types';
 import { MdLeaderboard, MdSportsGolf } from 'react-icons/md';
 import TextInput from '../components/TextInput';
 
-interface EnrollmentData {
-	score: number;
-	tournament: TournamentData;
-}
-
 const ButtonLinkIcon = styled(ButtonLink)`
 	svg {
 		margin-right: 0.5em;
@@ -65,12 +60,9 @@ export default function PlayTournament() {
 		loading: tournamentsLoading,
 	} = useGet<TournamentData[]>('/tournaments');
 
-	const [
-		{ data: postData, error: postError, loading: postLoading },
-		updateScore,
-	] = usePost<TournamentEnrollment>(`/tournaments/update_score`);
+	const [{ data: postData }, updateScore] = usePost<TournamentEnrollment>();
 
-	const enrollments = useMemo(() => {
+	const getEnrollments = () => {
 		if (userData && tournamentsData) {
 			const userTournaments = tournamentsData.filter((tournament) => {
 				return userData.enrollments
@@ -92,23 +84,23 @@ export default function PlayTournament() {
 		}
 
 		return [];
-	}, [userData, tournamentsData]);
+	};
+
+	const enrollments = getEnrollments();
 
 	const [strokes, setStrokes] = useState(0);
 
-	const activeTournament = useMemo(() => {
-		return enrollments.find(
-			(enrollment) =>
-				enrollment.tournament &&
-				sameDay(new Date(enrollment.tournament.date), new Date())
-		);
-	}, [enrollments]);
+	const activeTournament = enrollments.find(
+		(enrollment) =>
+			enrollment.tournament &&
+			sameDay(new Date(enrollment.tournament.date), new Date())
+	);
 
 	const handleSubmitHole = (strokes: number, tournamentId: number) => {
 		updateScore({
+			url: `/tournaments/${tournamentId}/update_score`,
 			data: {
 				score: strokes,
-				tournamentId: tournamentId,
 				userId: userData!.id,
 			},
 		});
@@ -136,7 +128,7 @@ export default function PlayTournament() {
 
 			const { score, tournament, currentHole } = activeTournament;
 
-			if (currentHole > tournament!.holeCount) {
+			if (currentHole > tournament.holeCount) {
 				return (
 					<CenterContent>
 						<Title>You're done!</Title>
@@ -166,7 +158,7 @@ export default function PlayTournament() {
 							height="100px"
 						/>
 						<Title>
-							Current Hole: {currentHole} / {tournament!.holeCount}
+							Current Hole: {currentHole} / {tournament.holeCount}
 						</Title>
 						<ScoreTitle>Your Score:</ScoreTitle>
 					</PageHeader>
@@ -194,7 +186,7 @@ export default function PlayTournament() {
 					</ChangeStrokeContainer>
 
 					<Button
-						onClick={() => handleSubmitHole(strokes, Number(tournament!.id))}
+						onClick={() => handleSubmitHole(strokes, Number(tournament.id))}
 					>
 						Submit
 					</Button>

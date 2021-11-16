@@ -90,7 +90,7 @@ def create_order(order_data: schemas.DrinkOrderIn, user: models.User = Depends(g
     return order
 
 @orders.post(
-    "/{id}", response_model=schemas.DrinkOrderOut
+    "/claimorder", response_model=schemas.DrinkOrderOut
 )
 def assign_dm_to_order(id: int, drinkmeister: models.User = Depends(current_user_is_drinkmeister), db: Session = Depends(get_db)):
     order: models.DrinkOrder = db.query(models.DrinkOrder).where(models.DrinkOrder.id == id).first()

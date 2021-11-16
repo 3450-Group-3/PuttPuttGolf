@@ -17,9 +17,15 @@ export enum UserRole {
 
 export interface TournamentEnrollment {
 	score: number;
+	userId: ID;
+	tournamentId: ID;
 	currentHole: number;
-	userId: number;
-	tournamentId: number;
+}
+
+export interface TournamentEnrollmentUser {
+	score: number;
+	user: UserData;
+	currentHole: number;
 }
 
 export interface UserData {
@@ -48,7 +54,7 @@ export interface TournamentData {
 	readonly balance: number;
 	readonly completed: boolean;
 	readonly advertisingBanner: null;
-	readonly enrollments: TournamentEnrollment[];
+	readonly enrollments: TournamentEnrollmentUser[];
 }
 
 export type Layout = 'mobile' | 'desktop';

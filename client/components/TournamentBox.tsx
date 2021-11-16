@@ -78,7 +78,7 @@ export default function TournamentBox({ tournament, onDelete }: Props) {
 	);
 
 	const [userRegistered, setUserRegistered] = useState(
-		() => !!tournament.enrollments.find((e) => e.userId === user.id)
+		() => !!tournament.enrollments.find((e) => e.user.id === user.id)
 	);
 
 	return (

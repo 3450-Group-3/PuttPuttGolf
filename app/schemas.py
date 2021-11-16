@@ -35,6 +35,15 @@ class TournamentEnrollment(OutModel):
         orm_mode = True
 
 
+class TournamentEnrollmentUser(OutModel):
+    score: int
+    user: User
+    current_hole: int
+
+    class Config:
+        orm_mode = True
+
+
 class TournamentEnrollmentIn(InModel):
     score: int
     tournament_id: int
@@ -148,7 +157,7 @@ class Tournament(OutModel):
     advertising_banner: Optional[str]
     sponsored_by: Optional[User]
     created_by: User
-    enrollments: list[TournamentEnrollment]
+    enrollments: list[TournamentEnrollmentUser]
 
     class Config:
         orm_mode = True
@@ -175,3 +184,4 @@ class BalanceUpdate(BaseModel):
 
 
 TournamentEnrollment.update_forward_refs()
+TournamentEnrollmentUser.update_forward_refs()

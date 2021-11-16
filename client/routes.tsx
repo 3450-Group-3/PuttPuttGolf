@@ -8,6 +8,8 @@ import { useUser } from './hooks';
 import User from './user';
 import UserManagement from './pages/UserManagement';
 import PlayTournament from './pages/PlayTournament';
+import Leaderboard from './pages/Leaderboard';
+import Leaderboards from './pages/Leaderboards';
 import DrinkOrdering from './pages/DrinkOrdering';
 import Tournaments from './pages/Tournaments';
 import CreateTournament from './pages/CreateTournament';
@@ -81,6 +83,8 @@ export default function Routes() {
 				exact
 				component={EditTournament}
 			/>
+			<AuthRoute path="/tournaments/:id/leaderboard" component={Leaderboard} />
+			<AuthRoute path="/tournaments/leaderboards" component={Leaderboards} />
 
 			<Route path="*" component={NotFound} />
 		</Switch>

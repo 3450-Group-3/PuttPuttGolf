@@ -12,7 +12,7 @@ import {
 	Button,
 	Header,
 } from '../styles';
-import { TournamentData, TournamentEnrollment, UserData } from '../types';
+import { TournamentData, TournamentEnrollment, UserData, ID } from '../types';
 import { MdLeaderboard, MdSportsGolf } from 'react-icons/md';
 import TextInput from '../components/TextInput';
 
@@ -96,7 +96,7 @@ export default function PlayTournament() {
 			sameDay(new Date(enrollment.tournament.date), new Date())
 	);
 
-	const handleSubmitHole = (strokes: number, tournamentId: number) => {
+	const handleSubmitHole = (strokes: number, tournamentId: ID) => {
 		updateScore({
 			url: `/tournaments/${tournamentId}/update_score`,
 			data: {

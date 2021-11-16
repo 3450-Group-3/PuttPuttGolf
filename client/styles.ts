@@ -170,3 +170,11 @@ export const Text = styled.p`
 	text-align: center;
 	padding: 0px 10px;
 `;
+
+export const Content = styled.div`
+	width: clamp(300px, 80%, 100%);
+	padding: 0px 50px;
+	display: flex;
+	flex-direction: column;
+	overflow-x: auto;
+`;

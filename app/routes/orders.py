@@ -99,7 +99,15 @@ def assign_dm_to_order(id: int, drinkmeister: models.User = Depends(current_user
             status_code=status.HTTP_400_BAD_REQUEST,
             content={"detail": "This order has already been claimed by a drinkmeister"}
         )
+
+    if (db.query(models.DrinkOrder).where(models.DrinkOrder.drink_meister_id == drinkmeister.id).all()):
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content={"detail": "You can only claim one order at a time"}
+        )
+
     order.drink_meister_id = drinkmeister.id
+    order.order_status = models.DrinkOrderState.INPROGRESS
 
     db.commit()
     db.refresh(order)

@@ -8,7 +8,7 @@ import { DetailFormError, DrinkData } from "../types"
 
 interface DrinkOrderQuantity {
     drinkId: number,
-    drinkQty: number
+    quantity: number
 }
 
 interface UserLocation {

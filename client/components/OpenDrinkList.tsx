@@ -58,6 +58,9 @@ export default function OpenDrinkList({setHasActiveOrder}: props) { //todo move 
     return (
         <div>
         {orderGet.data.map((drinkOrder) => {
+            if (drinkOrder.drinkMeisterId != -1){
+                return
+            }
             return (
                 <Order key={drinkOrder.id}>
                 <p>Customer Name: {drinkOrder.customerName}</p>

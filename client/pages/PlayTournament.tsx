@@ -1,9 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Redirect } from 'react-router';
 import styled from 'styled-components';
-import Input from '../components/Input';
 import Loader from '../components/Loader';
-import { useGet, usePost, useRedirect } from '../hooks';
+import { useGet, usePost } from '../hooks';
 import {
 	ButtonLink,
 	CenterContent,
@@ -15,6 +14,7 @@ import {
 import { TournamentData, TournamentEnrollment, UserData, ID } from '../types';
 import { MdLeaderboard, MdSportsGolf } from 'react-icons/md';
 import TextInput from '../components/TextInput';
+import api from '../api';
 
 const ButtonLinkIcon = styled(ButtonLink)`
 	svg {
@@ -93,8 +93,20 @@ export default function PlayTournament() {
 	const activeTournament = enrollments.find(
 		(enrollment) =>
 			enrollment.tournament &&
+			!enrollment.tournament.completed &&
 			sameDay(new Date(enrollment.tournament.date), new Date())
 	);
+
+	useEffect(() => {
+		if (activeTournament) {
+			if (
+				activeTournament.currentHole >= activeTournament.tournament.holeCount &&
+				!activeTournament.tournament.completed
+			) {
+				api.post(`/tournaments/${activeTournament.tournament.id}/completion`);
+			}
+		}
+	}, [activeTournament]);
 
 	const handleSubmitHole = (strokes: number, tournamentId: ID) => {
 		updateScore({

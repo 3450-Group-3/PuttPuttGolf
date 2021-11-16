@@ -1,4 +1,4 @@
-import { UserData, ID, UserRole, Enrollment } from './types';
+import { UserData, ID, UserRole, TournamentEnrollment } from './types';
 
 interface UserOptions extends UserData {
 	anonymous?: boolean;
@@ -11,7 +11,7 @@ export default class User {
 	readonly anonymous: boolean;
 	readonly balance: number;
 	readonly role: UserRole;
-	readonly enrollments: Enrollment[];
+	readonly enrollments: TournamentEnrollment[];
 
 	constructor(data: UserOptions) {
 		this.id = data.id;

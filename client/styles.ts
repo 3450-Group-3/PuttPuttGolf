@@ -156,3 +156,17 @@ export const Title = styled.h3`
 	margin: 3px 0px;
 	letter-spacing: 2px;
 `;
+
+export const Header = styled.h1`
+	font-size: 8rem;
+	font-family: 'Roboto';
+	font-weight: bold;
+	margin: 0;
+`;
+
+export const Text = styled.p`
+	font-weight: bold;
+	font-size: 1.5rem;
+	text-align: center;
+	padding: 0px 10px;
+`;

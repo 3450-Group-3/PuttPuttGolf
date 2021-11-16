@@ -220,7 +220,9 @@ class Tournament(Base):  # type: ignore
     def formatted_date(self) -> str:
         return self.date.strftime("%m/%d/%Y, %-I:%M/ %p")
 
-    def increment_score(self, db: Session, user: User, increment: int) -> int:
+    def increment_score(
+        self, db: Session, user: User, increment: int
+    ) -> "TournamentEnrollment":
         # Increment a user's score for this tournament
         assert not self.completed
         enrollment: Optional[TournamentEnrollment] = (
@@ -228,8 +230,10 @@ class Tournament(Base):  # type: ignore
         )
         if enrollment:
             enrollment.score += increment
+            enrollment.current_hole += 1
             db.commit()
-            return enrollment.score
+            db.refresh(enrollment)
+            return enrollment
         else:
             raise ValueError(f"User {user.id} is not enrolled in tournament {self.id}")
 
@@ -251,6 +255,7 @@ class TournamentEnrollment(Base):
     )
     user_id: int = Column(ForeignKey("users.id"), primary_key=True, nullable=False)
     score = Column(types.Integer, index=True, nullable=False)
+    current_hole: int = Column(types.Integer, index=True, default=1)
 
     user: User = relationship(User, back_populates="enrollments")
     tournament: Tournament = relationship(Tournament, back_populates="enrollments")

@@ -29,9 +29,16 @@ class TournamentEnrollment(OutModel):
     score: int
     tournament_id: int
     user_id: int
+    current_hole: int
 
     class Config:
         orm_mode = True
+
+
+class TournamentEnrollmentIn(InModel):
+    score: int
+    tournament_id: int
+    user_id: int
 
 
 class UserIn(InModel):

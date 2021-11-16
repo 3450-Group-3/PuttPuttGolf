@@ -17,21 +17,25 @@ const Order = styled.div`
     margin: 1em;
 `
 
+interface props {
+    setHasActiveOrder: React.Dispatch<React.SetStateAction<boolean>>
+}
 
-
-export default function OpenDrinkList() { //todo move fetching of data to drinkorderfullfillment component
+export default function OpenDrinkList({setHasActiveOrder}: props) { //todo move fetching of data to drinkorderfullfillment component
 
     const orderGet = useGet<DrinkOrderData[], DetailFormError>("/orders/state/" + DrinkOrderState.OPEN)
     const drinkGet = useGet<DrinkData[], DetailFormError>("/drinks")
-    const [order, setOrder] = useState<DrinkOrderData>()
-    const [{data, loading, error}, acceptOrder] = usePost<DrinkOrderData, DetailFormError>("/orders/" + order?.id)
+    const [response, accecptOrder] = usePost<DrinkData, DetailFormError>("/orders/claimorder")
 
-    function handleAcceptOrder() {
-
+    function handleAcceptOrder(id: number) {
+        accecptOrder({
+            params: {
+                id: id
+            }
+        }).then((data) => {
+            setHasActiveOrder(true)
+        })
     }
-
-    console.log(orderGet.data)
-    console.log(drinkGet.data)
 
     const drinkMap: Map<number, DrinkData> = new Map();
     drinkGet.data?.forEach((drink) => {
@@ -54,7 +58,6 @@ export default function OpenDrinkList() { //todo move fetching of data to drinko
     return (
         <div>
         {orderGet.data.map((drinkOrder) => {
-            console.log(drinkOrder)
             return (
                 <Order key={drinkOrder.id}>
                 <p>Customer Name: {drinkOrder.customerName}</p>
@@ -75,9 +78,8 @@ export default function OpenDrinkList() { //todo move fetching of data to drinko
                     <p>DrinkMeister Assigned: {drinkOrder.drinkMeisterId != -1 ? "Yes" : "No"}</p>
                     <div style={{textAlign: "center"}}>
                         <Button onClick={() => {
-                            setOrder(drinkOrder)
-                            handleAcceptOrder()
-                        }}>Accept Order</Button>
+                            handleAcceptOrder(drinkOrder.id)
+                        }}>Accept Order</Button> 
                     </div>
                     </Order>
                 )

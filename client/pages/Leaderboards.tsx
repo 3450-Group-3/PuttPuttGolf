@@ -56,7 +56,7 @@ const LeaderboardsTable = (tournaments: TournamentData[], title: string) => {
 						render: (tournament, item) => (
 							<ButtonLinkIcon
 								to={`/tournaments/${tournament.id}/leaderboard`}
-								kind="outline"
+								kind="text"
 							>
 								<BsTable />
 								View Leaderboard

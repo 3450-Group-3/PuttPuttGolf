@@ -237,14 +237,20 @@ class Tournament(Base):  # type: ignore
         else:
             raise ValueError(f"User {user.id} is not enrolled in tournament {self.id}")
 
-    def complete_tournament(self) -> None:  # TODO
-        pass
+    def complete_tournament(self, db: Session) -> None:
+        self.completed = True
+        self._distribute_winnings(db)
+        db.commit()
 
-    def _distribute_winnings(self) -> None:  # TODO
-        pass
-
-    def _finalize_scores(self) -> None:  # TODO
-        pass
+    def _distribute_winnings(self, db) -> None:
+        sorted_enrollments = list(
+            sorted(self.enrollments, key=lambda a, b: a.score > b.score, revsere=True)
+        )
+        # Get the top three
+        winners = sorted_enrollments[0:3]
+        # TODO actually distribute the winnings to each winner
+        # Note the above list doesn't nessecarily contain 3
+        # individuals
 
 
 class TournamentEnrollment(Base):

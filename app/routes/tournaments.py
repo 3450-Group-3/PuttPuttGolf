@@ -154,3 +154,17 @@ def update_score(
         raise errors.ResourceNotFound("User")
 
     return tournament.increment_score(db, user, increment.score)
+
+
+@tournaments.post("/{id}/completion")
+def completion_check(id: int, db: Session = Depends(get_db)):
+    tournament: Optional[models.Tournament] = db.query(models.Tournament).get(id)
+
+    if not tournament:
+        raise errors.ResourceNotFound("Tournament")
+
+    if not tournament.completed and all(
+        enrollment.current_hole > tournament.hole_count
+        for enrollment in tournament.enrollments
+    ):
+        tournament.complete_tournament(db)

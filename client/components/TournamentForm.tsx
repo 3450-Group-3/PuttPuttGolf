@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
-import { useForm, SubmitHandler, Controller } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { AiOutlineCalendar } from 'react-icons/ai';
 import styled from 'styled-components';
 import DateTimePicker from '../components/DateTimePicker';
-import Input from '../components/Input';
 import TextInput from '../components/TextInput';
-import { Button, CenterContent } from '../styles';
+import { Button } from '../styles';
 
 const Form = styled.form`
 	display: flex;
@@ -14,9 +12,14 @@ const Form = styled.form`
 	width: 300px;
 `;
 
+const CompletedWrapper = styled.div`
+	margin-bottom: 20px;
+`;
+
 interface Inputs {
-	holeCount: number;
-	date: Date;
+	readonly holeCount: number;
+	readonly completed: boolean;
+	readonly date: Date;
 }
 
 interface Props {
@@ -30,6 +33,7 @@ export default function TournamentForm({ onSubmit, defaultValues }: Props) {
 		formState: { errors },
 		control,
 		handleSubmit,
+		watch,
 	} = useForm<Inputs>({ defaultValues });
 
 	return (
@@ -59,6 +63,11 @@ export default function TournamentForm({ onSubmit, defaultValues }: Props) {
 				error={errors.holeCount?.message}
 				icon={<AiOutlineCalendar size={40} />}
 			/>
+
+			<CompletedWrapper>
+				<input type="checkbox" id="completed" {...register('completed')} />
+				<label htmlFor="completed">Tournament Completed</label>
+			</CompletedWrapper>
 			<Button type="submit">Submit</Button>
 		</Form>
 	);

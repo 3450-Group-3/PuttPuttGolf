@@ -9,6 +9,7 @@ import { ButtonLink, CenterContent } from '../styles';
 import { TournamentData } from '../types';
 import TournamentBox from '../components/TournamentBox';
 import api from '../api';
+import { adjustedDate } from '../utils';
 
 const onSameDay = (first: Date, second: Date) =>
 	first.getFullYear() === second.getFullYear() &&
@@ -67,11 +68,9 @@ export default function Tournaments() {
 	const tournaments = useMemo(() => {
 		if (tournamentData) {
 			return tournamentData.map((tournament) => {
-				const date = new Date(tournament.date);
-
 				return {
 					...tournament,
-					date: new Date(date.getTime() - date.getTimezoneOffset() * 60000),
+					date: adjustedDate(tournament.date),
 				};
 			});
 		}

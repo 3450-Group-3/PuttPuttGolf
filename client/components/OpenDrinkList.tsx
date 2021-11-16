@@ -21,7 +21,7 @@ interface props {
     setHasActiveOrder: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export default function OpenDrinkList({setHasActiveOrder}: props) { //todo move fetching of data to drinkorderfullfillment component
+export default function OpenDrinkList({setHasActiveOrder}: props) { 
 
     const orderGet = useGet<DrinkOrderData[], DetailFormError>("/orders/state/" + DrinkOrderState.OPEN)
     const drinkGet = useGet<DrinkData[], DetailFormError>("/drinks")
@@ -58,13 +58,11 @@ export default function OpenDrinkList({setHasActiveOrder}: props) { //todo move 
     return (
         <div>
         {orderGet.data.map((drinkOrder) => {
-            if (drinkOrder.drinkMeisterId != -1){
-                return
-            }
             return (
                 <Order key={drinkOrder.id}>
+                <p>Order id: {drinkOrder.id}</p>
                 <p>Customer Name: {drinkOrder.customerName}</p>
-                <p>Status: {status[drinkOrder.orderStatus]}</p>
+                <p>Status: {status[drinkOrder.orderStatus - 1]}</p>
                 <p>Time Ordered: {drinkOrder.timeOrdered}</p>
                 <p>Drinks:</p>
                 {drinkOrder.drinks.map((drink) => {
@@ -72,13 +70,12 @@ export default function OpenDrinkList({setHasActiveOrder}: props) { //todo move 
                     if (drinkData){
                         return (
                             <DrinkContainer key={drinkData.id}>
-                                    <p>Drink Name {drinkData.name}</p>
-                                    <p>AMount {drink.drinkQty}</p>
+                                    <p>Drink Name: {drinkData.name}</p>
+                                    <p>Amount: {drink.quantity}</p>
                                 </DrinkContainer>
                             )
                         }
                     })}
-                    <p>DrinkMeister Assigned: {drinkOrder.drinkMeisterId != -1 ? "Yes" : "No"}</p>
                     <div style={{textAlign: "center"}}>
                         <Button onClick={() => {
                             handleAcceptOrder(drinkOrder.id)

@@ -15,6 +15,7 @@ import { TournamentData, TournamentEnrollment, UserData, ID } from '../types';
 import { MdLeaderboard, MdSportsGolf } from 'react-icons/md';
 import TextInput from '../components/TextInput';
 import api from '../api';
+import { adjustedDate } from '../utils';
 
 const ButtonLinkIcon = styled(ButtonLink)`
 	svg {
@@ -94,8 +95,9 @@ export default function PlayTournament() {
 		(enrollment) =>
 			enrollment.tournament &&
 			!enrollment.tournament.completed &&
-			sameDay(new Date(enrollment.tournament.date), new Date())
+			sameDay(adjustedDate(enrollment.tournament.date), new Date())
 	);
+	console.log(enrollments);
 
 	useEffect(() => {
 		if (activeTournament) {

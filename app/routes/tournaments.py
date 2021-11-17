@@ -134,7 +134,11 @@ def remove_user(
     return {"status": "ok"}
 
 
-@tournaments.post("/{id}/update_score", dependencies=[Depends(get_current_user)])
+@tournaments.post(
+    "/{id}/update_score",
+    dependencies=[Depends(get_current_user)],
+    response_model=schemas.TournamentEnrollment,
+)
 def update_score(
     id: int,
     increment: schemas.IncrementScore,
@@ -149,6 +153,18 @@ def update_score(
     if not user:
         raise errors.ResourceNotFound("User")
 
-    tournament.increment_score(db, user, increment.score)
+    return tournament.increment_score(db, user, increment.score)
 
-    return {"status": "ok"}
+
+@tournaments.post("/{id}/completion")
+def completion_check(id: int, db: Session = Depends(get_db)):
+    tournament: Optional[models.Tournament] = db.query(models.Tournament).get(id)
+
+    if not tournament:
+        raise errors.ResourceNotFound("Tournament")
+
+    if not tournament.completed and all(
+        enrollment.current_hole > tournament.hole_count
+        for enrollment in tournament.enrollments
+    ):
+        tournament.complete_tournament(db)

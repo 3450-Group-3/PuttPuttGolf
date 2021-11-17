@@ -78,18 +78,20 @@ export default function TournamentBox({ tournament, onDelete }: Props) {
 	);
 
 	const [userRegistered, setUserRegistered] = useState(
-		() => !!tournament.enrollments.find((e) => e.userId === user.id)
+		() => !!tournament.enrollments.find((e) => e.user.id === user.id)
 	);
 
-	return (
-		<Tournament onMouseLeave={() => setMoreOpen(false)}>
-			<img
-				src={tournament.advertisingBanner || '/static/images/logo.png'}
-				width="100%"
-			/>
-			<HoleCount>{tournament.holeCount} Holes</HoleCount>
-			<Time>{tournament.date.toLocaleTimeString()}</Time>
-			{userRegistered ? (
+	const renderButton = () => {
+		if (tournament.completed) {
+			return (
+				<Button kind="text" disabled={true}>
+					Completed
+				</Button>
+			);
+		}
+
+		if (userRegistered) {
+			return (
 				<Button
 					kind="outline"
 					disabled={registerLoading || unRegisterLoading}
@@ -101,7 +103,9 @@ export default function TournamentBox({ tournament, onDelete }: Props) {
 				>
 					Un-register
 				</Button>
-			) : (
+			);
+		} else {
+			return (
 				<Button
 					disabled={registerLoading || unRegisterLoading}
 					onClick={() =>
@@ -112,7 +116,19 @@ export default function TournamentBox({ tournament, onDelete }: Props) {
 				>
 					Register
 				</Button>
-			)}
+			);
+		}
+	};
+
+	return (
+		<Tournament onMouseLeave={() => setMoreOpen(false)}>
+			<img
+				src={tournament.advertisingBanner || '/static/images/logo.png'}
+				width="100%"
+			/>
+			<HoleCount>{tournament.holeCount} Holes</HoleCount>
+			<Time>{tournament.date.toLocaleTimeString()}</Time>
+			{renderButton()}
 			{user.isSponsor && (
 				<div style={{ marginTop: '20px' }}>
 					<ButtonLink

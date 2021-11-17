@@ -32,3 +32,10 @@ async def not_found_handler(request: Request, exc: errors.ResourceNotFound):
             "message": f'"{exc.resource}" not found with search paramaters: {exc.search_params}'
         },
     )
+
+
+@app.exception_handler(errors.ValidationError)
+async def validation_handler(request: Request, exc: errors.ValidationError):
+    return JSONResponse(
+        status_code=status.HTTP_400_BAD_REQUEST, content={"message": exc.detail}
+    )

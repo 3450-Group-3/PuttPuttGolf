@@ -44,8 +44,6 @@ export default function DrinkOrderFufillment() {
 
     const {data, loading, error} = useGet<DrinkOrderData[], DetailFormError>("/orders/user/" + user.id)
 
-    console.log(data)
-
     if (!hasAcceptedOrder && data){
         if (data.length > 0){
             setHasAcceptedOrder(true)

@@ -24,9 +24,8 @@ interface props {
 export default function OpenDrinkList({setHasActiveOrder}: props) { 
 
     const orderGet = useGet<DrinkOrderData[], DetailFormError>("/orders/state/" + DrinkOrderState.OPEN)
-    const drinkGet = useGet<DrinkData[], DetailFormError>("/drinks")
     const [response, accecptOrder] = usePost<DrinkData, DetailFormError>("/orders/claimorder")
-
+    
     function handleAcceptOrder(id: number) {
         accecptOrder({
             params: {
@@ -36,12 +35,12 @@ export default function OpenDrinkList({setHasActiveOrder}: props) {
             setHasActiveOrder(true)
         })
     }
-
+    
+    const drinkGet = useGet<DrinkData[], DetailFormError>("/drinks")
     const drinkMap: Map<number, DrinkData> = new Map();
     drinkGet.data?.forEach((drink) => {
         drinkMap.set(drink.id, drink)
     })
-    
     function getDrinkData(id: number): DrinkData | undefined {
         return drinkMap.get(id)
     }

@@ -97,7 +97,6 @@ export default function PlayTournament() {
 			!enrollment.tournament.completed &&
 			sameDay(adjustedDate(enrollment.tournament.date), new Date())
 	);
-	console.log(enrollments);
 
 	useEffect(() => {
 		if (activeTournament) {

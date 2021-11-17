@@ -11,6 +11,7 @@ import PlayTournament from './pages/PlayTournament';
 import Leaderboard from './pages/Leaderboard';
 import Leaderboards from './pages/Leaderboards';
 import DrinkOrdering from './pages/DrinkOrdering';
+import DrinkOrderFufillment from './pages/DrinkOrderFufillment';
 import Tournaments from './pages/Tournaments';
 import CreateTournament from './pages/CreateTournament';
 import EditTournament from './pages/EditTournament';
@@ -76,6 +77,11 @@ export default function Routes() {
 				component={UserManagement}
 			/>
 			<AuthRoute path="/order" component={DrinkOrdering} />
+			<PermissionRoute
+				path="/dm/orders"
+				hasPermission={(user) => user.isDrinkMeister}
+				component={DrinkOrderFufillment}
+			/>
 			<AuthRoute path="/tournaments" exact component={Tournaments} />
 			<AuthRoute path="/tournaments/new" exact component={CreateTournament} />
 			<AuthRoute

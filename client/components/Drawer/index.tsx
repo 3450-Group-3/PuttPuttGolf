@@ -122,7 +122,7 @@ export default function Drawer(props: Props) {
 					}
 				>
 					{user.isDrinkMeister ? (
-						<DrawerItemNav to="/order/new" activeClassName="selected" exact>
+						<DrawerItemNav to="/dm/orders" activeClassName="selected" exact>
 							<AiOutlineEye size={25} />
 							<Text>Drink Queue</Text>
 						</DrawerItemNav>

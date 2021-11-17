@@ -29,6 +29,10 @@ def get_single_order(id: int, db: Session = Depends(get_db)):
     "/user/{id}", response_model=list[schemas.DrinkOrderOut], dependencies=[Depends(current_user_is_drinkmeister)]
 )
 def get_customer_orders(id: int, db: Session = Depends(get_db)):
+    user: models.User = db.query(models.User).where(models.User.id == id).first()
+    if (user.is_drink_meister):
+        return db.query(models.DrinkOrder).where(models.DrinkOrder.drink_meister_id == id).all()
+
     return db.query(models.DrinkOrder).where(models.DrinkOrder.customer_id == id).all()
 
 
@@ -62,6 +66,7 @@ def create_order(order_data: schemas.DrinkOrderIn, user: models.User = Depends(g
     
     order = models.DrinkOrder(
         customer_id = user.id,
+        customer_name = db.query(models.User).where(models.User.id == user.id).first().username,
         order_status = models.DrinkOrderState.OPEN,
         time_ordered = datetime.now(),
         total_price = price,
@@ -74,10 +79,36 @@ def create_order(order_data: schemas.DrinkOrderIn, user: models.User = Depends(g
         location_json = json.dumps({
             "lattitude" : order_data.location.lattitude,
             "longitude" : order_data.location.longitude
-        })
+        }),
+        drink_meister_id = -1
     )
 
     db.add(order)
+    db.commit()
+    db.refresh(order)
+
+    return order
+
+@orders.post(
+    "/claimorder", response_model=schemas.DrinkOrderOut
+)
+def assign_dm_to_order(id: int, drinkmeister: models.User = Depends(current_user_is_drinkmeister), db: Session = Depends(get_db)):
+    order: models.DrinkOrder = db.query(models.DrinkOrder).where(models.DrinkOrder.id == id).first()
+    if (order.drink_meister_id != -1):
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content={"detail": "This order has already been claimed by a drinkmeister"}
+        )
+
+    if (db.query(models.DrinkOrder).where(models.DrinkOrder.drink_meister_id == drinkmeister.id).all()):
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content={"detail": "You can only claim one order at a time"}
+        )
+
+    order.drink_meister_id = drinkmeister.id
+    order.order_status = models.DrinkOrderState.INPROGRESS
+
     db.commit()
     db.refresh(order)
 

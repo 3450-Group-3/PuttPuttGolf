@@ -7,6 +7,8 @@ from sqlalchemy import types
 from sqlalchemy.orm import Session, relationship
 from functools import cache, cached_property
 
+from sqlalchemy.sql.expression import null
+
 from .db import Base
 from .utils import UserRole, DrinkOrderState
 
@@ -125,12 +127,14 @@ class DrinkOrder(Base):
 
     id = Column(types.Integer, primary_key=True, nullable=False, index=True)
     customer_id = Column(types.Integer, nullable=False, index=True)
+    customer_name = Column(types.String, nullable=False)
     order_status = Column(types.Enum(DrinkOrderState), nullable=False, index=True)
     time_ordered = Column(types.DateTime, nullable=False, index=True)
     total_price = Column(types.Float, nullable=False)
     drinks_json = Column(types.String, nullable=False)
-    location_json = Column(types.String, nullable=True)
-
+    location_json = Column(types.String, nullable=False)
+    drink_meister_id = Column(types.Integer, nullable=False, index=True)
+    
     @property
     @cache
     def location(self):

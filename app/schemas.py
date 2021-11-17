@@ -116,11 +116,13 @@ class DrinkOrderQuantity(BaseModel):
 class DrinkOrderOut(OutModel):
     id: int
     customer_id: int
+    customer_name: str
     order_status: DrinkOrderState
     time_ordered: datetime
     total_price: float
     drinks: list[DrinkOrderQuantity]
     location: UserLocation
+    drink_meister_id: int 
 
     class Config:
         orm_mode = True

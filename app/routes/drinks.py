@@ -16,6 +16,13 @@ def list_drinks(db: Session = Depends(get_db)):
     return db.query(models.Drink).all()
 
 
+@drinks.get(
+    "/{id}", response_model=schemas.DrinkOut, dependencies=[Depends(get_current_user)]
+)
+def get_drink(id: int, db: Session = Depends(get_db)):
+    return db.query(models.Drink).where(models.Drink.id == id).first()
+
+
 @drinks.post(
     "", response_model=schemas.DrinkOut, dependencies=[Depends(current_user_is_manager)]
 )

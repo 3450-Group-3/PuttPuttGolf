@@ -18,9 +18,11 @@ interface drinkSelection {
 }
 
 const CartItem = styled.div`
-	border: 1px solid black;
-	margin-bottom: 2em;
-`;
+    border: 1px solid black;
+    margin-bottom: 2em;
+    margin-right: 5em;
+    margin-left: 5em;
+`
 
 interface DrinkOrder {
 	id: number;

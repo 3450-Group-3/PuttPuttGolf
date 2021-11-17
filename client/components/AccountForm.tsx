@@ -3,7 +3,6 @@ import { ThemeContext, DefaultTheme } from 'styled-components';
 
 import styled from 'styled-components';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
-import Select, { StylesConfig, SingleValue } from 'react-select';
 import { IoPersonCircleOutline } from 'react-icons/io5';
 import { RiLockPasswordLine } from 'react-icons/ri';
 import { AiOutlineCalendar } from 'react-icons/ai';
@@ -12,6 +11,8 @@ import { Title } from '../styles';
 import { UserData } from '../types';
 import { Button } from '../styles';
 import TextInput from './TextInput';
+import Select, { Option } from './Select';
+import { SingleValue } from 'react-select';
 
 const Form = styled.form`
 	display: flex;
@@ -19,49 +20,6 @@ const Form = styled.form`
 	justify-content: space-between;
 	max-width: 300px;
 `;
-
-interface Option {
-	value: string | number;
-	label: string;
-}
-
-const selectedStylesConfig = (theme: DefaultTheme): StylesConfig => ({
-	container: (provided) => ({
-		...provided,
-		zIndex: 10,
-		marginBottom: '2em',
-	}),
-	control: (provided, state) => ({
-		...provided,
-		boxShadow: 'none',
-		backgroundColor: theme.secondary,
-		borderColor: state.isFocused ? theme.textColor : 'transparent',
-		'&:hover': {
-			borderColor: state.isFocused ? theme.textColor : 'transparent',
-		},
-	}),
-	menu: (provided) => ({
-		...provided,
-		backgroundColor: theme.secondary,
-	}),
-	option: (provided) => ({
-		...provided,
-		color: theme.textColor,
-		fontSize: '17px',
-		padding: '1em',
-		backgroundColor: theme.secondary,
-		cursor: 'pointer',
-		'&:hover': {
-			backgroundColor: theme.primary,
-		},
-	}),
-	singleValue: (provided) => ({
-		...provided,
-		color: theme.textColor,
-		padding: '18px 8px',
-		fontSize: '17px',
-	}),
-});
 
 interface Inputs extends Omit<UserData, 'id'> {
 	password: string;
@@ -81,8 +39,6 @@ export default function AccountForm({ onSubmit, type, defaultValues }: Props) {
 		formState: { errors },
 		watch,
 	} = useForm<Inputs>({ defaultValues: defaultValues });
-	const theme = useContext(ThemeContext);
-	const selectedStyles = useMemo(() => selectedStylesConfig(theme), [theme]);
 
 	const userOptions: Option[] = [
 		{ value: 1, label: 'User' },
@@ -148,7 +104,6 @@ export default function AccountForm({ onSubmit, type, defaultValues }: Props) {
 									onChange((selectedOption as SingleValue<Option>)?.value);
 								}}
 								options={userOptions}
-								styles={selectedStyles}
 							/>
 						)}
 					/>

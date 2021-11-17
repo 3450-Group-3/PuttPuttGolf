@@ -109,6 +109,19 @@ def update_user(
     return user
 
 
+@users.put("/{id}/balance", response_model=schemas.BalanceUpdate)
+def update_balance(
+    update: schemas.BalanceUpdate,
+    db: Session = Depends(get_db),
+    user: models.User = Depends(get_relevant_user),
+):
+    if update.balance < 0:
+        raise errors.ValidationError("Balance cannot be negative")
+
+    user.update_balance(update.balance, db)
+    return {"balance": user.balance}
+
+
 @users.delete("/{id}")
 def delete_user(
     user: models.User = Depends(get_relevant_user),

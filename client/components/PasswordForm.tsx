@@ -12,7 +12,6 @@ const Form = styled.form`
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
-	margin-top: 3em;
 `;
 
 interface Inputs {

@@ -29,9 +29,25 @@ class TournamentEnrollment(OutModel):
     score: int
     tournament_id: int
     user_id: int
+    current_hole: int
 
     class Config:
         orm_mode = True
+
+
+class TournamentEnrollmentUser(OutModel):
+    score: int
+    user: User
+    current_hole: int
+
+    class Config:
+        orm_mode = True
+
+
+class TournamentEnrollmentIn(InModel):
+    score: int
+    tournament_id: int
+    user_id: int
 
 
 class UserIn(InModel):
@@ -143,7 +159,7 @@ class Tournament(OutModel):
     advertising_banner: Optional[str]
     sponsored_by: Optional[User]
     created_by: User
-    enrollments: list[TournamentEnrollment]
+    enrollments: list[TournamentEnrollmentUser]
 
     class Config:
         orm_mode = True
@@ -165,4 +181,9 @@ class IncrementScore(InModel):
     user_id: int
 
 
+class BalanceUpdate(BaseModel):
+    balance: float
+
+
 TournamentEnrollment.update_forward_refs()
+TournamentEnrollmentUser.update_forward_refs()

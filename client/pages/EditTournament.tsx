@@ -1,9 +1,10 @@
 import { useGet, usePageFocus, usePut } from '../hooks';
+import { Redirect, useParams } from 'react-router';
 import { CenterContent } from '../styles';
 import { TournamentData } from '../types';
 import Loader from '../components/Loader';
 import TournamentForm from '../components/TournamentForm';
-import { Redirect, useParams } from 'react-router';
+import { adjustedDate } from '../utils';
 
 export default function EditTournament() {
 	const { id = null } = useParams<{ id?: string | undefined }>();
@@ -38,12 +39,14 @@ export default function EditTournament() {
 		}
 
 		if (tournament) {
+			const date = new Date(tournament.date);
 			return (
 				<TournamentForm
 					onSubmit={(data) => update({ data: { ...tournament, ...data } })}
 					defaultValues={{
 						holeCount: tournament.holeCount,
-						date: new Date(tournament.date),
+						date: adjustedDate(tournament.date),
+						completed: tournament.completed,
 					}}
 				/>
 			);

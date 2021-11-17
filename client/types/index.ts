@@ -3,6 +3,7 @@ export type FormError<Keys extends string, Values = string[]> = Record<
 	Values
 >;
 export type DetailFormError = FormError<'detail', string>;
+export type MessageError = FormError<'message', string>;
 
 export type ID = string | number;
 
@@ -14,10 +15,17 @@ export enum UserRole {
 	Anonymous = 5,
 }
 
-export interface Enrollment {
+export interface TournamentEnrollment {
 	score: number;
-	userId: number;
-	tournamentId: number;
+	userId: ID;
+	tournamentId: ID;
+	currentHole: number;
+}
+
+export interface TournamentEnrollmentUser {
+	score: number;
+	user: UserData;
+	currentHole: number;
 }
 
 export interface UserData {
@@ -26,7 +34,7 @@ export interface UserData {
 	birthdate: Date;
 	role: UserRole;
 	balance: number;
-	enrollments: Enrollment[];
+	enrollments: TournamentEnrollment[];
 }
 
 export interface DrinkData {
@@ -46,13 +54,7 @@ export interface TournamentData {
 	readonly balance: number;
 	readonly completed: boolean;
 	readonly advertisingBanner: null;
-	readonly enrollments: TournamentEnrollment[];
-}
-
-export interface TournamentEnrollment {
-	score: number;
-	tournamentId: number;
-	userId: number;
+	readonly enrollments: TournamentEnrollmentUser[];
 }
 
 export type Layout = 'mobile' | 'desktop';

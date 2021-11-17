@@ -1,5 +1,10 @@
 # Group 3 README
 
+## Standup Notes
+```
+./doc/planning/standup/
+```
+
 ## Project Organization
 - `/app` contains the `FastAPI` backend API code
 - `/client` contains the `React` frontend code

@@ -4,6 +4,7 @@ import json
 from typing import Optional, Union
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy import types
+from sqlalchemy.engine import create
 from sqlalchemy.orm import Session, relationship
 from functools import cache, cached_property
 
@@ -26,13 +27,16 @@ class User(Base):  # type: ignore
     enrollments: list["TournamentEnrollment"] = relationship(
         "TournamentEnrollment", back_populates="user"
     )
-    created_tournaments: "Tournament" = relationship(
-        "Tournament", back_populates="created_by", cascade="all, delete, delete-orphan"
-    )
+    # created_tournaments: "Tournament" = relationship(
+    #     "Tournament",
+    #     back_populates="created_by",
+    #     cascade="all, delete, delete-orphan",
+    # )
     # sponsored_tournaments = relationship(
     #     "Tournament",
     #     back_populates="sponsored_by",
-    #     foreign_keys=["tournaments.sponsored_by_id"],
+    #     foreign_keys=["Tournament.sponsored_by_id"],
+    #     lazy="dynamic",
     # )
 
     @property
@@ -176,17 +180,17 @@ class Tournament(Base):  # type: ignore
     balance = Column(types.Float, default=0.0, nullable=False)
     hole_count = Column(types.Integer, nullable=False)
 
-    created_by_id = Column(types.Integer, ForeignKey("users.id"), nullable=False)
     winning_distributions_json = Column(
         types.String,
         default=json.dumps({"first": 0.5, "second": 0.3, "third": 0.2}),
         nullable=False,
     )
 
-    created_by = relationship("User", back_populates="created_tournaments")
+    created_by_id = Column(types.Integer, ForeignKey("users.id"), nullable=False)
+    created_by = relationship("User", foreign_keys=created_by_id)
 
-    # sponsored_by_id = Column(types.Integer, ForeignKey("users.id"))
-    # sponsored_by = relationship("User", back_populates="sponsored_tournaments")
+    sponsored_by_id = Column(types.Integer, ForeignKey("users.id"))
+    sponsored_by = relationship("User", foreign_keys=sponsored_by_id)
 
     enrollments = relationship(
         "TournamentEnrollment",

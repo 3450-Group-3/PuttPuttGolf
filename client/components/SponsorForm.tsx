@@ -31,7 +31,7 @@ interface Props {
 }
 
 export default function SponsorForm({ tournamentId, defaultValues }: Props) {
-	const { user, setUser } = useUser();
+	const { user } = useUser();
 	const [
 		{ data: updateData, loading: updateLoading, error: updateError },
 		update,

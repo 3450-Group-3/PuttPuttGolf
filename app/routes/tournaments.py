@@ -117,6 +117,7 @@ def sponsor_tournament(
     tournament.balance += s_data.balance_diff
     tournament.advertising_banner = s_data.advertising_banner
     tournament.winning_distributions = s_data.winning_distributions.dict()
+    tournament.sponsored_by = user
 
     db.commit()
     db.refresh(tournament)

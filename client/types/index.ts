@@ -37,6 +37,12 @@ export interface DrinkData {
 	balance: number;
 }
 
+export interface WinningDistributions {
+	readonly first: number;
+	readonly second: number;
+	readonly third: number;
+}
+
 export interface TournamentData {
 	readonly id: ID;
 	readonly date: string;
@@ -47,6 +53,7 @@ export interface TournamentData {
 	readonly completed: boolean;
 	readonly advertisingBanner: null;
 	readonly enrollments: TournamentEnrollment[];
+	readonly winningDistributions: WinningDistributions;
 }
 
 export interface TournamentEnrollment {

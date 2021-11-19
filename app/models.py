@@ -49,15 +49,15 @@ class User(Base):  # type: ignore
 
     @property
     def is_drink_meister(self):
-        return self.has_role(UserRole.DRINK_MEISTER)
+        return self.has_role(UserRole.DRINK_MEISTER) or self.has_role(UserRole.MANAGER)
 
     @property
     def is_sponsor(self):
-        return self.has_role(UserRole.SPONSOR)
+        return self.has_role(UserRole.SPONSOR) or self.has_role(UserRole.MANAGER)
 
     @property
     def is_player(self):
-        return self.has_role(UserRole.PLAYER)
+        return self.has_role(UserRole.PLAYER) or self.has_role(UserRole.MANAGER)
 
     def update_balance(self, value: float, db: Session):
         assert isinstance(value, (float, int))
@@ -177,6 +177,12 @@ class Tournament(Base):  # type: ignore
     hole_count = Column(types.Integer, nullable=False)
 
     created_by_id = Column(types.Integer, ForeignKey("users.id"), nullable=False)
+    winning_distributions_json = Column(
+        types.String,
+        default=json.dumps({"first": 0.5, "second": 0.3, "third": 0.2}),
+        nullable=False,
+    )
+
     created_by = relationship("User", back_populates="created_tournaments")
 
     # sponsored_by_id = Column(types.Integer, ForeignKey("users.id"))
@@ -196,6 +202,14 @@ class Tournament(Base):  # type: ignore
     def players(self):
         for enrollment in self.enrollments:
             yield enrollment.user
+
+    @property
+    def winning_distributions(self):
+        return json.loads(self.winning_distributions_json)
+
+    @winning_distributions.setter
+    def winning_distributions(self, value):
+        self.winning_distributions_json = json.dumps(value)
 
     def add_user(self, db: Session, user: User) -> "TournamentEnrollment":
         # Add user to scores / handle nonexistant id

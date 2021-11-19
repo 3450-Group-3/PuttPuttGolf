@@ -5,7 +5,13 @@ from sqlalchemy.orm.session import Session
 from starlette import status
 from starlette.responses import JSONResponse
 
-from app.dependancies import current_user_is_manager, get_current_user, get_db
+from app.dependancies import (
+    current_user_is_drinkmeister,
+    current_user_is_manager,
+    current_user_is_sponsor,
+    get_current_user,
+    get_db,
+)
 from app import schemas, models
 from app.security import Password
 from app import errors
@@ -68,7 +74,10 @@ def create_tournament(
     dependencies=[Depends(current_user_is_manager)],
 )
 def update_tournament(
-    id: int, t_data: schemas.TournamentUpdate, db: Session = Depends(get_db)
+    id: int,
+    t_data: schemas.TournamentUpdate,
+    db: Session = Depends(get_db),
+    user: models.User = Depends(get_current_user),
 ):
     tournament: Optional[models.Tournament] = (
         db.query(models.Tournament).where(models.Tournament.id == id).first()
@@ -80,8 +89,34 @@ def update_tournament(
     tournament.date = t_data.date
     tournament.completed = t_data.completed
     tournament.advertising_banner = t_data.advertising_banner
-    tournament.balance = t_data.balance
+    tournament.balance += t_data.balance
     tournament.hole_count = t_data.hole_count
+    tournament.winning_distributions = t_data.winning_distributions.dict()
+
+    db.commit()
+    db.refresh(tournament)
+
+    return tournament
+
+
+@tournaments.put(
+    "/{id}/sponsor",
+    response_model=schemas.Tournament,
+)
+def sponsor_tournament(
+    id: int,
+    s_data: schemas.SponsorTournament,
+    db: Session = Depends(get_db),
+    user: models.User = Depends(current_user_is_sponsor),
+):
+    tournament: Optional[models.Tournament] = db.query(models.Tournament).get(id)
+
+    if not tournament:
+        raise errors.ResourceNotFound("Tournament")
+
+    tournament.balance += s_data.balance_diff
+    tournament.advertising_banner = s_data.advertising_banner
+    tournament.winning_distributions = s_data.winning_distributions.dict()
 
     db.commit()
     db.refresh(tournament)

@@ -128,12 +128,26 @@ class TournamentIn(InModel):
     hole_count: int
 
 
+class WinningDistribution(InModel):
+    first: float
+    second: float
+    third: float
+
+
 class TournamentUpdate(InModel):
     date: datetime
     hole_count: int
+    completed: bool
+
     advertising_banner: Optional[str]
     balance: float
-    completed: bool
+    winning_distributions: WinningDistribution
+
+
+class SponsorTournament(InModel):
+    advertising_banner: Optional[str]
+    balance_diff: float
+    winning_distributions: WinningDistribution
 
 
 class Tournament(OutModel):
@@ -146,6 +160,7 @@ class Tournament(OutModel):
     sponsored_by: Optional[User]
     created_by: User
     enrollments: list[TournamentEnrollment]
+    winning_distributions: WinningDistribution
 
     class Config:
         orm_mode = True

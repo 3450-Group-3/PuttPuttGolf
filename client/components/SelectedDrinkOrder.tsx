@@ -1,12 +1,30 @@
-import { useGet, useUser } from "../hooks"
-import { DrinkOrderData } from "../pages/DrinkOrderFufillment";
+import { useGet, usePost, usePut, useUser } from "../hooks"
+import { DrinkOrderData, DrinkOrderState } from "../pages/DrinkOrderFufillment";
+import { Button } from "../styles";
 import { DetailFormError, DrinkData } from "../types";
 
 interface props {
-    activeOrder: DrinkOrderData | undefined
+    activeOrder: DrinkOrderData | undefined,
+    setActiveOrder: React.Dispatch<React.SetStateAction<DrinkOrderData | undefined>>,
+    setOrderReadyToBeDelivered: React.Dispatch<React.SetStateAction<boolean>>
+
 }
 
-export default function SelectedDrinkOrder({activeOrder}: props) {
+export default function SelectedDrinkOrder({activeOrder, setActiveOrder, setOrderReadyToBeDelivered}: props) {
+
+    const [response, deliverOrder] = usePut<DrinkOrderData, DetailFormError>("/orders/status")
+
+    function handleDeliverOrder() {
+        deliverOrder({
+            data: {
+                id: activeOrder?.id,
+                orderStatus: DrinkOrderState.ENROUTE
+            }
+        }).then((data) => {
+            setActiveOrder(data.data)
+            setOrderReadyToBeDelivered(true)
+        })
+    }
 
     const drinkGet = useGet<DrinkData[], DetailFormError>("/drinks")
     const drinkMap: Map<number, DrinkData> = new Map();
@@ -38,8 +56,11 @@ export default function SelectedDrinkOrder({activeOrder}: props) {
                                 </div>
                             )
                         })}
-                    </div>
+                    </div>  
                 </div>
+                <Button onClick={() => {
+                    handleDeliverOrder()
+                }}>Deliver Order</Button>
             </div>}
         </div>
     )

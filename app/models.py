@@ -134,7 +134,7 @@ class DrinkOrder(Base):
     drinks_json = Column(types.String, nullable=False)
     location_json = Column(types.String, nullable=False)
     drink_meister_id = Column(types.Integer, nullable=False, index=True)
-    
+
     @property
     @cache
     def location(self):
@@ -248,7 +248,7 @@ class Tournament(Base):  # type: ignore
 
     def _distribute_winnings(self, db) -> None:
         sorted_enrollments = list(
-            sorted(self.enrollments, key=lambda a, b: a.score > b.score, revsere=True)
+            sorted(self.enrollments, key=lambda a: a.score, reverse=True)
         )
         # Get the top three
         winners = sorted_enrollments[0:3]

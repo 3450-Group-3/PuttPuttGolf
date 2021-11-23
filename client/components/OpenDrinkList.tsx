@@ -19,11 +19,10 @@ const Order = styled.div`
 
 interface props {
     setHasActiveOrder: React.Dispatch<React.SetStateAction<boolean>>,
-    refreshOrderData: () => void,
     setActiveOrder: React.Dispatch<React.SetStateAction<DrinkOrderData | undefined>>
 }
 
-export default function OpenDrinkList({setHasActiveOrder, refreshOrderData, setActiveOrder}: props) { 
+export default function OpenDrinkList({setHasActiveOrder, setActiveOrder}: props) { 
 
     const orderGet = useGet<DrinkOrderData[], DetailFormError>("/orders/state/" + DrinkOrderState.OPEN)
     const [response, accecptOrder] = usePost<DrinkData, DetailFormError>("/orders/claimorder")
@@ -34,7 +33,6 @@ export default function OpenDrinkList({setHasActiveOrder, refreshOrderData, setA
                 id: id
             }
         }).then((data) => {
-            refreshOrderData()
             setHasActiveOrder(true)
         })
     }

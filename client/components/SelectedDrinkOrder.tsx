@@ -35,13 +35,15 @@ export default function SelectedDrinkOrder({activeOrder, setActiveOrder, setOrde
         return drinkMap.get(id)
     }
 
+    const status = ["OPEN", "INPROGRESS", "ENROUTE", "DELIVERED"]
+
     return (
         <div>
             {activeOrder && <div>
                 <h2 style={{borderBottom: "2xp solid black"}}>Currently Active Order</h2>
                 <p>Drink Order Id: {activeOrder.id}</p>
                 <p>Customer Name: {activeOrder.customerName}</p>
-                <p>Order Status: {activeOrder.orderStatus}</p>
+                <p>Order Status: {status[activeOrder.orderStatus - 1]}</p>
                 <p>Time Ordered" {activeOrder.timeOrdered}</p>
                 <p>Order Total Price: {activeOrder.totalPrice}</p>
                 <div>

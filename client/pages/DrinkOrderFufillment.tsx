@@ -41,11 +41,21 @@ export default function DrinkOrderFufillment() {
     const [hasAcceptedOrder, setHasAcceptedOrder] = useState(false)
     const [orderReadyToBeDelivered, setOrderReadyToBeDelivered] = useState(false)
     const {user} = useUser()
+    const [drinkFullfillmentRefreshOrder, setDrinkFullfillmentRefreshOrder] = useState(false)
+
+    function refreshOrderData() {
+        setDrinkFullfillmentRefreshOrder(!drinkFullfillmentRefreshOrder)
+    }
+
+    const [activeOrder, setActiveOrder] = useState<DrinkOrderData>()
 
     const {data, loading, error} = useGet<DrinkOrderData[], DetailFormError>("/orders/user/" + user.id)
 
+    
+
     if (!hasAcceptedOrder && data){
         if (data.length > 0){
+            setActiveOrder(data[0])
             setHasAcceptedOrder(true)
             if (!orderReadyToBeDelivered){
                 if (data[0].orderStatus == DrinkOrderState.ENROUTE){
@@ -58,8 +68,8 @@ export default function DrinkOrderFufillment() {
 
     return (
         <div>
-            {!hasAcceptedOrder && <OpenDrinkList setHasActiveOrder={setHasAcceptedOrder}/>}
-            {hasAcceptedOrder && !orderReadyToBeDelivered && <SelectedDrinkOrder />}
+            {!hasAcceptedOrder && <OpenDrinkList setHasActiveOrder={setHasAcceptedOrder} refreshOrderData={refreshOrderData} setActiveOrder={setActiveOrder}/>}
+            {hasAcceptedOrder && !orderReadyToBeDelivered && <SelectedDrinkOrder activeOrder={activeOrder} />}
             {hasAcceptedOrder && orderReadyToBeDelivered && <DeliverDrinkOrder />}
         </div>
     )

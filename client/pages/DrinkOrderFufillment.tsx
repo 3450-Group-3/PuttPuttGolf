@@ -64,7 +64,7 @@ export default function DrinkOrderFufillment() {
         <div>
             {!hasAcceptedOrder && <OpenDrinkList setHasActiveOrder={setHasAcceptedOrder} setActiveOrder={setActiveOrder}/>}
             {hasAcceptedOrder && !orderReadyToBeDelivered && <SelectedDrinkOrder activeOrder={activeOrder} setActiveOrder={setActiveOrder} setOrderReadyToBeDelivered={setOrderReadyToBeDelivered}/>}
-            {hasAcceptedOrder && orderReadyToBeDelivered && <DeliverDrinkOrder />}
+            {hasAcceptedOrder && orderReadyToBeDelivered && <DeliverDrinkOrder activeOrder={activeOrder} />}
         </div>
     )
 }

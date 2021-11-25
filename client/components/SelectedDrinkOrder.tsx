@@ -11,7 +11,6 @@ interface props {
 }
 
 export default function SelectedDrinkOrder({activeOrder, setActiveOrder, setOrderReadyToBeDelivered}: props) {
-
     const [response, deliverOrder] = usePut<DrinkOrderData, DetailFormError>("/orders/status")
 
     function handleDeliverOrder() {

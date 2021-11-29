@@ -45,6 +45,7 @@ export default function DrinkCart({ drinkMap, setViewCart }: Props) {
 	const [successfullyPlacedOrder, setSuccessfullyPlaceOrder] = useState(false);
 
 	function placeOrder() {
+		
 		if (drinks.length == 0) {
 			return;
 		}
@@ -66,7 +67,7 @@ export default function DrinkCart({ drinkMap, setViewCart }: Props) {
 			setSuccessfullyPlaceOrder(true);
 			setTimeout(() => {
 				setViewCart(false);
-			}, 2000);
+			}, 750);
 		});
 	}
 

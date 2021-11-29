@@ -116,10 +116,10 @@ def assign_dm_to_order(id: int, drinkmeister: models.User = Depends(current_user
 
 
 @orders.put(
-    "/{id}/status", response_model=schemas.DrinkOrderOut, dependencies=[Depends(current_user_is_drinkmeister)]
+    "/status", response_model=schemas.DrinkOrderOut, dependencies=[Depends(current_user_is_drinkmeister)]
 )
-def update_order_status(id: int, order_data: schemas.DrinkOrderStatusUpdateIn, db: Session = Depends(get_db)):
-    order: models.DrinkOrder = db.query(models.DrinkOrder).where(models.DrinkOrder.id == id).first()
+def update_order_status(order_data: schemas.DrinkOrderStatusUpdateIn, db: Session = Depends(get_db)):
+    order: models.DrinkOrder = db.query(models.DrinkOrder).where(models.DrinkOrder.id == order_data.id).first()
 
     if order.order_status.value != (order_data.order_status.value - 1):
         return JSONResponse(

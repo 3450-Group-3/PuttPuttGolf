@@ -11,7 +11,7 @@ interface DrinkOrderQuantity {
     quantity: number
 }
 
-interface UserLocation {
+export interface UserLocation {
     longitude: number,
     lattitude: number
 }
@@ -38,11 +38,12 @@ export enum DrinkOrderState {
 
 export default function DrinkOrderFufillment() {
 
+    const [dummy, setDummy] = useState(false)
     const [hasAcceptedOrder, setHasAcceptedOrder] = useState(false)
     const [orderReadyToBeDelivered, setOrderReadyToBeDelivered] = useState(false)
-    const {user} = useUser()
     const [activeOrder, setActiveOrder] = useState<DrinkOrderData>()
-
+    
+    const {user} = useUser()
     const {data, loading, error} = useGet<DrinkOrderData[], DetailFormError>("/orders/user/" + user.id)
 
     
@@ -63,8 +64,8 @@ export default function DrinkOrderFufillment() {
     return (
         <div>
             {!hasAcceptedOrder && <OpenDrinkList setHasActiveOrder={setHasAcceptedOrder} setActiveOrder={setActiveOrder}/>}
-            {hasAcceptedOrder && !orderReadyToBeDelivered && <SelectedDrinkOrder activeOrder={activeOrder} setActiveOrder={setActiveOrder} setOrderReadyToBeDelivered={setOrderReadyToBeDelivered}/>}
-            {hasAcceptedOrder && orderReadyToBeDelivered && <DeliverDrinkOrder activeOrder={activeOrder} />}
+            {hasAcceptedOrder && !orderReadyToBeDelivered && <SelectedDrinkOrder activeOrder={activeOrder} setOrderReadyToBeDelivered={setOrderReadyToBeDelivered}/>}
+            {hasAcceptedOrder && orderReadyToBeDelivered && <DeliverDrinkOrder activeOrder={activeOrder} setDummy={setDummy} dummy={dummy}/>}
         </div>
     )
 }

@@ -5,12 +5,11 @@ import { DetailFormError, DrinkData } from "../types";
 
 interface props {
     activeOrder: DrinkOrderData | undefined,
-    setActiveOrder: React.Dispatch<React.SetStateAction<DrinkOrderData | undefined>>,
     setOrderReadyToBeDelivered: React.Dispatch<React.SetStateAction<boolean>>
 
 }
 
-export default function SelectedDrinkOrder({activeOrder, setActiveOrder, setOrderReadyToBeDelivered}: props) {
+export default function SelectedDrinkOrder({activeOrder, setOrderReadyToBeDelivered}: props) {
     const [response, deliverOrder] = usePut<DrinkOrderData, DetailFormError>("/orders/status")
 
     function handleDeliverOrder() {
@@ -20,7 +19,6 @@ export default function SelectedDrinkOrder({activeOrder, setActiveOrder, setOrde
                 orderStatus: DrinkOrderState.ENROUTE
             }
         }).then((data) => {
-            setActiveOrder(data.data)
             setOrderReadyToBeDelivered(true)
         })
     }

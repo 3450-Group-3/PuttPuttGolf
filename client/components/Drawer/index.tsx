@@ -133,7 +133,7 @@ export default function Drawer(props: Props) {
 								<AiOutlinePlus size={25} />
 								<Text>New Order</Text>
 							</DrawerItemNav>
-							<DrawerItemNav to="/order" activeClassName="selected" exact>
+							<DrawerItemNav to="/order/active" activeClassName="selected" exact>
 								<AiOutlineEye size={25} />
 								<Text>Check Orders</Text>
 							</DrawerItemNav>

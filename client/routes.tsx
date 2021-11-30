@@ -15,6 +15,7 @@ import DrinkOrderFufillment from './pages/DrinkOrderFufillment';
 import Tournaments from './pages/Tournaments';
 import CreateTournament from './pages/CreateTournament';
 import EditTournament from './pages/EditTournament';
+import CustomerViewOrders from './pages/CustomerViewOrders';
 
 /**  User must be logged in */
 const AuthRoute = (props: RouteProps) => {
@@ -76,7 +77,8 @@ export default function Routes() {
 				hasPermission={(user) => user.isManager}
 				component={UserManagement}
 			/>
-			<AuthRoute path="/order" component={DrinkOrdering} />
+			<AuthRoute path="/order/new" exact component={DrinkOrdering} />
+			<AuthRoute path="/order/active" exact component={CustomerViewOrders} />
 			<PermissionRoute
 				path="/dm/orders"
 				hasPermission={(user) => user.isDrinkMeister}

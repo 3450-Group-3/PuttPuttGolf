@@ -43,32 +43,42 @@ export default function DrinkCart({ drinkMap, setViewCart }: Props) {
 		DetailFormError
 	>('/orders');
 	const [successfullyPlacedOrder, setSuccessfullyPlaceOrder] = useState(false);
+	const [locationPermissonDenied, setLocationPermissionDenied] = useState(false);
 
 	function placeOrder() {
 		
 		if (drinks.length == 0) {
 			return;
 		}
-		submitOrder({
-			data: {
-				drinks: drinks.map((drink) => {
-					return {
-						drinkId: drink.drinkID,
-						quantity: drink.drinkQty,
-					};
-				}),
-				location: {
-					longitude: 69,
-					lattitude: 420,
+
+		navigator.geolocation.getCurrentPosition((location) => {
+			submitOrder({
+				data: {
+					drinks: drinks.map((drink) => {
+						return {
+							drinkId: drink.drinkID,
+							quantity: drink.drinkQty,
+						};
+					}),
+					location: {
+						longitude: location.coords.longitude,
+						lattitude: location.coords.latitude,
+					},
 				},
-			},
-		}).then(({ data }) => {
-			drinkMap.clear();
-			setSuccessfullyPlaceOrder(true);
-			setTimeout(() => {
-				setViewCart(false);
-			}, 750);
-		});
+			}).then(({ data }) => {
+				drinkMap.clear();
+				setSuccessfullyPlaceOrder(true);
+				setTimeout(() => {
+					setViewCart(false);
+				}, 750);
+			});
+		},
+		() => {
+			setLocationPermissionDenied(true)
+		},
+		{
+			enableHighAccuracy: true
+		})
 	}
 
 	const [dummy, setDummy] = useState(false);
@@ -88,10 +98,9 @@ export default function DrinkCart({ drinkMap, setViewCart }: Props) {
 		setDummy(!dummy);
 	}
 
-	console.log('Drinks before map', drinks);
-
 	return (
 		<div>
+			{locationPermissonDenied && <h1 style={{color:"red"}}>Please enable location permissions and refresh </h1>}
 			{successfullyPlacedOrder && <h2>Successfully placed your order</h2>}
 			{drinks.length == 0 && !successfullyPlacedOrder && (
 				<h2>There are currently no items in your cart</h2>

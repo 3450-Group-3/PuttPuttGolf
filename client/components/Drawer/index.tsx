@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-import { useOnClickOutside, useUser } from '../../hooks';
+import { useGlobal, useOnClickOutside, useUser } from '../../hooks';
 import {
 	AiOutlineHome,
 	AiOutlinePlus,
@@ -63,6 +63,7 @@ interface Props {
 export default function Drawer(props: Props) {
 	const { user } = useUser();
 	const ref = useRef(null);
+	const {locationWatchHandlerId} = useGlobal()
 
 	const history = useHistory();
 
@@ -169,7 +170,10 @@ export default function Drawer(props: Props) {
 					</>
 				) : (
 					<DrawerItemAction
-						onClick={() => localStorage.removeItem('token')}
+						onClick={() => {
+							localStorage.removeItem('token')
+							navigator.geolocation.clearWatch(locationWatchHandlerId)
+						}}
 						href=""
 					>
 						<IoMdLogOut size={25} />

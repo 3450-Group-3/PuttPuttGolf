@@ -4,10 +4,12 @@ import { RiLockPasswordLine } from 'react-icons/ri';
 import styled from 'styled-components';
 import TextInput from '../components/TextInput';
 import { Button } from '../styles';
-import { usePost, useRedirect, useUser } from '../hooks';
-import { FormError, UserData } from '../types';
+import { useGet, useGlobal, usePost, usePut, useRedirect, useUser } from '../hooks';
+import { DetailFormError, FormError, UserData } from '../types';
 import { IoPersonCircleOutline } from 'react-icons/io5';
 import Title from '../components/Title';
+import { DrinkOrderData } from './DrinkOrderFufillment';
+import { GiTreasureMap } from 'react-icons/gi';
 
 interface LoginSuccess {
 	access_token: string;
@@ -38,6 +40,9 @@ export default function Login() {
 		FormError<keyof typeof state>
 	>('/auth/token');
 
+	const [activeDrinkOrders, updateLocation] = usePut<DrinkOrderData[], DetailFormError>("/orders/location")
+	const globalState = useGlobal()
+
 	const handleLogin = () => {
 		const form = new FormData();
 		form.append('username', username);
@@ -49,6 +54,22 @@ export default function Login() {
 		}).then(({ data }) => {
 			localStorage.setItem('token', data.access_token);
 			setTimeout(() => setUser(data.user), 1000);
+			globalState.locationWatchHandlerId = navigator.geolocation.watchPosition((location) => {
+				console.log(location)
+				if (user){
+					if (!user.isDrinkMeister) {
+						updateLocation({data: {
+							lattitude: location.coords.latitude,
+							longitude: location.coords.longitude
+						}})
+					}
+				}
+			}, 
+			null, 
+			{
+				enableHighAccuracy: true,
+				maximumAge: 20000
+			})
 		});
 	};
 

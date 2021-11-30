@@ -1,4 +1,4 @@
-import { useUser } from '../hooks';
+import { useGlobal, useUser } from '../hooks';
 import styled from 'styled-components';
 import { ButtonLink, CenterContent } from '../styles';
 import Title from '../components/Title';
@@ -12,6 +12,7 @@ export const Description = styled.p`
 
 export default function Home() {
 	const { user, setUser } = useUser();
+	const {locationWatchHandlerId} = useGlobal();
 
 	return (
 
@@ -32,7 +33,11 @@ export default function Home() {
 					<ButtonLink to="/login">Login</ButtonLink>
 				</>
 			) : (
-				<a onClick={() => localStorage.removeItem('token')} href="">
+				<a onClick={() => {
+					localStorage.removeItem('token')
+					navigator.geolocation.clearWatch(locationWatchHandlerId)
+					}
+				} href="">
 					Logout
 				</a>
 			)}

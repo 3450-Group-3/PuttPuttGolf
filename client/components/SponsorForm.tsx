@@ -1,7 +1,7 @@
 import React from 'react';
 import { useUser } from '../hooks';
 import styled from 'styled-components';
-import { Button } from '../styles';
+import { Button, Message } from '../styles';
 import { ID, TournamentData } from '../types';
 import { usePut } from '../hooks';
 import TextInput from '../components/TextInput';
@@ -141,6 +141,10 @@ export default function SponsorForm({ tournamentId, defaultValues }: Props) {
 			<TextInput placeholder="Advertising banner URL" />
 
 			{/* Confirm and sponsor */}
+			{updateData && <Message>Sponsorship Updated</Message>}
+			{updateError && (
+				<Message error>Something went Wrong, please try again</Message>
+			)}
 			<Button type="submit">Confirm and Sponsor</Button>
 		</form>
 	);

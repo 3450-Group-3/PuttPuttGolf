@@ -264,15 +264,26 @@ class Tournament(Base):  # type: ignore
         self._distribute_winnings(db)
         db.commit()
 
-    def _distribute_winnings(self, db) -> None:
+    def _distribute_winnings(self, db: Session) -> None:
         sorted_enrollments = list(
             sorted(self.enrollments, key=lambda a: a.score, reverse=True)
         )
         # Get the top three
         winners = sorted_enrollments[0:3]
-        # TODO actually distribute the winnings to each winner
-        # Note the above list doesn't nessecarily contain 3
-        # individuals
+
+        winner: TournamentEnrollment
+        for winner, percent in zip(winners, self._winning_distributions_tuple()):
+            winner.user.balance += self.balance * percent
+
+        self.balance = 0
+
+    def _winning_distributions_tuple(self):
+        wd = self.winning_distributions
+        return (
+            wd["first"],
+            wd["second"],
+            wd["third"],
+        )
 
 
 class TournamentEnrollment(Base):

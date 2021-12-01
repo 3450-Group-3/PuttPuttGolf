@@ -3,14 +3,12 @@ from fastapi import APIRouter, Depends, Request
 from sqlalchemy.orm.session import Session
 
 from app.dependancies import (
-    current_user_is_drinkmeister,
     current_user_is_manager,
     current_user_is_sponsor,
     get_current_user,
     get_db,
 )
 from app import schemas, models
-from app.security import Password
 from app import errors
 
 tournaments = APIRouter(prefix="/tournaments", tags=["Tournament Crud"])
@@ -106,10 +104,17 @@ def sponsor_tournament(
     if not tournament:
         raise errors.ResourceNotFound("Tournament")
 
+    if tournament.sponsor_by is not user and not user.is_manager:
+        raise errors.PermissionException(
+            "Cannot update a tournament you are not sponsoring"
+        )
+
     tournament.balance += s_data.balance_diff
     tournament.advertising_banner = s_data.advertising_banner
     tournament.winning_distributions = s_data.winning_distributions.dict()
     tournament.sponsored_by = user
+
+    user.update_balance(user.balance - s_data.balance_diff, db)
 
     db.commit()
     db.refresh(tournament)
@@ -141,6 +146,11 @@ def add_user(
 
     if not tournament:
         raise errors.ResourceNotFound("Tournament")
+
+    if tournament.comleted:
+        raise errors.ValidationError(
+            "Cannot update sponsorship for completed tournament"
+        )
 
     if not user:
         raise errors.ResourceNotFound("User")

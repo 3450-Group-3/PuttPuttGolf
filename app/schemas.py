@@ -173,7 +173,7 @@ class Tournament(OutModel):
     advertising_banner: Optional[str]
     sponsored_by: Optional[User]
     created_by: User
-    enrollments: list[TournamentEnrollment]
+    enrollments: list[TournamentEnrollmentUser]
     winning_distributions: WinningDistribution
 
     class Config:

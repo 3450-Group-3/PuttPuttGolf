@@ -103,7 +103,7 @@ def sponsor_tournament(
     if not tournament:
         raise errors.ResourceNotFound("Tournament")
 
-    if tournament.sponsor_by is not user and not user.is_manager:
+    if tournament.sponsored_by is not user and not user.is_manager:
         raise errors.PermissionException(
             "Cannot update a tournament you are not sponsoring"
         )

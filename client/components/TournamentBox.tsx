@@ -130,7 +130,7 @@ export default function TournamentBox({ tournament, onDelete }: Props) {
 			return null;
 		}
 
-		if (tournament?.sponsoredBy?.id !== user.id) {
+		if (tournament.sponsoredBy && tournament.sponsoredBy.id !== user.id) {
 			return (
 				<div style={{ marginTop: '20px' }}>
 					<ButtonLink kind="text" to="#" fontSize={18} text={'grey'}>

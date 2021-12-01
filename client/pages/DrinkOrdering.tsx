@@ -84,7 +84,6 @@ export default function DrinkOrdering() {
 	const [qtyPostive, setQtyPositive] = useState(true);
 	const [viewCart, setViewCart] = useState(false);
 
-	// console.log(data)
 
 	return (
 		<Content>

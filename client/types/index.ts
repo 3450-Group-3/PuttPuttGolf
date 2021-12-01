@@ -20,6 +20,7 @@ export interface TournamentEnrollment {
 	userId: ID;
 	tournamentId: ID;
 	currentHole: number;
+	user: UserData;
 }
 
 export interface TournamentEnrollmentUser {
@@ -45,6 +46,12 @@ export interface DrinkData {
 	description: string;
 }
 
+export interface WinningDistributions {
+	readonly first: number;
+	readonly second: number;
+	readonly third: number;
+}
+
 export interface TournamentData {
 	readonly id: ID;
 	readonly date: string;
@@ -54,7 +61,8 @@ export interface TournamentData {
 	readonly balance: number;
 	readonly completed: boolean;
 	readonly advertisingBanner: null;
-	readonly enrollments: TournamentEnrollmentUser[];
+	readonly enrollments: TournamentEnrollment[];
+	readonly winningDistributions: WinningDistributions;
 }
 
 export type Layout = 'mobile' | 'desktop';

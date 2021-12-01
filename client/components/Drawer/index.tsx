@@ -104,11 +104,7 @@ export default function Drawer(props: Props) {
 						<Text>Register</Text>
 					</DrawerItemNav>
 					{user.isSponsor && (
-						<DrawerItemNav
-							to="/tournaments/sponsor"
-							activeClassName="selected"
-							exact
-						>
+						<DrawerItemNav to="/tournaments" activeClassName="selected" exact>
 							<SiGithubsponsors size={25} />
 							<Text>Sponsor</Text>
 						</DrawerItemNav>

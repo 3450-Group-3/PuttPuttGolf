@@ -4,7 +4,12 @@ import { IoEllipsisVerticalSharp } from 'react-icons/io5';
 import { ID, TournamentData } from '../types';
 import { usePost, useUser } from '../hooks';
 import { useState } from 'react';
-import { AiOutlineEdit, AiOutlineDelete } from 'react-icons/ai';
+import {
+	AiOutlineEdit,
+	AiOutlineDelete,
+	AiOutlineHeart,
+	AiFillHeart,
+} from 'react-icons/ai';
 import { SiGithubsponsors } from 'react-icons/si';
 
 const MoreWrapper = styled.div`
@@ -78,7 +83,7 @@ export default function TournamentBox({ tournament, onDelete }: Props) {
 	);
 
 	const [userRegistered, setUserRegistered] = useState(
-		() => !!tournament.enrollments.find((e) => e.user.id === user.id)
+		() => !!tournament.enrollments.find((e) => e.userId === user.id)
 	);
 
 	const renderButton = () => {
@@ -120,6 +125,35 @@ export default function TournamentBox({ tournament, onDelete }: Props) {
 		}
 	};
 
+	const renderSponsorButton = () => {
+		if (!user.isSponsor || tournament.completed) {
+			return null;
+		}
+
+		if (tournament?.sponsoredBy?.id !== user.id) {
+			return (
+				<div style={{ marginTop: '20px' }}>
+					<ButtonLink kind="text" to="#" fontSize={18} text={'grey'}>
+						<AiFillHeart size={16} /> Sponsored
+					</ButtonLink>
+				</div>
+			);
+		}
+
+		return (
+			<div style={{ marginTop: '20px' }}>
+				<ButtonLink
+					kind="text"
+					to={`/tournaments/${tournament.id}/sponsor`}
+					fontSize={18}
+					text={tournament.sponsoredBy?.id === user.id ? 'green' : undefined}
+				>
+					<AiOutlineHeart size={16} /> Sponsor
+				</ButtonLink>
+			</div>
+		);
+	};
+
 	return (
 		<Tournament onMouseLeave={() => setMoreOpen(false)}>
 			<img
@@ -129,18 +163,7 @@ export default function TournamentBox({ tournament, onDelete }: Props) {
 			<HoleCount>{tournament.holeCount} Holes</HoleCount>
 			<Time>{tournament.date.toLocaleTimeString()}</Time>
 			{renderButton()}
-			{user.isSponsor && (
-				<div style={{ marginTop: '20px' }}>
-					<ButtonLink
-						kind="text"
-						to={`/tournaments/${tournament.id}/sponsor`}
-						fontSize={18}
-						text={tournament.sponsoredBy !== null ? 'green' : undefined}
-					>
-						<SiGithubsponsors size={14} /> Sponsor
-					</ButtonLink>
-				</div>
-			)}
+			{renderSponsorButton()}
 			{user.isManager && (
 				<MoreWrapper onClick={() => setMoreOpen(!moreOpen)}>
 					<IoEllipsisVerticalSharp size={20} />

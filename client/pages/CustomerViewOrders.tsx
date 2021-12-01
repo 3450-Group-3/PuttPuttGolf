@@ -6,18 +6,8 @@ import { useGet, useUser } from '../hooks';
 import { CenterContent, Content, Title } from '../styles';
 import { DrinkOrderData, OrderStatus } from '../types';
 
-const LeaderboardContainer = styled.div`
+const Container = styled.div`
 	max-width: 50em;
-`;
-
-const SubTitle = styled(Title)`
-	margin-top: 1em;
-	font-size: 0.9rem;
-`;
-
-const CurrUserCell = styled.div`
-	font-weight: bold;
-	font-size: 1.1rem;
 `;
 
 export default function CustomerViewOrders() {
@@ -40,7 +30,7 @@ export default function CustomerViewOrders() {
 		if (data) {
 			data.sort((a, b) => (a.timeOrdered > b.timeOrdered ? 1 : -1));
 			return (
-				<LeaderboardContainer>
+				<Container>
 					<Title>Your Current Orders:</Title>
 					<Table
 						columns={[
@@ -78,7 +68,7 @@ export default function CustomerViewOrders() {
 						]}
 						data={data}
 					/>
-				</LeaderboardContainer>
+				</Container>
 			);
 		}
 	};

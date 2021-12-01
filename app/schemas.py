@@ -29,9 +29,25 @@ class TournamentEnrollment(OutModel):
     score: int
     tournament_id: int
     user_id: int
+    current_hole: int
 
     class Config:
         orm_mode = True
+
+
+class TournamentEnrollmentUser(OutModel):
+    score: int
+    user: User
+    current_hole: int
+
+    class Config:
+        orm_mode = True
+
+
+class TournamentEnrollmentIn(InModel):
+    score: int
+    tournament_id: int
+    user_id: int
 
 
 class UserIn(InModel):
@@ -100,21 +116,19 @@ class DrinkOrderQuantity(BaseModel):
 class DrinkOrderOut(OutModel):
     id: int
     customer_id: int
+    customer_name: str
     order_status: DrinkOrderState
     time_ordered: datetime
     total_price: float
     drinks: list[DrinkOrderQuantity]
     location: UserLocation
+    drink_meister_id: int
 
     class Config:
         orm_mode = True
 
 
 class DrinkOrderIn(InModel):
-    customer_id: int
-    order_status: DrinkOrderState
-    time_ordered: datetime
-    total_price: float
     drinks: list[DrinkOrderQuantity]
     location: UserLocation
 
@@ -182,4 +196,9 @@ class IncrementScore(InModel):
     user_id: int
 
 
+class BalanceUpdate(BaseModel):
+    balance: float
+
+
 TournamentEnrollment.update_forward_refs()
+TournamentEnrollmentUser.update_forward_refs()

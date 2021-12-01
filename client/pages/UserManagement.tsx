@@ -5,7 +5,7 @@ import User from '../user';
 import Title from '../components/Title';
 import Loader from '../components/Loader';
 import Table from '../components/Table';
-import { ButtonLink } from '../styles';
+import { ButtonLink, Content } from '../styles';
 import styled, { css } from 'styled-components';
 import {
 	AiOutlineEdit,
@@ -15,14 +15,6 @@ import {
 import { FiUserPlus } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import TextInput from '../components/TextInput';
-
-const Content = styled.div`
-	width: clamp(300px, 80%, 100%);
-	padding: 0px 50px;
-	display: flex;
-	flex-direction: column;
-	overflow-x: auto;
-`;
 
 const Header = styled.div`
 	display: flex;

@@ -1,9 +1,6 @@
 from typing import Literal, Optional
-from fastapi import APIRouter, Depends
-from fastapi.exceptions import HTTPException
+from fastapi import APIRouter, Depends, Request
 from sqlalchemy.orm.session import Session
-from starlette import status
-from starlette.responses import JSONResponse
 
 from app.dependancies import (
     current_user_is_drinkmeister,
@@ -42,17 +39,12 @@ def get_tournament(id: int, db: Session = Depends(get_db)):
     return tournament
 
 
-@tournaments.post(
-    "",
-    response_model=schemas.Tournament,
-    dependencies=[],
-)
+@tournaments.post("", response_model=schemas.Tournament)
 def create_tournament(
     t_data: schemas.TournamentIn,
     curr_user=Depends(current_user_is_manager),
     db: Session = Depends(get_db),
 ):
-
     tournament = models.Tournament(
         date=t_data.date,
         hole_count=t_data.hole_count,
@@ -178,7 +170,11 @@ def remove_user(
     return {"status": "ok"}
 
 
-@tournaments.post("/{id}/update_score", dependencies=[Depends(get_current_user)])
+@tournaments.post(
+    "/{id}/update_score",
+    dependencies=[Depends(get_current_user)],
+    response_model=schemas.TournamentEnrollment,
+)
 def update_score(
     id: int,
     increment: schemas.IncrementScore,
@@ -193,6 +189,18 @@ def update_score(
     if not user:
         raise errors.ResourceNotFound("User")
 
-    tournament.increment_score(db, user, increment.score)
+    return tournament.increment_score(db, user, increment.score)
 
-    return {"status": "ok"}
+
+@tournaments.post("/{id}/completion")
+def completion_check(id: int, db: Session = Depends(get_db)):
+    tournament: Optional[models.Tournament] = db.query(models.Tournament).get(id)
+
+    if not tournament:
+        raise errors.ResourceNotFound("Tournament")
+
+    if not tournament.completed and all(
+        enrollment.current_hole > tournament.hole_count
+        for enrollment in tournament.enrollments
+    ):
+        tournament.complete_tournament(db)

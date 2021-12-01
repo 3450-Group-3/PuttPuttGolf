@@ -10,7 +10,7 @@ const Content = styled.div`
 `;
 
 const Div = styled.div`
-	padding: 2rem;
+	padding: 0rem 2rem;
 `;
 
 export default function Themer() {

@@ -8,6 +8,8 @@ import PasswordForm from '../components/PasswordForm';
 import { Message } from '../styles';
 import Themer from '../components/Themer';
 import User from '../user';
+import AccountBalance from '../components/AccountBalance';
+import Title from '../components/Title';
 
 const Content = styled.div`
 	display: flex;
@@ -18,6 +20,10 @@ const Content = styled.div`
 	margin: auto;
 	padding-top: 2rem;
 	padding-bottom: 2rem;
+`;
+
+const Section = styled.h1`
+	margin-top: 3rem;
 `;
 
 export default function AccountManagement() {
@@ -61,6 +67,9 @@ export default function AccountManagement() {
 	if (data)
 		return (
 			<Content>
+				<Title>Account Management</Title>
+				<Section>Account Balance</Section>
+				<AccountBalance currentBalance={data.balance} userId={data.id} />
 				{postLoading && <Message>Updating user...</Message>}
 				{postData && <Message>Update user successful!</Message>}
 				{postError && (
@@ -69,6 +78,7 @@ export default function AccountManagement() {
 							'Something went wrong, please try again'}
 					</Message>
 				)}
+				<Section>User Details</Section>
 				<AccountForm
 					onSubmit={(data) =>
 						updateUser({ url: `/users/${id}`, data }).then((res) => {
@@ -80,7 +90,9 @@ export default function AccountManagement() {
 					type="updating"
 					defaultValues={data}
 				/>
+				<Section>Change Password</Section>
 				<PasswordForm />
+				<Section>Themes</Section>
 				<Themer />
 			</Content>
 		);

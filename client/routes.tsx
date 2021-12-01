@@ -7,6 +7,11 @@ import NotFound from './pages/NotFound';
 import { useUser } from './hooks';
 import User from './user';
 import UserManagement from './pages/UserManagement';
+import PlayTournament from './pages/PlayTournament';
+import Leaderboard from './pages/Leaderboard';
+import Leaderboards from './pages/Leaderboards';
+import DrinkOrdering from './pages/DrinkOrdering';
+import DrinkOrderFufillment from './pages/DrinkOrderFufillment';
 import Tournaments from './pages/Tournaments';
 import CreateTournament from './pages/CreateTournament';
 import EditTournament from './pages/EditTournament';
@@ -66,11 +71,18 @@ export default function Routes() {
 			<AuthRoute path="/tournaments/:id/sponsor" component={Sponsor} />
 			<AuthRoute path="/users/:id" component={AccountManagement} />
 			<AuthRoute path="/me" exact component={AccountManagement} />
+			<AuthRoute path="/play" component={PlayTournament} />
 			<PermissionRoute
 				path="/admin/users"
 				exact
 				hasPermission={(user) => user.isManager}
 				component={UserManagement}
+			/>
+			<AuthRoute path="/order" component={DrinkOrdering} />
+			<PermissionRoute
+				path="/dm/orders"
+				hasPermission={(user) => user.isDrinkMeister}
+				component={DrinkOrderFufillment}
 			/>
 			<AuthRoute path="/tournaments" exact component={Tournaments} />
 			<AuthRoute path="/tournaments/new" exact component={CreateTournament} />
@@ -79,6 +91,8 @@ export default function Routes() {
 				exact
 				component={EditTournament}
 			/>
+			<AuthRoute path="/tournaments/:id/leaderboard" component={Leaderboard} />
+			<AuthRoute path="/tournaments/leaderboards" component={Leaderboards} />
 
 			<Route path="*" component={NotFound} />
 		</Switch>

@@ -81,7 +81,6 @@ def update_tournament(
     tournament.advertising_banner = t_data.advertising_banner
     tournament.balance += t_data.balance
     tournament.hole_count = t_data.hole_count
-    tournament.winning_distributions = t_data.winning_distributions.dict()
 
     db.commit()
     db.refresh(tournament)
@@ -147,7 +146,7 @@ def add_user(
     if not tournament:
         raise errors.ResourceNotFound("Tournament")
 
-    if tournament.comleted:
+    if tournament.completed:
         raise errors.ValidationError(
             "Cannot update sponsorship for completed tournament"
         )

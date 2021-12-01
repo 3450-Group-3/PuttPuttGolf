@@ -155,7 +155,6 @@ class TournamentUpdate(InModel):
 
     advertising_banner: Optional[str]
     balance: float
-    winning_distributions: WinningDistribution
 
 
 class SponsorTournament(InModel):

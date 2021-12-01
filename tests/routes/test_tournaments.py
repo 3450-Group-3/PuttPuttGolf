@@ -157,6 +157,7 @@ def test_add_user(user: models.User, db: Session, client: TestClient):
     assert res.status_code == 200, res.text
     assert len(user.enrollments) == 1
     assert len(tournament.enrollments) == 1
+    db.delete(tournament.enrollments[0])
 
 
 def test_remove_user(user: models.User, db: Session, client: TestClient):
@@ -202,3 +203,4 @@ def test_update_score(user: models.User, db: Session, client: TestClient):
 
     assert res.status_code == 200, res.text
     assert user.enrollments[0].score == 8, res.text
+    db.delete(tournament.enrollments[0])

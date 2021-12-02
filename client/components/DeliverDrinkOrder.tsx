@@ -82,7 +82,7 @@ export default function DeliverDrinkOrder() {
                 orderStatus: DrinkOrderState.DELIVERED
             }
         }).then(() => {
-            setRedir(true)
+            location.reload()
         })
     }
 
@@ -103,7 +103,6 @@ export default function DeliverDrinkOrder() {
                     </DeliverMap>
                 </Wrapper>
             </div>
-            {redir && <Redirect to="/dm/orders" />}
         </div>
     )
 }

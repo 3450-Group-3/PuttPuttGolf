@@ -132,8 +132,9 @@ def update_order_status(order_data: schemas.DrinkOrderStatusUpdateIn, db: Sessio
     db.refresh(order)
 
     if (order.order_status == models.DrinkOrderState.DELIVERED):
-        order.delete()
+        order.drink_meister_id = -1
         db.commit()
+        db.refresh(order)
 
     return order
 

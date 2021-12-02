@@ -97,7 +97,7 @@ export default function DeliverDrinkOrder() {
             </Button>
             <div style={{height: "20em"}}>
                 <Wrapper apiKey={apiKey}>
-                    <DeliverMap style={{height: "50em", width: "50em"}} onClick={onClick} onIdle={onIdle} center={center} zoom={zoom}>
+                    <DeliverMap style={{height: "50em", width: "50em"}} onClick={onClick} onIdle={onIdle} center={center} zoom={zoom}> {/* TODO: fix the css so it looks nice on mobile */}
                         {lat !== undefined && lng !== undefined && <DeliverMarker position={{lat: lat, lng: lng}} />}
                         {dmPos?.lat !== undefined && dmPos?.lng !== undefined && <DeliverMarker position={{lat: dmPos.lat, lng: dmPos.lng}} icon={"https://raw.githubusercontent.com/scottdejonge/map-icons/master/src/icons/male.svg"} />}
                     </DeliverMap>

@@ -9,6 +9,7 @@ import {
 	EffectCallback,
 	useContext,
 	DependencyList,
+	useRef,
 } from 'react';
 import GlobalContext from './global';
 import { UserData, RedirectState } from './types';

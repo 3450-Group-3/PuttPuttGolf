@@ -1,6 +1,5 @@
 import { Wrapper } from "@googlemaps/react-wrapper";
 import { useEffect, useState } from "react";
-import { SiUndertale } from "react-icons/si";
 import { useGet, useUser } from "../hooks";
 import { DrinkOrderData } from "../pages/DrinkOrderFufillment";
 import { Button } from "../styles";
@@ -64,7 +63,7 @@ export default function DeliverDrinkOrder() {
             <div style={{height: "20em"}}>
                 <Wrapper apiKey={apiKey}>
                     <DeliverMap style={{height: "50em", width: "50em"}} onClick={onClick} onIdle={onIdle} center={center} zoom={zoom}>
-                        {lat !== undefined && lng !== undefined && <DeliverMarker position={{lat: lat, lng: lng}}/>}
+                        {lat !== undefined && lng !== undefined && <DeliverMarker position={{lat: lat, lng: lng}} />}
                     </DeliverMap>
                 </Wrapper>
             </div>

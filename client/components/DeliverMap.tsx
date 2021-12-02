@@ -41,6 +41,7 @@ function useDeepCompareEffectForMaps(callback: EffectCallback, dependencies: any
 export default function DeliverMap({style, onClick, onIdle, children, ...options}: MapProps) {
     const ref = useRef<HTMLDivElement>(null)
     const [map, setMap] = useState<google.maps.Map>()
+    const [currLocButtonAdded, setCurrLocButtonadded] = useState(false)
 
 
     useDeepCompareEffectForMaps(() => {
@@ -48,9 +49,6 @@ export default function DeliverMap({style, onClick, onIdle, children, ...options
             map.setOptions(options);
         }
     }, [map, options]);
-
-
-
 
     useEffect(() => {
         if (ref.current && !map) {

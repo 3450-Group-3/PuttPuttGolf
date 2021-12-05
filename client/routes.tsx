@@ -79,8 +79,8 @@ export default function Routes() {
 				hasPermission={(user) => user.isManager}
 				component={UserManagement}
 			/>
-			<PermissionRoute path="/order/new" hasPermission={(user) => !user.isDrinkMeister} exact component={DrinkOrdering} />
-			<PermissionRoute path="/order/active" hasPermission={(user) => !user.isDrinkMeister} exact component={CustomerViewOrders} />
+			<PermissionRoute path="/order/new" hasPermission={(user) => !user.isDrinkMeister || user.isManager} exact component={DrinkOrdering} />
+			<PermissionRoute path="/order/active" hasPermission={(user) => !user.isDrinkMeister || user.isManager} exact component={CustomerViewOrders} />
 			<PermissionRoute
 				path="/dm/orders"
 				hasPermission={(user) => user.isDrinkMeister}

@@ -4,6 +4,7 @@ import OpenDrinkList from "../components/OpenDrinkList"
 import SelectedDrinkOrder from "../components/SelectedDrinkOrder"
 import { useGet, useUser } from "../hooks"
 import { DetailFormError, DrinkData } from "../types"
+import { Wrapper } from "@googlemaps/react-wrapper"
 
 
 interface DrinkOrderQuantity {
@@ -11,7 +12,7 @@ interface DrinkOrderQuantity {
     quantity: number
 }
 
-interface UserLocation {
+export interface UserLocation {
     longitude: number,
     lattitude: number
 }
@@ -38,16 +39,19 @@ export enum DrinkOrderState {
 
 export default function DrinkOrderFufillment() {
 
+    const [dummy, setDummy] = useState(false)
     const [hasAcceptedOrder, setHasAcceptedOrder] = useState(false)
     const [orderReadyToBeDelivered, setOrderReadyToBeDelivered] = useState(false)
+    const [activeOrder, setActiveOrder] = useState<DrinkOrderData>()
+    
     const {user} = useUser()
-
     const {data, loading, error} = useGet<DrinkOrderData[], DetailFormError>("/orders/user/" + user.id)
 
-    console.log(data)
+    
 
     if (!hasAcceptedOrder && data){
         if (data.length > 0){
+            setActiveOrder(data[0])
             setHasAcceptedOrder(true)
             if (!orderReadyToBeDelivered){
                 if (data[0].orderStatus == DrinkOrderState.ENROUTE){
@@ -60,9 +64,9 @@ export default function DrinkOrderFufillment() {
 
     return (
         <div>
-            {!hasAcceptedOrder && <OpenDrinkList setHasActiveOrder={setHasAcceptedOrder}/>}
-            {hasAcceptedOrder && !orderReadyToBeDelivered && <SelectedDrinkOrder />}
-            {hasAcceptedOrder && orderReadyToBeDelivered && <DeliverDrinkOrder />}
+            {!hasAcceptedOrder && <OpenDrinkList setHasActiveOrder={setHasAcceptedOrder} setActiveOrder={setActiveOrder}/>}
+            {hasAcceptedOrder && !orderReadyToBeDelivered && <SelectedDrinkOrder activeOrder={activeOrder} setOrderReadyToBeDelivered={setOrderReadyToBeDelivered}/>}
+            {hasAcceptedOrder && orderReadyToBeDelivered && <DeliverDrinkOrder/>}
         </div>
     )
 }

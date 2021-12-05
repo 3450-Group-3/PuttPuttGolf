@@ -15,6 +15,13 @@ export enum UserRole {
 	Anonymous = 5,
 }
 
+export enum OrderStatus {
+	Open = 1,
+	InProgress = 2,
+	Enroute = 3,
+	Delivered = 4,
+}
+
 export interface TournamentEnrollment {
 	score: number;
 	userId: ID;
@@ -44,6 +51,28 @@ export interface DrinkData {
 	price: number;
 	imageUrl: string;
 	description: string;
+}
+
+export interface LocationData {
+	lattitude: number;
+	longitude: number;
+}
+
+export interface DrinkOrderQuantityData {
+	drinkId: number;
+	quantity: number;
+}
+
+export interface DrinkOrderData {
+	id: number;
+	customerId: number;
+	customerName: string;
+	orderStatus: OrderStatus;
+	timeOrdered: Date;
+	totalPrice: number;
+	drinks: DrinkOrderQuantityData[];
+	location: LocationData;
+	drinkMeisterId: number;
 }
 
 export interface WinningDistributions {

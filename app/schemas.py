@@ -134,6 +134,7 @@ class DrinkOrderIn(InModel):
 
 
 class DrinkOrderStatusUpdateIn(InModel):
+    id: int
     order_status: DrinkOrderState
 
 

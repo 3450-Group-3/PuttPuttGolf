@@ -17,6 +17,7 @@ export default function App() {
 	const [globalState, setGlobalState] = useState<Omit<GlobalState, 'setState'>>(
 		{
 			user: User.anonymousUser(),
+			locationWatchHandlerId: -1,
 			theme: localStorage.getItem('theme') || 'darkMode',
 		}
 	);

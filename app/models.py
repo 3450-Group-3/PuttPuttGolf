@@ -55,15 +55,15 @@ class User(Base):  # type: ignore
 
     @property
     def is_drink_meister(self):
-        return self.has_role(UserRole.DRINK_MEISTER) or self.has_role(UserRole.MANAGER)
+        return self.has_role(UserRole.DRINK_MEISTER)
 
     @property
     def is_sponsor(self):
-        return self.has_role(UserRole.SPONSOR) or self.has_role(UserRole.MANAGER)
+        return self.has_role(UserRole.SPONSOR) 
 
     @property
     def is_player(self):
-        return self.has_role(UserRole.PLAYER) or self.has_role(UserRole.MANAGER)
+        return self.has_role(UserRole.PLAYER) 
 
     def update_balance(self, value: float, db: Session):
         assert isinstance(value, (float, int))

@@ -18,15 +18,15 @@ const Order = styled.div`
 `
 
 interface props {
-    setHasActiveOrder: React.Dispatch<React.SetStateAction<boolean>>
+    setHasActiveOrder: React.Dispatch<React.SetStateAction<boolean>>,
+    setActiveOrder: React.Dispatch<React.SetStateAction<DrinkOrderData | undefined>>
 }
 
-export default function OpenDrinkList({setHasActiveOrder}: props) { 
+export default function OpenDrinkList({setHasActiveOrder, setActiveOrder}: props) { 
 
     const orderGet = useGet<DrinkOrderData[], DetailFormError>("/orders/state/" + DrinkOrderState.OPEN)
-    const drinkGet = useGet<DrinkData[], DetailFormError>("/drinks")
     const [response, accecptOrder] = usePost<DrinkData, DetailFormError>("/orders/claimorder")
-
+    
     function handleAcceptOrder(id: number) {
         accecptOrder({
             params: {
@@ -36,18 +36,17 @@ export default function OpenDrinkList({setHasActiveOrder}: props) {
             setHasActiveOrder(true)
         })
     }
-
+    
+    const drinkGet = useGet<DrinkData[], DetailFormError>("/drinks")
     const drinkMap: Map<number, DrinkData> = new Map();
     drinkGet.data?.forEach((drink) => {
         drinkMap.set(drink.id, drink)
     })
-    
     function getDrinkData(id: number): DrinkData | undefined {
         return drinkMap.get(id)
     }
-
-
     const status = ["OPEN", "INPROGRESS", "ENROUTE", "DELIVERED"]
+    
 
     if (!orderGet.data || orderGet.data.length == 0){
         return (
@@ -78,6 +77,7 @@ export default function OpenDrinkList({setHasActiveOrder}: props) {
                     })}
                     <div style={{textAlign: "center"}}>
                         <Button onClick={() => {
+                            setActiveOrder(drinkOrder)
                             handleAcceptOrder(drinkOrder.id)
                         }}>Accept Order</Button> 
                     </div>

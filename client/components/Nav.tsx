@@ -69,7 +69,7 @@ export default function Nav({ layout }: Props) {
 		<>
 			<Drawer isOpen={drawerIsOpen} setIsOpen={setDrawerIsOpen} />
 			<NavContainer layout={layout}>
-				<NavButton to="/order" activeClassName="current" exact key={1}>
+				<NavButton to="/order/new" activeClassName="current" exact key={1}>
 					<MdLocalDrink size={50} />
 					<NavText>order drinks</NavText>
 				</NavButton>

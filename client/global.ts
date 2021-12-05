@@ -5,6 +5,7 @@ import { UserData } from './types';
 export interface GlobalState {
 	theme: string;
 	user: User;
+	locationWatchHandlerId: number;
 	setState: (state: GlobalState) => void;
 }
 

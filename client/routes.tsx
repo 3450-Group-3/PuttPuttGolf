@@ -15,6 +15,7 @@ import DrinkOrderFufillment from './pages/DrinkOrderFufillment';
 import Tournaments from './pages/Tournaments';
 import CreateTournament from './pages/CreateTournament';
 import EditTournament from './pages/EditTournament';
+import CustomerViewOrders from './pages/CustomerViewOrders';
 import Sponsor from './pages/Sponsor';
 
 /**  User must be logged in */
@@ -78,7 +79,8 @@ export default function Routes() {
 				hasPermission={(user) => user.isManager}
 				component={UserManagement}
 			/>
-			<AuthRoute path="/order" component={DrinkOrdering} />
+			<PermissionRoute path="/order/new" hasPermission={(user) => !user.isDrinkMeister} exact component={DrinkOrdering} />
+			<PermissionRoute path="/order/active" hasPermission={(user) => !user.isDrinkMeister} exact component={CustomerViewOrders} />
 			<PermissionRoute
 				path="/dm/orders"
 				hasPermission={(user) => user.isDrinkMeister}

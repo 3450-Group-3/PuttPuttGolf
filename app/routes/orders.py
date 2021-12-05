@@ -26,7 +26,7 @@ def get_single_order(id: int, db: Session = Depends(get_db)):
 
 
 @orders.get(
-    "/user/{id}", response_model=list[schemas.DrinkOrderOut], dependencies=[Depends(current_user_is_drinkmeister)]
+    "/user/{id}", response_model=list[schemas.DrinkOrderOut], dependencies=[Depends(get_current_user)]
 )
 def get_customer_orders(id: int, db: Session = Depends(get_db)):
     user: models.User = db.query(models.User).where(models.User.id == id).first()
@@ -116,10 +116,10 @@ def assign_dm_to_order(id: int, drinkmeister: models.User = Depends(current_user
 
 
 @orders.put(
-    "/{id}/status", response_model=schemas.DrinkOrderOut, dependencies=[Depends(current_user_is_drinkmeister)]
+    "/status", response_model=schemas.DrinkOrderOut, dependencies=[Depends(current_user_is_drinkmeister)]
 )
-def update_order_status(id: int, order_data: schemas.DrinkOrderStatusUpdateIn, db: Session = Depends(get_db)):
-    order: models.DrinkOrder = db.query(models.DrinkOrder).where(models.DrinkOrder.id == id).first()
+def update_order_status(order_data: schemas.DrinkOrderStatusUpdateIn, db: Session = Depends(get_db)):
+    order: models.DrinkOrder = db.query(models.DrinkOrder).where(models.DrinkOrder.id == order_data.id).first()
 
     if order.order_status.value != (order_data.order_status.value - 1):
         return JSONResponse(
@@ -132,37 +132,32 @@ def update_order_status(id: int, order_data: schemas.DrinkOrderStatusUpdateIn, d
     db.refresh(order)
 
     if (order.order_status == models.DrinkOrderState.DELIVERED):
-        order.delete()
+        order.drink_meister_id = -1
         db.commit()
+        db.refresh(order)
 
     return order
 
 
 @orders.put(
-    "/{id}/location", response_model=schemas.DrinkOrderOut
+    "/location", response_model=list[schemas.DrinkOrderOut]
 )
-def update_order_customer_location(
-    id: int, 
+def update_order_customer_location( 
     order_data: schemas.UserLocation , 
     user: models.User = Depends(get_current_user), 
     db: Session = Depends(get_db)
 ):
-    order: models.DrinkOrder = db.query(models.DrinkOrder).where(models.DrinkOrder.id == id).first()
+    orders: list[models.DrinkOrder] = db.query(models.DrinkOrder).where(models.DrinkOrder.customer_id == user.id).all()
 
-    if (order.customer_id != user.id):
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            content={"detail" : "Attempting to update another users order, aborting."}
-        )
-    
-    order.location_json = json.dumps({
-            "lattitude" : order_data.lattitude,
-            "longitude" : order_data.longitude
-    })
-    db.commit()
-    db.refresh(order)
+    for order in orders:    
+        order.location_json = json.dumps({
+                "lattitude" : order_data.lattitude,
+                "longitude" : order_data.longitude
+        })
+        db.commit()
+        db.refresh(order)
 
-    return order
+    return orders
 
 @orders.delete(
     "/{id}", dependencies=[Depends(current_user_is_manager)]

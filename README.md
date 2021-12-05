@@ -102,6 +102,7 @@ Now you should be able to go to [localhost:3000](http://localhost:3000) in your 
     $ yarn build
     ```
 2. In production `ENVIRONMENT` in the `.env` needs to be set to `production` otherwise, it won't serve the bundled JS assets
+> **NOTE** The bundle js files have been pushed to master if you dont want to build them yourself. In that case still set `ENVIRONMENT` in the `.env` to `production`
 
 ## Testing
 1. Linux

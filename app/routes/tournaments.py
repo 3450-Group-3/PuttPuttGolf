@@ -2,9 +2,13 @@ from typing import Literal, Optional
 from fastapi import APIRouter, Depends, Request
 from sqlalchemy.orm.session import Session
 
-from app.dependancies import current_user_is_manager, get_current_user, get_db
+from app.dependancies import (
+    current_user_is_manager,
+    current_user_is_sponsor,
+    get_current_user,
+    get_db,
+)
 from app import schemas, models
-from app.security import Password
 from app import errors
 
 tournaments = APIRouter(prefix="/tournaments", tags=["Tournament Crud"])
@@ -60,7 +64,10 @@ def create_tournament(
     dependencies=[Depends(current_user_is_manager)],
 )
 def update_tournament(
-    id: int, t_data: schemas.TournamentUpdate, db: Session = Depends(get_db)
+    id: int,
+    t_data: schemas.TournamentUpdate,
+    db: Session = Depends(get_db),
+    user: models.User = Depends(get_current_user),
 ):
     tournament: Optional[models.Tournament] = (
         db.query(models.Tournament).where(models.Tournament.id == id).first()
@@ -72,8 +79,41 @@ def update_tournament(
     tournament.date = t_data.date
     tournament.completed = t_data.completed
     tournament.advertising_banner = t_data.advertising_banner
-    tournament.balance = t_data.balance
+    tournament.balance += t_data.balance
     tournament.hole_count = t_data.hole_count
+
+    db.commit()
+    db.refresh(tournament)
+
+    return tournament
+
+
+@tournaments.put(
+    "/{id}/sponsor",
+    response_model=schemas.Tournament,
+)
+def sponsor_tournament(
+    id: int,
+    s_data: schemas.SponsorTournament,
+    db: Session = Depends(get_db),
+    user: models.User = Depends(current_user_is_sponsor),
+):
+    tournament: Optional[models.Tournament] = db.query(models.Tournament).get(id)
+
+    if not tournament:
+        raise errors.ResourceNotFound("Tournament")
+
+    if tournament.sponsored_by is not user and tournament.sponsored_by is not None and not user.is_manager:
+        raise errors.PermissionException(
+            "Cannot update a tournament you are not sponsoring"
+        )
+
+    tournament.balance += s_data.balance_diff
+    tournament.advertising_banner = s_data.advertising_banner
+    tournament.winning_distributions = s_data.winning_distributions.dict()
+    tournament.sponsored_by = user
+
+    user.update_balance(user.balance - s_data.balance_diff, db)
 
     db.commit()
     db.refresh(tournament)
@@ -105,6 +145,11 @@ def add_user(
 
     if not tournament:
         raise errors.ResourceNotFound("Tournament")
+
+    if tournament.completed:
+        raise errors.ValidationError(
+            "Cannot update sponsorship for completed tournament"
+        )
 
     if not user:
         raise errors.ResourceNotFound("User")

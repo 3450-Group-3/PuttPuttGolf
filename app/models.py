@@ -4,6 +4,7 @@ import json
 from typing import Optional, Union
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy import types
+from sqlalchemy.engine import create
 from sqlalchemy.orm import Session, relationship
 from functools import cache, cached_property
 
@@ -28,13 +29,16 @@ class User(Base):  # type: ignore
     enrollments: list["TournamentEnrollment"] = relationship(
         "TournamentEnrollment", back_populates="user"
     )
-    created_tournaments: "Tournament" = relationship(
-        "Tournament", back_populates="created_by", cascade="all, delete, delete-orphan"
-    )
+    # created_tournaments: "Tournament" = relationship(
+    #     "Tournament",
+    #     back_populates="created_by",
+    #     cascade="all, delete, delete-orphan",
+    # )
     # sponsored_tournaments = relationship(
     #     "Tournament",
     #     back_populates="sponsored_by",
-    #     foreign_keys=["tournaments.sponsored_by_id"],
+    #     foreign_keys=["Tournament.sponsored_by_id"],
+    #     lazy="dynamic",
     # )
 
     @property
@@ -51,15 +55,15 @@ class User(Base):  # type: ignore
 
     @property
     def is_drink_meister(self):
-        return self.has_role(UserRole.DRINK_MEISTER)
+        return self.has_role(UserRole.DRINK_MEISTER) or self.has_role(UserRole.MANAGER)
 
     @property
     def is_sponsor(self):
-        return self.has_role(UserRole.SPONSOR)
+        return self.has_role(UserRole.SPONSOR) or self.has_role(UserRole.MANAGER)
 
     @property
     def is_player(self):
-        return self.has_role(UserRole.PLAYER)
+        return self.has_role(UserRole.PLAYER) or self.has_role(UserRole.MANAGER)
 
     def update_balance(self, value: float, db: Session):
         assert isinstance(value, (float, int))
@@ -180,11 +184,17 @@ class Tournament(Base):  # type: ignore
     balance = Column(types.Float, default=0.0, nullable=False)
     hole_count = Column(types.Integer, nullable=False)
 
-    created_by_id = Column(types.Integer, ForeignKey("users.id"), nullable=False)
-    created_by = relationship("User", back_populates="created_tournaments")
+    winning_distributions_json = Column(
+        types.String,
+        default=json.dumps({"first": 0.5, "second": 0.3, "third": 0.2}),
+        nullable=False,
+    )
 
-    # sponsored_by_id = Column(types.Integer, ForeignKey("users.id"))
-    # sponsored_by = relationship("User", back_populates="sponsored_tournaments")
+    created_by_id = Column(types.Integer, ForeignKey("users.id"), nullable=False)
+    created_by = relationship("User", foreign_keys=created_by_id)
+
+    sponsored_by_id = Column(types.Integer, ForeignKey("users.id"))
+    sponsored_by = relationship("User", foreign_keys=sponsored_by_id)
 
     enrollments = relationship(
         "TournamentEnrollment",
@@ -200,6 +210,14 @@ class Tournament(Base):  # type: ignore
     def players(self):
         for enrollment in self.enrollments:
             yield enrollment.user
+
+    @property
+    def winning_distributions(self):
+        return json.loads(self.winning_distributions_json)
+
+    @winning_distributions.setter
+    def winning_distributions(self, value):
+        self.winning_distributions_json = json.dumps(value)
 
     def add_user(self, db: Session, user: User) -> "TournamentEnrollment":
         # Add user to scores / handle nonexistant id
@@ -246,15 +264,26 @@ class Tournament(Base):  # type: ignore
         self._distribute_winnings(db)
         db.commit()
 
-    def _distribute_winnings(self, db) -> None:
+    def _distribute_winnings(self, db: Session) -> None:
         sorted_enrollments = list(
             sorted(self.enrollments, key=lambda a: a.score, reverse=True)
         )
         # Get the top three
         winners = sorted_enrollments[0:3]
-        # TODO actually distribute the winnings to each winner
-        # Note the above list doesn't nessecarily contain 3
-        # individuals
+
+        winner: TournamentEnrollment
+        for winner, percent in zip(winners, self._winning_distributions_tuple()):
+            winner.user.balance += self.balance * percent
+
+        self.balance = 0
+
+    def _winning_distributions_tuple(self):
+        wd = self.winning_distributions
+        return (
+            wd["first"],
+            wd["second"],
+            wd["third"],
+        )
 
 
 class TournamentEnrollment(Base):

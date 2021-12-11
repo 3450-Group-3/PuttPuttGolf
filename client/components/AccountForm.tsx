@@ -8,11 +8,12 @@ import { RiLockPasswordLine } from 'react-icons/ri';
 import { AiOutlineCalendar } from 'react-icons/ai';
 
 import { Title } from '../styles';
-import { UserData } from '../types';
+import { UserData, UserRole } from '../types';
 import { Button } from '../styles';
 import TextInput from './TextInput';
 import Select, { Option } from './Select';
 import { SingleValue } from 'react-select';
+import { useUser } from '../hooks';
 
 const Form = styled.form`
 	display: flex;
@@ -32,6 +33,7 @@ interface Props {
 }
 
 export default function AccountForm({ onSubmit, type, defaultValues }: Props) {
+	const {user} = useUser()
 	const {
 		register,
 		handleSubmit,
@@ -46,6 +48,21 @@ export default function AccountForm({ onSubmit, type, defaultValues }: Props) {
 		{ value: 3, label: 'Sponsor' },
 		{ value: 4, label: 'Manager' },
 	];
+
+	const displayUserOptions: Option[] = []; 
+
+	if (user.isManager){
+		userOptions.forEach((option) => {
+			displayUserOptions.push(option)
+		})
+	} else {
+		const userOption = userOptions.find((c) => defaultValues?.role === c.value)
+		if (userOption){
+			displayUserOptions.push(userOption)
+		}
+	}
+
+	console.log(displayUserOptions)
 
 	return (
 		<Form onSubmit={handleSubmit(onSubmit)}>
@@ -103,7 +120,7 @@ export default function AccountForm({ onSubmit, type, defaultValues }: Props) {
 								onChange={(selectedOption) => {
 									onChange((selectedOption as SingleValue<Option>)?.value);
 								}}
-								options={userOptions}
+								options={displayUserOptions}
 							/>
 						)}
 					/>
